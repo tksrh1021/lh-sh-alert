@@ -3,7 +3,7 @@ import hashlib
 import re
 from datetime import date, datetime
 
-from src.config import HOUSING_TYPE_KEYWORDS, TARGET_GROUP_KEYWORDS
+from src.config import HOUSING_TYPE_KEYWORDS, SEOUL_DISTRICTS, SEOUL_DONG_TO_GU, TARGET_GROUP_KEYWORDS
 from src.models import Notice
 
 _LEADING_NEW = re.compile(r"^NEW")
@@ -26,6 +26,18 @@ def guess_housing_type(title: str) -> str | None:
 
 def guess_target_groups(title: str) -> list[str]:
     return [kw for kw in TARGET_GROUP_KEYWORDS if kw in title]
+
+
+def guess_seoul_district(title: str) -> str | None:
+    """제목에 구 이름이 직접 있으면 그걸 쓰고, 없으면 동/지구명 사전에서 찾는다.
+    둘 다 못 찾으면 None — 틀린 구로 잘못 넣기보다 '모름'으로 두는 쪽을 택함."""
+    for gu in SEOUL_DISTRICTS:
+        if gu in title:
+            return gu
+    for place, gu in SEOUL_DONG_TO_GU.items():
+        if place in title:
+            return gu
+    return None
 
 
 def _parse_date(text: str, fmt: str):
@@ -135,6 +147,8 @@ def normalize_sh(row: dict) -> Notice:
     detail_text = row.get("detail_text")
     apply_start, apply_end = parse_schedule_dates(detail_text)
     doc_review_date, result_date = parse_review_dates(detail_text)
+    district = guess_seoul_district(title)
+    regions = ["서울특별시", district] if district else ["서울특별시"]
     return Notice(
         id=f"SH:{row['seq']}",
         source="SH",
@@ -142,7 +156,7 @@ def normalize_sh(row: dict) -> Notice:
         title=title,
         housing_type=guess_housing_type(title),
         target_groups=guess_target_groups(title),
-        regions=["서울특별시"],
+        regions=regions,
         posted_at=posted_at,
         apply_start=apply_start,
         apply_end=apply_end,

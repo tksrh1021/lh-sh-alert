@@ -12,6 +12,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
+from src.config import SEOUL_DISTRICTS
 from src.models import Notice
 from src.profile import Profile
 
@@ -39,11 +40,19 @@ def match(notice: Notice, profile: Profile, today: date | None = None) -> MatchR
 
     allowed = set(profile.interests.regions)
     if allowed and notice.regions and not (set(notice.regions) & allowed):
-        return MatchResult(
-            notice_id=notice.id,
-            verdict="NO_MATCH",
-            reasons=[f"지역 불일치: {notice.regions}는 관심 지역({sorted(allowed)})과 무관"],
-        )
+        # 구 단위로 좁혀놨는데 공고에서 구를 못 찾은 경우(서울인 건 맞음)엔
+        # "확실히 다름"이 아니라 "모름"이라서 걸러내지 않고 사람 확인으로 넘긴다.
+        wants_specific_gu = any(r in SEOUL_DISTRICTS for r in allowed) and "서울특별시" not in allowed
+        district_unknown = notice.regions == ["서울특별시"]
+        if wants_specific_gu and district_unknown:
+            wanted_gu = sorted(allowed & set(SEOUL_DISTRICTS))
+            reasons.append(f"서울 공고인데 제목에서 구를 못 찾음 — 관심 구({wanted_gu})인지 직접 확인 필요")
+        else:
+            return MatchResult(
+                notice_id=notice.id,
+                verdict="NO_MATCH",
+                reasons=[f"지역 불일치: {notice.regions}는 관심 지역({sorted(allowed)})과 무관"],
+            )
     if not notice.regions:
         reasons.append("지역 정보 없음 — 공고문 확인 필요")
 

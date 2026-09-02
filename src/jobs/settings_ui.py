@@ -17,7 +17,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from src.config import HOUSING_TYPE_KEYWORDS, REGIONS, TARGET_GROUP_KEYWORDS
+from src.config import HOUSING_TYPE_KEYWORDS, REGIONS, SEOUL_DISTRICTS, TARGET_GROUP_KEYWORDS
 from src.github_secrets import GithubSecretError, set_secret
 from src.matcher import match
 from src.profile import Profile, load_profile
@@ -49,7 +49,7 @@ body {
 h2 { font-size: 22px; font-weight: 800; margin: 0 0 4px; }
 .sub { color: var(--sub); font-size: 14px; margin-bottom: 24px; }
 label.field-label { display: block; margin-top: 24px; font-weight: 700; font-size: 14px; }
-input[type=date], input[type=time] {
+input[type=date], input[type=time], input[type=number] {
   width: 100%; padding: 12px 14px; margin-top: 8px; border: 1.5px solid var(--line);
   border-radius: 10px; font-size: 15px; font-family: inherit; color: var(--ink);
 }
@@ -64,6 +64,14 @@ input:focus { outline: none; border-color: var(--wanted-blue); }
 .chip input:checked + span { background: var(--wanted-blue); border-color: var(--wanted-blue); color: #fff; }
 .time-row { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
 .time-row span { color: var(--sub); }
+.id-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+.id-row input { text-align: center; }
+.id-row input[name=birth_year] { flex: 2; }
+.id-row input[name=birth_month], .id-row input[name=birth_day] { flex: 1; }
+.id-row span { color: var(--sub); }
+.seoul-districts {
+  margin-top: 12px; padding: 14px; background: var(--bg); border-radius: 12px;
+}
 small.hint { display: block; color: var(--sub); font-size: 12px; margin-top: 6px; }
 button {
   width: 100%; margin-top: 32px; padding: 14px; font-size: 16px; font-weight: 800;
@@ -132,13 +140,14 @@ def _load_current() -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
-def _chips(field_name: str, options: list[str], selected: list[str]) -> str:
+def _chips(field_name: str, options: list[str], selected: list[str], extra_ids: tuple[str, ...] = ()) -> str:
     items = []
     for opt in options:
         checked = "checked" if opt in selected else ""
         opt_esc = html.escape(opt)
+        extra = f' id="chk-{opt_esc}"' if opt_esc in extra_ids else ""
         items.append(
-            f'<label class="chip"><input type="checkbox" name="{field_name}" value="{opt_esc}" {checked}>'
+            f'<label class="chip"><input type="checkbox" name="{field_name}" value="{opt_esc}"{extra} {checked}>'
             f'<span>{opt_esc}</span></label>'
         )
     return "\n".join(items)
@@ -152,6 +161,12 @@ def _render_form(data: dict, message: str = "") -> str:
     quiet_hours = notify.get("quiet_hours") or "23:00-08:00"
     quiet_start, quiet_end = (quiet_hours.split("-") + ["", ""])[:2]
 
+    birth_date = personal.get("birth_date", "")
+    birth_y, birth_m, birth_d = (birth_date.split("-") + ["", "", ""])[:3] if birth_date else ("", "", "")
+
+    selected_regions = interests.get("regions", [])
+    seoul_open = "block" if any(r in SEOUL_DISTRICTS for r in selected_regions) else "none"
+
     body = f"""
 <div class="card">
   <h2>내 조건 설정</h2>
@@ -159,7 +174,14 @@ def _render_form(data: dict, message: str = "") -> str:
   {f'<div class="msg {"err" if "실패" in message else "ok"}">{message}</div>' if message else ""}
   <form method="post" action="/save">
     <label class="field-label">생년월일</label>
-    <input type="date" name="birth_date" value="{personal.get('birth_date', '')}" required>
+    <small class="hint">주민등록번호 앞자리처럼 태어난 연/월/일만 입력하면 됩니다</small>
+    <div class="id-row">
+      <input type="number" name="birth_year" placeholder="YYYY" min="1900" max="2100" value="{birth_y}" required>
+      <span>-</span>
+      <input type="number" name="birth_month" placeholder="MM" min="1" max="12" value="{birth_m}" required>
+      <span>-</span>
+      <input type="number" name="birth_day" placeholder="DD" min="1" max="31" value="{birth_d}" required>
+    </div>
 
     <label class="field-label">관심 주택 유형</label>
     <div class="chips">{_chips("housing_types", HOUSING_TYPE_KEYWORDS, interests.get('housing_types', []))}</div>
@@ -168,8 +190,12 @@ def _render_form(data: dict, message: str = "") -> str:
     <div class="chips">{_chips("target_groups", TARGET_GROUP_KEYWORDS, interests.get('target_groups', []))}</div>
 
     <label class="field-label">관심 지역</label>
-    <small class="hint">아무것도 선택 안 하면 전체 지역을 봅니다</small>
-    <div class="chips">{_chips("regions", REGIONS, interests.get('regions', []))}</div>
+    <small class="hint">아무것도 선택 안 하면 전체 지역을 봅니다. 서울특별시를 고르면 구까지 좁힐 수 있어요</small>
+    <div class="chips">{_chips("regions", REGIONS, selected_regions, extra_ids=("서울특별시",))}</div>
+    <div id="seoul-districts" class="seoul-districts" style="display:{seoul_open}">
+      <small class="hint">서울 안에서 특정 구만 보고 싶으면 선택 (안 고르면 서울 전체)</small>
+      <div class="chips">{_chips("regions", SEOUL_DISTRICTS, selected_regions)}</div>
+    </div>
 
     <label class="field-label">알림 금지 시간</label>
     <div class="time-row">
@@ -181,7 +207,16 @@ def _render_form(data: dict, message: str = "") -> str:
 
     <button type="submit">저장하고 GitHub에 반영</button>
   </form>
-</div>"""
+</div>
+<script>
+  var seoulChk = document.getElementById('chk-서울특별시');
+  var panel = document.getElementById('seoul-districts');
+  if (seoulChk) {{
+    seoulChk.addEventListener('change', function () {{
+      panel.style.display = seoulChk.checked ? 'block' : 'none';
+    }});
+  }}
+</script>"""
     return _page("공공임대 알림 봇 - 필터 설정", "settings", body)
 
 
@@ -365,8 +400,13 @@ class Handler(http.server.BaseHTTPRequestHandler):
         quiet_end = form.get("quiet_end", [""])[0]
         quiet_hours = f"{quiet_start}-{quiet_end}" if quiet_start and quiet_end else None
 
+        birth_y = form.get("birth_year", [""])[0]
+        birth_m = form.get("birth_month", [""])[0].zfill(2) if form.get("birth_month", [""])[0] else ""
+        birth_d = form.get("birth_day", [""])[0].zfill(2) if form.get("birth_day", [""])[0] else ""
+        birth_date = f"{birth_y}-{birth_m}-{birth_d}" if birth_y and birth_m and birth_d else ""
+
         data = {
-            "personal": {"birth_date": form.get("birth_date", [""])[0]},
+            "personal": {"birth_date": birth_date},
             "interests": {
                 "housing_types": form.get("housing_types", []),
                 "target_groups": form.get("target_groups", []),

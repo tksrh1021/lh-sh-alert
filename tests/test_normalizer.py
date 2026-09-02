@@ -3,6 +3,7 @@ from datetime import date
 from src.normalizer import (
     clean_title,
     guess_housing_type,
+    guess_seoul_district,
     normalize_lh,
     normalize_sh,
     parse_review_dates,
@@ -107,6 +108,37 @@ def test_parse_schedule_dates_from_real_fixture_supply_schedule_style():
     start, end = parse_schedule_dates(text)
     assert start == date(2026, 9, 28)
     assert end == date(2026, 9, 30)
+
+
+def test_guess_seoul_district_matches_exact_gu_name():
+    assert guess_seoul_district("강남구 청년안심주택 입주자 모집") == "강남구"
+
+
+def test_guess_seoul_district_matches_known_dong():
+    assert guess_seoul_district("홍은동 청년협동조합(이웃기웃) 조합단 면담평가") == "서대문구"
+    assert guess_seoul_district("마곡 지식산업센터 PM·FM 용역 제안서평가") == "강서구"
+
+
+def test_guess_seoul_district_returns_none_when_unrecognized():
+    assert guess_seoul_district("2026년 2차 장기미임대 매입임대주택 입주자모집공고") is None
+
+
+def test_normalize_sh_adds_district_to_regions_when_found():
+    row = {
+        "seq": "1", "title": "홍은동 청년협동조합 모집", "posted_at": "2026-09-02",
+        "detail_url": "https://www.i-sh.co.kr/x",
+    }
+    notice = normalize_sh(row)
+    assert notice.regions == ["서울특별시", "서대문구"]
+
+
+def test_normalize_sh_regions_stays_seoul_only_when_district_unknown():
+    row = {
+        "seq": "2", "title": "아무 지명 없는 모집공고", "posted_at": "2026-09-02",
+        "detail_url": "https://www.i-sh.co.kr/x",
+    }
+    notice = normalize_sh(row)
+    assert notice.regions == ["서울특별시"]
 
 
 def test_parse_review_dates_finds_doc_review_and_result():

@@ -24,12 +24,34 @@ def test_render_form_includes_current_values():
         "interests": {"housing_types": ["행복주택"], "regions": ["서울특별시"], "target_groups": []},
         "notify": {"quiet_hours": "23:00-08:00"},
     })
-    assert "1995-01-01" in html
+    assert 'name="birth_year"' in html and 'value="1995"' in html
+    assert 'value="01"' in html  # 월/일
     assert "행복주택" in html
     assert "서울특별시" in html
     assert 'name="quiet_start" value="23:00"' in html
     assert 'name="quiet_end" value="08:00"' in html
     assert "총자산" not in html  # 자산/차량가액 필드는 뺌
+
+
+def test_render_form_shows_seoul_district_panel_closed_by_default():
+    html = settings_ui._render_form({
+        "personal": {"birth_date": "1995-01-01"},
+        "interests": {"housing_types": [], "regions": ["서울특별시"], "target_groups": []},
+        "notify": {"quiet_hours": None},
+    })
+    assert 'id="seoul-districts"' in html
+    assert "display:none" in html
+    assert "강남구" in html  # 구 목록 자체는 항상 렌더링(JS로 보이기/숨기기만)
+
+
+def test_render_form_opens_seoul_district_panel_when_district_already_selected():
+    html = settings_ui._render_form({
+        "personal": {"birth_date": "1995-01-01"},
+        "interests": {"housing_types": [], "regions": ["서울특별시", "강남구"], "target_groups": []},
+        "notify": {"quiet_hours": None},
+    })
+    assert "display:block" in html
+    assert 'value="강남구" checked' in html
 
 
 @pytest.fixture()
@@ -70,7 +92,7 @@ def test_post_saves_profile_and_pushes_secret(running_server):
     resp = httpx.post(
         f"http://127.0.0.1:{port}/save",
         data={
-            "birth_date": "1998-05-20",
+            "birth_year": "1998", "birth_month": "5", "birth_day": "20",
             "housing_types": ["행복주택", "청년안심주택"],
             "target_groups": ["청년"],
             "regions": ["서울특별시", "경기도"],
@@ -95,17 +117,31 @@ def test_post_no_regions_checked_means_all_regions(running_server):
     port, tmp_path, _ = running_server
     httpx.post(
         f"http://127.0.0.1:{port}/save",
-        data={"birth_date": "1998-05-20", "quiet_start": "22:00", "quiet_end": "07:00"},
+        data={"birth_year": "1998", "birth_month": "5", "birth_day": "20", "quiet_start": "22:00", "quiet_end": "07:00"},
     )
     saved = yaml.safe_load((tmp_path / "profile.yaml").read_text(encoding="utf-8"))
     assert saved["interests"]["regions"] == []
+
+
+def test_post_seoul_district_saved_alongside_province(running_server):
+    port, tmp_path, _ = running_server
+    httpx.post(
+        f"http://127.0.0.1:{port}/save",
+        data={
+            "birth_year": "1998", "birth_month": "5", "birth_day": "20",
+            "regions": ["서울특별시", "강남구"],
+            "quiet_start": "22:00", "quiet_end": "07:00",
+        },
+    )
+    saved = yaml.safe_load((tmp_path / "profile.yaml").read_text(encoding="utf-8"))
+    assert saved["interests"]["regions"] == ["서울특별시", "강남구"]
 
 
 def test_post_invalid_birth_date_shows_error(running_server):
     port, tmp_path, saved_secrets = running_server
     resp = httpx.post(
         f"http://127.0.0.1:{port}/save",
-        data={"birth_date": "이건 날짜가 아님", "regions": ["서울특별시"]},
+        data={"birth_year": "1998", "birth_month": "13", "birth_day": "20", "regions": ["서울특별시"]},
     )
     assert "저장 실패" in resp.text
     assert not (tmp_path / "profile.yaml").exists()

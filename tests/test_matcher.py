@@ -102,3 +102,36 @@ def test_conditions_with_zero_confidence_is_treated_as_no_conditions():
     notice = make_notice(conditions={"age_min": None, "age_max": None, "extraction_confidence": 0.0})
     result = match(notice, PROFILE, today=date(2026, 1, 1))
     assert result.verdict == "NEEDS_REVIEW"
+
+
+def test_district_matches_when_notice_has_matching_gu():
+    profile = PROFILE.model_copy(deep=True)
+    profile.interests.regions = ["강남구"]
+    notice = make_notice(regions=["서울특별시", "강남구"])
+    result = match(notice, profile, today=date(2026, 1, 1))
+    assert result.verdict != "NO_MATCH"
+
+
+def test_district_mismatch_is_no_match_when_notice_district_is_known():
+    profile = PROFILE.model_copy(deep=True)
+    profile.interests.regions = ["강남구"]
+    notice = make_notice(regions=["서울특별시", "마포구"])  # 구가 확실히 다름
+    result = match(notice, profile, today=date(2026, 1, 1))
+    assert result.verdict == "NO_MATCH"
+
+
+def test_unknown_district_is_needs_review_not_no_match():
+    profile = PROFILE.model_copy(deep=True)
+    profile.interests.regions = ["강남구"]
+    notice = make_notice(regions=["서울특별시"])  # 서울인 건 맞지만 구를 못 찾음
+    result = match(notice, profile, today=date(2026, 1, 1))
+    assert result.verdict == "NEEDS_REVIEW"
+    assert any("구를 못 찾음" in r for r in result.reasons)
+
+
+def test_non_seoul_region_still_no_match_even_with_gu_preference():
+    profile = PROFILE.model_copy(deep=True)
+    profile.interests.regions = ["강남구"]
+    notice = make_notice(regions=["충청북도"])  # 서울 자체가 아니므로 확실한 불일치
+    result = match(notice, profile, today=date(2026, 1, 1))
+    assert result.verdict == "NO_MATCH"
