@@ -28,7 +28,21 @@ Python 3.11+ / httpx / BeautifulSoup4 / pdfplumber / pydantic / SQLite / pytest
 - 작업 후 반드시 `pytest`를 실행하고 결과를 보고한다.
 
 ## 현재 Phase
-Phase 3 완료 (알림, pytest 35개 통과, 실제 카카오톡 발송 검증) → Phase 4(조건 자동 추출) 또는 배포(GitHub Actions/DB 영속화) 결정 대기
+배포 설정 완료 (로컬 git 커밋 + GitHub Actions 워크플로 작성, pytest 37개 통과) → GitHub 리포 생성/시크릿 등록은 사용자가 해야 함(Claude에게 GitHub 계정 접근 권한 없음). 그 다음은 Phase 4(조건 자동 추출) 또는 Phase 5(P2)
+
+## 리마인드 정책 변경 (사용자 요청)
+D-3/D-1/D-0 다단계 리마인드 대신 **접수 시작일 1번 + 접수 마감일 1번, 총 두 번만** 보내도록 단순화함.
+- SH: 상세 페이지에서 '청약신청 일정' 구간을 찾아 접수 시작/마감을 둘 다 추출 (`normalizer.parse_schedule_dates`). 공고마다 헤딩 표현이 달라서("청약신청 일정" vs "청약신청 :") 정규식 하나로 못 잡고, "청약신청" 뒤에 날짜가 바로 오는 진짜 위치만 찾도록 처리. "청약신청서.pdf" 같은 첨부파일명 오탐도 실측 중 발견해서 제외 처리함.
+- LH: 목록에 접수 시작일 자체가 없어서 마감일 리마인드만 가능 (시작일 리마인드는 Phase 4에서 PDF까지 읽어야 지원 가능).
+- `profile.yaml`의 `notify.reminder_days_before`는 더 이상 안 씀 — 스키마에서 제거.
+
+## 배포 확정 사항
+- DB 영속화 방식: **git commit-back** 채택 (원격 DB/캐시 대신). Actions가 매 실행 후 `data/notices.db`를 커밋+푸시. 이유: 새 계정/서비스 없이 무료로 되는 가장 단순한 방법 (설계서 4.3 우려사항 중 (a)안).
+- 스케줄: `collect.yml`은 30분 간격 상시 실행(설계서의 주/야간 빈도 분리는 Actions 무료 한도 안에서 불필요해 단순화함, ponytail 주석 남김). `remind.yml`은 매일 00:00 UTC(=09:00 KST).
+- `src/env.py`가 os.environ을 우선 깔고 `.env`로 덮어쓰는 구조로 바뀜 — 로컬은 `.env`, GitHub Actions는 Secrets가 그대로 동작.
+- `src/jobs/collect.py`: LH/SH 중 하나가 깨져도 나머지는 계속 수집하고, 깨진 쪽은 에러 알림을 보냄(카카오→실패시 Discord).
+- **알려진 한계**: 카카오 refresh_token이 회전(rotate)되면 로컬 `.env`엔 반영되지만 GitHub Secrets엔 자동 반영 안 됨 — Actions 환경에선 새 토큰이 유실된다. 이 경우 다음 실행에서 카카오 발송이 실패 → Discord 백업 채널로 "재인증 필요" 알림이 감(백업 채널을 설정해뒀다면). 발생하면 `research/kakao_oauth.py`를 로컬에서 다시 돌려 새 refresh_token을 받아 GitHub Secret을 수동 갱신해야 함.
+- `data/notices.db`는 공개 공고 정보만 담고 있어 (개인 소득/자산 없음) 리포에 커밋해도 안전. `profile.yaml`/`.env`는 여전히 `.gitignore`.
 
 ## Phase 2 확정 사항
 - notice.conditions(나이/소득/자산)는 Phase 4 전까지 항상 비어 있음 → 지금은 유형/지역/마감일만으로 NO_MATCH를 걸러내고, 나머지는 전부 NEEDS_REVIEW. MATCH는 Phase 4에서 조건 데이터가 채워져야 나온다.

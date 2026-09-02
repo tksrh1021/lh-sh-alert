@@ -5,11 +5,12 @@ research/probe_sh.py, probe_sh_detail.py에서 실측 검증한 구조 사용.
 동일하게 열리는 걸 확인했음 (사람이 클릭할 원문 링크로 그대로 써도 됨).
 """
 import re
+import time
 
 import httpx
 from bs4 import BeautifulSoup
 
-from src.config import SH_DETAIL_URL, SH_LIST_URL, USER_AGENT
+from src.config import REQUEST_DELAY_SECONDS, SH_DETAIL_URL, SH_LIST_URL, USER_AGENT
 
 HEADERS = {"User-Agent": USER_AGENT}
 SEQ_PATTERN = re.compile(r"getDetailView\('(\d+)'\)")
@@ -18,12 +19,28 @@ SEQ_PATTERN = re.compile(r"getDetailView\('(\d+)'\)")
 class SHCrawler:
     def collect(self) -> list[dict]:
         html = self._fetch_list()
-        return self._parse_rows(html)
+        rows = self._parse_rows(html)
+        for row in rows:
+            row["detail_text"] = self._fetch_detail_text(row["seq"])
+            time.sleep(REQUEST_DELAY_SECONDS)
+        return rows
 
     def _fetch_list(self) -> str:
         resp = httpx.get(SH_LIST_URL, headers=HEADERS, timeout=15, follow_redirects=True)
         resp.raise_for_status()
         return resp.text
+
+    def _fetch_detail_text(self, seq: str) -> str | None:
+        """상세 페이지 본문 전체 텍스트. 접수 일정 문구 위치/표현이 공고마다 달라서
+        (예: '청약신청 일정' vs '공급일정 > 청약신청 :') 어디를 찾을지는 normalizer가 판단한다."""
+        try:
+            resp = httpx.get(
+                SH_DETAIL_URL, params={"seq": seq, "multi_itm_seq": "2"}, headers=HEADERS, timeout=15
+            )
+            resp.raise_for_status()
+        except httpx.HTTPError:
+            return None
+        return BeautifulSoup(resp.text, "lxml").get_text("\n", strip=True)
 
     def _parse_rows(self, html: str) -> list[dict]:
         soup = BeautifulSoup(html, "lxml")

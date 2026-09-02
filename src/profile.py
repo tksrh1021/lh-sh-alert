@@ -50,7 +50,6 @@ class Interests(BaseModel):
 class Notify(BaseModel):
     channels: list[str] = []
     quiet_hours: str | None = None
-    reminder_days_before: list[int] = []
 
 
 class Profile(BaseModel):

@@ -26,14 +26,16 @@ def build_notification(notice: Notice, result: MatchResult) -> tuple[str, str | 
     return "\n".join(lines), notice.detail_url
 
 
-def build_reminder(notice: Notice, days_before: int) -> tuple[str, str | None]:
-    when = "오늘 마감" if days_before == 0 else f"마감 D-{days_before}"
-    lines = [
-        f"⏰ 접수 {when}",
-        "",
-        f"[{notice.source}] {notice.title}",
-        f"· 마감: {notice.apply_end.isoformat() if notice.apply_end else '미확인'}",
-    ]
+def build_reminder(notice: Notice, kind: str) -> tuple[str, str | None]:
+    if kind == "start":
+        header = "🚀 오늘부터 접수 시작!"
+    else:
+        header = "⏰ 오늘 접수 마감!"
+    lines = [header, "", f"[{notice.source}] {notice.title}"]
+    if notice.apply_start:
+        lines.append(f"· 접수 시작: {notice.apply_start.isoformat()}")
+    if notice.apply_end:
+        lines.append(f"· 접수 마감: {notice.apply_end.isoformat()}")
     return "\n".join(lines), notice.detail_url
 
 
