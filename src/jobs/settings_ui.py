@@ -3,6 +3,7 @@ GitHub Actions가 볼 수 있도록 GitHub Secret(PROFILE_YAML)까지 자동으�
 
 실행: python -m src.jobs.settings_ui
 """
+import html
 import http.server
 import urllib.parse
 import webbrowser
@@ -11,6 +12,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
+from src.config import HOUSING_TYPE_KEYWORDS, REGIONS, TARGET_GROUP_KEYWORDS
 from src.github_secrets import GithubSecretError, set_secret
 from src.profile import Profile
 
@@ -24,8 +26,16 @@ def _load_current() -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
-def _split_csv(text: str) -> list[str]:
-    return [item.strip() for item in text.split(",") if item.strip()]
+def _chips(field_name: str, options: list[str], selected: list[str]) -> str:
+    items = []
+    for opt in options:
+        checked = "checked" if opt in selected else ""
+        opt_esc = html.escape(opt)
+        items.append(
+            f'<label class="chip"><input type="checkbox" name="{field_name}" value="{opt_esc}" {checked}>'
+            f'<span>{opt_esc}</span></label>'
+        )
+    return "\n".join(items)
 
 
 def _render_form(data: dict, message: str = "") -> str:
@@ -34,50 +44,105 @@ def _render_form(data: dict, message: str = "") -> str:
     interests = data.get("interests", {})
     notify = data.get("notify", {})
 
+    quiet_hours = notify.get("quiet_hours") or "23:00-08:00"
+    quiet_start, quiet_end = (quiet_hours.split("-") + ["", ""])[:2]
+
     return f"""<!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>공공임대 알림 봇 - 필터 설정</title>
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/webfonts/wanted-sans-cdn.css">
 <style>
-body {{ font-family: sans-serif; max-width: 480px; margin: 40px auto; padding: 0 16px; }}
-label {{ display: block; margin-top: 16px; font-weight: bold; }}
-input {{ width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; }}
-small {{ color: #666; }}
-button {{ margin-top: 24px; padding: 10px 20px; font-size: 16px; }}
-.msg {{ padding: 12px; margin-bottom: 16px; border-radius: 4px; }}
-.ok {{ background: #e6ffed; }}
-.err {{ background: #ffeef0; }}
+:root {{
+  --wanted-blue: #3552e4;
+  --wanted-blue-dark: #2a41b8;
+  --ink: #17171c;
+  --sub: #6c6c75;
+  --line: #e8e8ee;
+  --bg: #f4f5f9;
+}}
+* {{ box-sizing: border-box; }}
+body {{
+  font-family: "Wanted Sans", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  background: var(--bg); color: var(--ink);
+  max-width: 560px; margin: 48px auto; padding: 0 16px;
+}}
+.card {{
+  background: #fff; border-radius: 20px; padding: 32px 28px;
+  box-shadow: 0 4px 24px rgba(23, 23, 28, 0.06);
+}}
+h2 {{ font-size: 22px; font-weight: 800; margin: 0 0 4px; }}
+.sub {{ color: var(--sub); font-size: 14px; margin-bottom: 24px; }}
+label.field-label {{ display: block; margin-top: 24px; font-weight: 700; font-size: 14px; }}
+input[type=date], input[type=number], input[type=time] {{
+  width: 100%; padding: 12px 14px; margin-top: 8px; box-sizing: border-box;
+  border: 1.5px solid var(--line); border-radius: 10px; font-size: 15px;
+  font-family: inherit; color: var(--ink);
+}}
+input[type=date]:focus, input[type=number]:focus, input[type=time]:focus {{
+  outline: none; border-color: var(--wanted-blue);
+}}
+.chips {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }}
+.chip {{ cursor: pointer; }}
+.chip input {{ display: none; }}
+.chip span {{
+  display: inline-block; padding: 9px 16px; border-radius: 999px;
+  border: 1.5px solid var(--line); font-size: 14px; font-weight: 600;
+  color: var(--sub); transition: all .12s ease;
+}}
+.chip input:checked + span {{
+  background: var(--wanted-blue); border-color: var(--wanted-blue); color: #fff;
+}}
+.time-row {{ display: flex; gap: 10px; align-items: center; margin-top: 8px; }}
+.time-row span {{ color: var(--sub); }}
+small.hint {{ display: block; color: var(--sub); font-size: 12px; margin-top: 6px; }}
+button {{
+  width: 100%; margin-top: 32px; padding: 14px; font-size: 16px; font-weight: 800;
+  color: #fff; background: var(--wanted-blue); border: none; border-radius: 12px;
+  cursor: pointer; font-family: inherit;
+}}
+button:hover {{ background: var(--wanted-blue-dark); }}
+.msg {{ padding: 14px 16px; margin-bottom: 20px; border-radius: 10px; font-size: 14px; font-weight: 600; }}
+.ok {{ background: #eaf0ff; color: var(--wanted-blue-dark); }}
+.err {{ background: #fdecec; color: #c62828; }}
 </style></head>
 <body>
-<h2>내 조건 설정</h2>
-{f'<div class="msg {"err" if "실패" in message else "ok"}">{message}</div>' if message else ""}
-<form method="post" action="/save">
-  <label>생년월일</label>
-  <input type="date" name="birth_date" value="{personal.get('birth_date', '')}" required>
+<div class="card">
+  <h2>내 조건 설정</h2>
+  <p class="sub">여기서 정한 조건에 맞는 공고만 카카오톡으로 옵니다</p>
+  {f'<div class="msg {"err" if "실패" in message else "ok"}">{message}</div>' if message else ""}
+  <form method="post" action="/save">
+    <label class="field-label">생년월일</label>
+    <input type="date" name="birth_date" value="{personal.get('birth_date', '')}" required>
 
-  <label>총자산 (원)</label>
-  <input type="number" name="total_asset_krw" value="{assets.get('total_asset_krw', 0)}">
+    <label class="field-label">총자산 (원)</label>
+    <input type="number" name="total_asset_krw" value="{assets.get('total_asset_krw', 0)}">
 
-  <label>차량가액 (원)</label>
-  <input type="number" name="car_value_krw" value="{assets.get('car_value_krw', 0)}">
+    <label class="field-label">차량가액 (원)</label>
+    <input type="number" name="car_value_krw" value="{assets.get('car_value_krw', 0)}">
 
-  <label>관심 주택 유형 (쉼표로 구분)</label>
-  <input type="text" name="housing_types" value="{', '.join(interests.get('housing_types', []))}">
-  <small>예: 행복주택, 청년매입임대, 청년전세임대, 청년안심주택</small>
+    <label class="field-label">관심 주택 유형</label>
+    <div class="chips">{_chips("housing_types", HOUSING_TYPE_KEYWORDS, interests.get('housing_types', []))}</div>
 
-  <label>관심 대상 계층 (쉼표로 구분)</label>
-  <input type="text" name="target_groups" value="{', '.join(interests.get('target_groups', []))}">
-  <small>예: 청년, 신혼부부, 고령자</small>
+    <label class="field-label">관심 대상 계층</label>
+    <div class="chips">{_chips("target_groups", TARGET_GROUP_KEYWORDS, interests.get('target_groups', []))}</div>
 
-  <label>관심 지역 - 시/도 (쉼표로 구분)</label>
-  <input type="text" name="regions" value="{', '.join(interests.get('regions', []))}">
-  <small>이 지역 공고만 옵니다. 예: 서울특별시, 경기도</small>
+    <label class="field-label">관심 지역</label>
+    <small class="hint">아무것도 선택 안 하면 전체 지역을 봅니다</small>
+    <div class="chips">{_chips("regions", REGIONS, interests.get('regions', []))}</div>
 
-  <label>알림 금지 시간</label>
-  <input type="text" name="quiet_hours" value="{notify.get('quiet_hours', '23:00-08:00')}">
-  <small>이 시간엔 알림을 다음날 아침으로 미룹니다. 형식: 23:00-08:00</small>
+    <label class="field-label">알림 금지 시간</label>
+    <div class="time-row">
+      <input type="time" name="quiet_start" value="{quiet_start}">
+      <span>~</span>
+      <input type="time" name="quiet_end" value="{quiet_end}">
+    </div>
+    <small class="hint">이 시간엔 알림을 다음날 아침으로 미룹니다</small>
 
-  <button type="submit">저장 + GitHub에 반영</button>
-</form>
+    <button type="submit">저장하고 GitHub에 반영</button>
+  </form>
+</div>
 </body></html>"""
 
 
@@ -90,6 +155,10 @@ class Handler(http.server.BaseHTTPRequestHandler):
         body = self.rfile.read(length).decode("utf-8")
         form = urllib.parse.parse_qs(body)
 
+        quiet_start = form.get("quiet_start", [""])[0]
+        quiet_end = form.get("quiet_end", [""])[0]
+        quiet_hours = f"{quiet_start}-{quiet_end}" if quiet_start and quiet_end else None
+
         data = {
             "personal": {"birth_date": form.get("birth_date", [""])[0]},
             "assets": {
@@ -97,11 +166,11 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 "car_value_krw": int(form.get("car_value_krw", ["0"])[0] or 0),
             },
             "interests": {
-                "housing_types": _split_csv(form.get("housing_types", [""])[0]),
-                "target_groups": _split_csv(form.get("target_groups", [""])[0]),
-                "regions": _split_csv(form.get("regions", [""])[0]),
+                "housing_types": form.get("housing_types", []),
+                "target_groups": form.get("target_groups", []),
+                "regions": form.get("regions", []),
             },
-            "notify": {"quiet_hours": form.get("quiet_hours", [""])[0] or None},
+            "notify": {"quiet_hours": quiet_hours},
         }
 
         try:
@@ -121,8 +190,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         self._respond(_render_form(data, message))
 
-    def _respond(self, html: str):
-        body = html.encode("utf-8")
+    def _respond(self, html_body: str):
+        body = html_body.encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
