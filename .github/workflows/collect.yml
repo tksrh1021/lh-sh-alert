@@ -30,6 +30,10 @@ jobs:
           KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
+      - name: 나이·자산 조건 자동 추출 (NEEDS_REVIEW 후보만)
+        if: always()
+        run: python -m src.jobs.enrich
+
       - name: 매칭 결과 카카오톡 발송
         if: always()
         run: python -m src.jobs.notify

@@ -43,6 +43,7 @@ class Subscription(BaseModel):
 class Interests(BaseModel):
     housing_types: list[str] = []
     target_groups: list[str] = []
+    regions: list[str] = []  # 보고 싶은 시/도. 거주지·근무지와 별개로 명시 설정
     max_deposit_krw: int | None = None
     max_monthly_rent_krw: int | None = None
 

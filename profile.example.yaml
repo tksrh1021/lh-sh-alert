@@ -28,6 +28,7 @@ subscription:
 interests:
   housing_types: [행복주택, 청년매입임대, 청년전세임대, 청년안심주택]
   target_groups: [청년, 사회초년생]
+  regions: [서울특별시]  # 이 목록의 시/도 공고만 본다. 여러 지역 원하면 추가
   max_deposit_krw: 100000000
   max_monthly_rent_krw: 600000
 

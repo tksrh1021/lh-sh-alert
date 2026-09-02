@@ -89,6 +89,12 @@ class Store:
         ).fetchone()
         return row is not None
 
+    def set_conditions(self, notice_id: str, conditions: dict) -> None:
+        self.conn.execute(
+            "UPDATE notices SET conditions = ? WHERE id = ?", (_dumps(conditions), notice_id)
+        )
+        self.conn.commit()
+
     def record_notification(self, notice_id: str, kind: str, channel: str) -> None:
         self.conn.execute(
             "INSERT OR REPLACE INTO notifications (notice_id, kind, sent_at, channel) VALUES (?, ?, ?, ?)",

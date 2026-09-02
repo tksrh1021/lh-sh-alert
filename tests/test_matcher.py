@@ -57,3 +57,48 @@ def test_valid_candidate_is_needs_review_until_conditions_exist():
     result = match(notice, PROFILE, today=date(2026, 1, 1))
     assert result.verdict == "NEEDS_REVIEW"
     assert any("세부 자격조건" in r for r in result.reasons)
+
+
+# PROFILE: birth_date 1995-01-01 -> 2026-01-01 기준 만 31세, 자산/차량 0원
+
+
+def test_conditions_age_out_of_range_is_no_match():
+    notice = make_notice(conditions={"age_min": 19, "age_max": 29, "extraction_confidence": 1.0})
+    result = match(notice, PROFILE, today=date(2026, 1, 1))
+    assert result.verdict == "NO_MATCH"
+    assert "나이" in result.reasons[0]
+
+
+def test_conditions_asset_over_limit_is_no_match():
+    notice = make_notice(conditions={"total_asset_limit_krw": 100_000_000, "extraction_confidence": 0.5})
+    profile = PROFILE.model_copy(deep=True)
+    profile.assets.total_asset_krw = 200_000_000  # 기준 초과
+    result = match(notice, profile, today=date(2026, 1, 1))
+    assert result.verdict == "NO_MATCH"
+    assert "총자산" in result.reasons[0]
+
+
+def test_conditions_car_value_over_limit_is_no_match():
+    notice = make_notice(conditions={"car_value_limit_krw": 10_000_000, "extraction_confidence": 0.5})
+    profile = PROFILE.model_copy(deep=True)
+    profile.assets.car_value_krw = 20_000_000  # 기준 초과
+    result = match(notice, profile, today=date(2026, 1, 1))
+    assert result.verdict == "NO_MATCH"
+    assert "차량가액" in result.reasons[0]
+
+
+def test_conditions_all_satisfied_promotes_to_match():
+    notice = make_notice(conditions={
+        "age_min": 19, "age_max": 39,
+        "total_asset_limit_krw": 345_000_000,
+        "car_value_limit_krw": 45_420_000,
+        "extraction_confidence": 1.0,
+    })
+    result = match(notice, PROFILE, today=date(2026, 1, 1))
+    assert result.verdict == "MATCH"
+
+
+def test_conditions_with_zero_confidence_is_treated_as_no_conditions():
+    notice = make_notice(conditions={"age_min": None, "age_max": None, "extraction_confidence": 0.0})
+    result = match(notice, PROFILE, today=date(2026, 1, 1))
+    assert result.verdict == "NEEDS_REVIEW"

@@ -28,7 +28,17 @@ Python 3.11+ / httpx / BeautifulSoup4 / pdfplumber / pydantic / SQLite / pytest
 - 작업 후 반드시 `pytest`를 실행하고 결과를 보고한다.
 
 ## 현재 Phase
-배포 설정 완료 (로컬 git 커밋 + GitHub Actions 워크플로 작성, pytest 37개 통과) → GitHub 리포 생성/시크릿 등록은 사용자가 해야 함(Claude에게 GitHub 계정 접근 권한 없음). 그 다음은 Phase 4(조건 자동 추출) 또는 Phase 5(P2)
+배포 완료 + Phase 4(나이·자산 조건 자동 추출, 규칙 기반) 완료. GitHub Actions 실제 실행 성공 확인(collect→enrich→notify→DB 커밋). pytest 57개 통과.
+
+## Phase 4 확정 사항 (사용자 결정)
+- **소득은 자동판단 대상에서 제외**: 공고마다 표(가구원수x대상계층x순위) 표현이 제각각이고 숫자 밀집도가 높아 규칙 기반으로 안전하게 못 뽑는다고 판단. `data/income_standards.yaml`도 더 이상 채울 계획 없음(비워둔 채 유지).
+- 나이(`만 OO세 이상 OO세 이하`)와 자산/차량가액(`총자산가액 합산기준 OOO만원`, `자동차가액이 OOO만원`) 두 가지만 규칙 기반(`src/enricher/condition_parse.py`)으로 추출. 실제 LH PDF로 검증 완료(만19~39세, 3억4500만원, 4542만원 — 전부 정확히 일치).
+- 순위별로 기준액이 다르면(완화조건 등) **가장 관대한(높은) 값**을 채택 — 오탈락 방지가 우선이라는 기존 원칙 유지.
+- `notice.conditions`가 채워지고 `extraction_confidence > 0`이면 나이/자산 기준으로 실제 MATCH/NO_MATCH 판정. 못 뽑으면(confidence 0) 여전히 NEEDS_REVIEW.
+- `src/jobs/enrich.py`: NO_MATCH가 이미 확실한 공고는 PDF/상세텍스트를 아예 안 읽음(불필요한 요청 방지). SH는 collect() 때 이미 받아둔 상세 텍스트를 재사용, LH만 이 시점에 PDF를 새로 받음.
+- **지역 필터 변경**: 거주지/근무지에서 유추하던 방식 폐기, `profile.yaml`에 `interests.regions`(관심 시/도 목록)를 명시 설정하는 방식으로 변경 — 사용자가 원하는 지역만 명확히 지정.
+- **알려진 한계**: Phase 4 이전에 수집된 SH 공고 일부는 `raw.detail_text`가 없는 옛날 스키마로 저장돼 있어 조건 추출이 안 됨(자연 소멸 — 내용이 안 바뀌면 재수집해도 안 갱신됨). 새로 들어오는 공고는 문제없음.
+- 그 다음은 Phase 5(P2, 선택) — 대시보드/발표일 리마인드/타 지방공사 확장.
 
 ## 리마인드 정책 변경 (사용자 요청)
 D-3/D-1/D-0 다단계 리마인드 대신 **접수 시작일 1번 + 접수 마감일 1번, 총 두 번만** 보내도록 단순화함.
