@@ -34,5 +34,14 @@ jobs:
           git config user.name "lh-sh-alert-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/notices.db
-          git diff --cached --quiet || git commit -m "chore: update notices.db after remind [skip ci]"
-          git push
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: update notices.db after remind [skip ci]"
+          for i in 1 2 3 4 5; do
+            git push && exit 0
+            echo "push 실패, 원격 최신본과 병합 후 재시도 ($i/5)"
+            git fetch origin
+            git merge -X ours --no-edit origin/master
+            sleep $((RANDOM % 5 + 1))
+          done
+          echo "5번 재시도해도 push 실패"
+          exit 1
