@@ -1,0 +1,38 @@
+name: remind
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # 매일 09:00 KST (UTC+9)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install -r requirements.txt
+
+      - name: 마감 임박 리마인드
+        run: python -m src.jobs.remind
+        env:
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: DB 변경사항 커밋
+        if: always()
+        run: |
+          git config user.name "lh-sh-alert-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/notices.db
+          git diff --cached --quiet || git commit -m "chore: update notices.db after remind [skip ci]"
+          git push

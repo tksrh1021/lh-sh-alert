@@ -1,0 +1,10 @@
+# 도시근로자 가구원수별 월평균소득 기준 (Phase 2에서 실제 공고문 값으로 채울 것)
+# 절대 추정치로 채우지 말 것 — null로 두고 실제 공고문에서 확인
+year: null
+verified_at: null
+source: null
+household:
+  1: { krw: null }
+  2: { krw: null }
+  3: { krw: null }
+  4: { krw: null }

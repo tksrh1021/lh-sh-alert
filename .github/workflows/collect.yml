@@ -1,0 +1,49 @@
+name: collect-and-notify
+
+on:
+  schedule:
+    # ponytail: 설계서는 낮/밤 빈도를 나눴지만(08-20시 30분, 그 외 3시간),
+    # 개인 리포 Actions 무료 한도(월 2000분) 안에서 여유가 커서 그냥 항상 30분 간격으로 단순화.
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install -r requirements.txt
+
+      - name: 공고 수집
+        run: python -m src.jobs.collect
+        env:
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: 매칭 결과 카카오톡 발송
+        if: always()
+        run: python -m src.jobs.notify
+        env:
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: DB 변경사항 커밋
+        if: always()
+        run: |
+          git config user.name "lh-sh-alert-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/notices.db
+          git diff --cached --quiet || git commit -m "chore: update notices.db [skip ci]"
+          git push

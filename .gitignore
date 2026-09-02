@@ -1,0 +1,7 @@
+.env
+profile.yaml
+research/samples/
+*.pdf
+__pycache__/
+*.pyc
+.pytest_cache/

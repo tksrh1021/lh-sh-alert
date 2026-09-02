@@ -1,0 +1,37 @@
+personal:
+  birth_date: 1995-01-01
+  marital_status: 미혼
+  household_size: 1
+  is_homeowner: false
+
+income:
+  monthly_gross_krw: 2900000
+  basis: 본인
+  employment_status: 재직
+  work_start_date: 2022-02-01
+
+assets:
+  total_asset_krw: 0
+  car_value_krw: 0
+
+location:
+  residence: 서울특별시
+  residence_since: 2020-01-01
+  workplace: 서울특별시
+  preferred_districts: [관악구, 동작구, 영등포구, 마포구]
+
+subscription:
+  has_housing_account: true
+  opened_at: 2021-05-01
+  deposit_count: 40
+
+interests:
+  housing_types: [행복주택, 청년매입임대, 청년전세임대, 청년안심주택]
+  target_groups: [청년, 사회초년생]
+  max_deposit_krw: 100000000
+  max_monthly_rent_krw: 600000
+
+notify:
+  channels: [kakao]
+  quiet_hours: "23:00-08:00"
+  reminder_days_before: [3, 1, 0]
