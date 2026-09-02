@@ -14,19 +14,35 @@ from src.config import REQUEST_DELAY_SECONDS, SH_DETAIL_URL, SH_LIST_URL, USER_A
 
 HEADERS = {"User-Agent": USER_AGENT}
 SEQ_PATTERN = re.compile(r"getDetailView\('(\d+)'\)")
+LIST_PAGES = 2  # 1페이지(~10건)만 보면 하루에 글이 많이 올라오는 날 놓칠 수 있어 2페이지까지 확인
 
 
 class SHCrawler:
     def collect(self) -> list[dict]:
-        html = self._fetch_list()
-        rows = self._parse_rows(html)
+        rows = []
+        seen_seqs = set()
+        for page in range(1, LIST_PAGES + 1):
+            html = self._fetch_list(page)
+            for row in self._parse_rows(html):
+                if row["seq"] in seen_seqs:  # 페이지 사이에 새 글이 끼어들어 중복 노출되는 경우 방지
+                    continue
+                seen_seqs.add(row["seq"])
+                rows.append(row)
+            if page < LIST_PAGES:
+                time.sleep(REQUEST_DELAY_SECONDS)
+
         for row in rows:
             row["detail_text"] = self._fetch_detail_text(row["seq"])
             time.sleep(REQUEST_DELAY_SECONDS)
         return rows
 
-    def _fetch_list(self) -> str:
-        resp = httpx.get(SH_LIST_URL, headers=HEADERS, timeout=15, follow_redirects=True)
+    def _fetch_list(self, page: int = 1) -> str:
+        # httpx의 params는 URL에 이미 있는 쿼리스트링을 통째로 대체하므로
+        # multi_itm_seq을 여기서 같이 안 넣으면 다른 게시판이 응답으로 온다.
+        resp = httpx.get(
+            SH_LIST_URL, params={"multi_itm_seq": "2", "page": page},
+            headers=HEADERS, timeout=15, follow_redirects=True,
+        )
         resp.raise_for_status()
         return resp.text
 
