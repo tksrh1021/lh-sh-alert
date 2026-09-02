@@ -22,6 +22,26 @@ def make_notice(**overrides) -> Notice:
     return Notice(**base)
 
 
+def test_result_announcement_title_is_no_match():
+    notice = make_notice(title="[당첨자발표] 2026년 다자녀 매입임대주택 입주자모집공고 당첨자 및 예비자 발표")
+    result = match(notice, PROFILE, today=date(2026, 1, 1))
+    assert result.verdict == "NO_MATCH"
+    assert "안내성" in result.reasons[0]
+
+
+def test_review_result_title_is_no_match():
+    notice = make_notice(title="장기안심주택 2026년 12월 재계약 대상자 입주자격 심사결과")
+    result = match(notice, PROFILE, today=date(2026, 1, 1))
+    assert result.verdict == "NO_MATCH"
+
+
+def test_real_recruitment_title_is_not_excluded_by_result_filter():
+    # "모집공고"류는 결과발표 키워드가 안 들어있어야 정상 진행됨(오탈락 방지 확인)
+    notice = make_notice(title="2026년 2차 행복주택 입주자 모집공고 (2026. 8. 28. 공고)")
+    result = match(notice, PROFILE, today=date(2026, 1, 1))
+    assert result.verdict != "NO_MATCH" or "안내성" not in result.reasons[0]
+
+
 def test_wrong_housing_type_is_no_match():
     notice = make_notice(housing_type="상가")
     result = match(notice, PROFILE, today=date(2026, 1, 1))

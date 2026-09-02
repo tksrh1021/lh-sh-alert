@@ -12,7 +12,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-from src.config import SEOUL_DISTRICTS
+from src.config import RESULT_ANNOUNCEMENT_KEYWORDS, SEOUL_DISTRICTS
 from src.models import Notice
 from src.profile import Profile
 
@@ -28,6 +28,13 @@ class MatchResult(BaseModel):
 def match(notice: Notice, profile: Profile, today: date | None = None) -> MatchResult:
     today = today or date.today()
     reasons: list[str] = []
+
+    if any(kw in notice.title for kw in RESULT_ANNOUNCEMENT_KEYWORDS):
+        return MatchResult(
+            notice_id=notice.id,
+            verdict="NO_MATCH",
+            reasons=["당첨자 발표·서류심사 결과 등 안내성 공고 — 신청 대상 아님"],
+        )
 
     if notice.housing_type and notice.housing_type not in profile.interests.housing_types:
         return MatchResult(
