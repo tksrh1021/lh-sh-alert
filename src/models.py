@@ -23,6 +23,8 @@ class Notice(BaseModel):
     posted_at: date | None = None
     apply_start: date | None = None
     apply_end: date | None = None
+    doc_review_date: date | None = None  # 서류심사대상자 발표일
+    result_date: date | None = None  # 당첨자 발표일
     detail_url: str | None = None
     pdf_urls: list[str] = []
     raw: dict = {}

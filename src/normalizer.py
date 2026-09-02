@@ -79,6 +79,36 @@ def parse_schedule_dates(detail_text: str | None) -> tuple[date | None, date | N
     return dates[0], dates[-1]
 
 
+def _first_date_after(text: str, anchor: str, window: int = 60) -> date | None:
+    idx = text.find(anchor)
+    if idx < 0:
+        return None
+    m = _SCHEDULE_DATE.search(text[idx : idx + len(anchor) + window])
+    if not m:
+        return None
+    y, mo, d = m.groups()
+    return date(int(y), int(mo), int(d))
+
+
+def parse_review_dates(detail_text: str | None) -> tuple[date | None, date | None]:
+    """서류심사대상자 발표일, 당첨자 발표일. 표현이 조금씩 달라 후보를 여러 개 시도한다
+    (F-11: 실측에서 '발표: 2026...'처럼 콜론 앞 공백 없는 경우와 있는 경우가 둘 다 있었음
+    — 콜론 자체는 매칭에 안 쓰고 앵커 뒤 구간에서 날짜만 찾아서 신경 안 써도 됨)."""
+    if not detail_text:
+        return None, None
+    doc_review = (
+        _first_date_after(detail_text, "서류심사대상자 발표")
+        or _first_date_after(detail_text, "서류심사 대상자 발표")
+        or _first_date_after(detail_text, "서류심사결과 발표")
+    )
+    result = (
+        _first_date_after(detail_text, "당첨자 및 예비자 발표")
+        or _first_date_after(detail_text, "당첨자발표")
+        or _first_date_after(detail_text, "당첨자 발표")
+    )
+    return doc_review, result
+
+
 def normalize_lh(row: dict) -> Notice:
     title = clean_title(row["title"])
     posted_at = _parse_date(row["posted_at"], "%Y.%m.%d")
@@ -102,7 +132,9 @@ def normalize_lh(row: dict) -> Notice:
 def normalize_sh(row: dict) -> Notice:
     title = clean_title(row["title"])
     posted_at = _parse_date(row["posted_at"], "%Y-%m-%d")
-    apply_start, apply_end = parse_schedule_dates(row.get("detail_text"))
+    detail_text = row.get("detail_text")
+    apply_start, apply_end = parse_schedule_dates(detail_text)
+    doc_review_date, result_date = parse_review_dates(detail_text)
     return Notice(
         id=f"SH:{row['seq']}",
         source="SH",
@@ -114,7 +146,12 @@ def normalize_sh(row: dict) -> Notice:
         posted_at=posted_at,
         apply_start=apply_start,
         apply_end=apply_end,
+        doc_review_date=doc_review_date,
+        result_date=result_date,
         detail_url=row["detail_url"],
         raw=row,
-        content_hash=_hash(title, row["posted_at"], str(apply_start), str(apply_end)),
+        content_hash=_hash(
+            title, row["posted_at"], str(apply_start), str(apply_end),
+            str(doc_review_date), str(result_date),
+        ),
     )

@@ -1,6 +1,5 @@
-"""접수 시작일 1번 + 마감일 1번, 총 두 번만 리마인드한다. python -m src.jobs.remind
-apply_start/apply_end이 있는 공고만 대상 (LH는 목록에 마감일만 있어 마감 리마인드만 나감,
-SH는 상세 페이지에서 시작/마감 둘 다 뽑아와서 둘 다 나간다).
+"""접수 시작일·마감일에 더해 서류심사대상자 발표일·당첨자 발표일까지(F-11)
+날짜가 있는 것만 그날 한 번씩 리마인드한다. python -m src.jobs.remind
 """
 import argparse
 from datetime import date
@@ -30,7 +29,13 @@ def run(today: date | None = None, dry_run: bool = False) -> dict:
             if match(notice, profile, today=today).verdict == "NO_MATCH":
                 continue
 
-            for kind, target_date in (("start", notice.apply_start), ("end", notice.apply_end)):
+            date_kinds = (
+                ("start", notice.apply_start),
+                ("end", notice.apply_end),
+                ("doc_review", notice.doc_review_date),
+                ("result", notice.result_date),
+            )
+            for kind, target_date in date_kinds:
                 if target_date != today:
                     continue
                 notification_kind = f"reminder_{kind}"
@@ -61,9 +66,9 @@ def main() -> None:
     result = run(dry_run=args.dry_run)
     mode = "[dry-run] " if args.dry_run else ""
     print(f"{mode}리마인드 발송 {len(result['sent'])}건 / 실패 {len(result['failed'])}건")
+    labels = {"start": "접수시작", "end": "마감", "doc_review": "서류심사발표", "result": "당첨자발표"}
     for notice, kind in result["sent"]:
-        label = "접수시작" if kind == "start" else "마감"
-        print(f"  [{label}] [{notice.source}] {notice.title}")
+        print(f"  [{labels[kind]}] [{notice.source}] {notice.title}")
 
 
 if __name__ == "__main__":

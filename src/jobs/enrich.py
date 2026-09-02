@@ -1,5 +1,7 @@
 """NEEDS_REVIEW 후보 중 조건 추출이 안 된 공고만 PDF/상세텍스트를 읽어
-나이·자산·차량가액 조건을 채운다. NO_MATCH는 건드리지 않는다(불필요한 PDF 요청 방지).
+나이 조건과 서류심사·당첨자 발표일(F-11)을 채운다. SH는 collect() 때 이미
+상세텍스트로 발표일을 뽑아두므로 여기선 LH만 새로 PDF를 읽는다.
+NO_MATCH는 건드리지 않는다(불필요한 PDF 요청 방지).
 python -m src.jobs.enrich
 """
 from pathlib import Path
@@ -7,6 +9,7 @@ from pathlib import Path
 from src.enricher.condition_parse import parse_conditions
 from src.enricher.pdf_extract import extract_lh_pdf_text
 from src.matcher import match
+from src.normalizer import parse_review_dates
 from src.profile import load_profile
 from src.store import Store
 
@@ -40,6 +43,12 @@ def run() -> dict:
 
             conditions = parse_conditions(text, source_label)
             store.set_conditions(notice.id, conditions)
+
+            if notice.source == "LH" and notice.doc_review_date is None and notice.result_date is None:
+                doc_review_date, result_date = parse_review_dates(text)
+                if doc_review_date or result_date:
+                    store.set_review_dates(notice.id, doc_review_date, result_date)
+
             enriched.append((notice, conditions))
     finally:
         store.close()

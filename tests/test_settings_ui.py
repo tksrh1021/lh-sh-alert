@@ -138,6 +138,45 @@ def test_calendar_day_shows_matched_notice_on_its_date(running_server):
     assert "접수시작" in resp.text
 
 
+def test_dashboard_shows_matched_notice_sorted_by_soonest_date(running_server):
+    port, tmp_path, _ = running_server
+    store = Store(tmp_path / "notices.db")
+    store.upsert(_make_notice("LH:soon", apply_end=date.today()))
+    store.upsert(_make_notice("LH:later", apply_end=date(2099, 1, 1)))
+    store.close()
+
+    resp = httpx.get(f"http://127.0.0.1:{port}/dashboard")
+    assert resp.status_code == 200
+    soon_pos = resp.text.find("테스트 공고 LH:soon")
+    later_pos = resp.text.find("테스트 공고 LH:later")
+    assert soon_pos != -1 and later_pos != -1 and soon_pos < later_pos
+
+
+def test_dashboard_hides_no_match_by_default_but_shows_with_all_flag(running_server):
+    port, tmp_path, _ = running_server
+    store = Store(tmp_path / "notices.db")
+    store.upsert(_make_notice("LH:bad", housing_type="상가"))  # NO_MATCH
+    store.close()
+
+    resp = httpx.get(f"http://127.0.0.1:{port}/dashboard")
+    assert "테스트 공고 LH:bad" not in resp.text
+
+    resp_all = httpx.get(f"http://127.0.0.1:{port}/dashboard?all=1")
+    assert "테스트 공고 LH:bad" in resp_all.text
+    assert "NO_MATCH" in resp_all.text
+
+
+def test_dashboard_marks_already_sent_notice(running_server):
+    port, tmp_path, _ = running_server
+    store = Store(tmp_path / "notices.db")
+    store.upsert(_make_notice("LH:sent"))
+    store.record_notification("LH:sent", "new", "kakao")
+    store.close()
+
+    resp = httpx.get(f"http://127.0.0.1:{port}/dashboard")
+    assert "발송됨" in resp.text
+
+
 def test_calendar_day_excludes_no_match_notice(running_server):
     port, tmp_path, _ = running_server
     store = Store(tmp_path / "notices.db")

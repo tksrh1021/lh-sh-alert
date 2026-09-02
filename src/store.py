@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS notices (
     posted_at TEXT,
     apply_start TEXT,
     apply_end TEXT,
+    doc_review_date TEXT,
+    result_date TEXT,
     detail_url TEXT,
     pdf_urls TEXT NOT NULL,
     raw TEXT NOT NULL,
@@ -53,6 +55,8 @@ def _row_to_notice(row: sqlite3.Row) -> Notice:
         posted_at=row["posted_at"],
         apply_start=row["apply_start"],
         apply_end=row["apply_end"],
+        doc_review_date=row["doc_review_date"],
+        result_date=row["result_date"],
         detail_url=row["detail_url"],
         pdf_urls=json.loads(row["pdf_urls"]),
         raw=json.loads(row["raw"]),
@@ -70,6 +74,15 @@ class Store:
         self.conn = sqlite3.connect(self.db_path)
         self.conn.row_factory = sqlite3.Row
         self.conn.executescript(SCHEMA)
+        self.conn.commit()
+        self._ensure_columns("notices", {"doc_review_date": "TEXT", "result_date": "TEXT"})
+
+    def _ensure_columns(self, table: str, columns: dict[str, str]) -> None:
+        """이미 배포된 옛날 스키마 DB에 새 컬럼을 뒤늦게 추가한다 (마이그레이션)."""
+        existing = {row[1] for row in self.conn.execute(f"PRAGMA table_info({table})")}
+        for col, coltype in columns.items():
+            if col not in existing:
+                self.conn.execute(f"ALTER TABLE {table} ADD COLUMN {col} {coltype}")
         self.conn.commit()
 
     def close(self) -> None:
@@ -92,6 +105,17 @@ class Store:
     def set_conditions(self, notice_id: str, conditions: dict) -> None:
         self.conn.execute(
             "UPDATE notices SET conditions = ? WHERE id = ?", (_dumps(conditions), notice_id)
+        )
+        self.conn.commit()
+
+    def set_review_dates(self, notice_id: str, doc_review_date: date | None, result_date: date | None) -> None:
+        self.conn.execute(
+            "UPDATE notices SET doc_review_date = ?, result_date = ? WHERE id = ?",
+            (
+                doc_review_date.isoformat() if doc_review_date else None,
+                result_date.isoformat() if result_date else None,
+                notice_id,
+            ),
         )
         self.conn.commit()
 
@@ -128,9 +152,9 @@ class Store:
         self.conn.execute(
             f"""{verb} INTO notices (
                 id, source, source_notice_id, title, housing_type, target_groups,
-                regions, posted_at, apply_start, apply_end, detail_url, pdf_urls,
-                raw, conditions, first_seen_at, updated_at, content_hash
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                regions, posted_at, apply_start, apply_end, doc_review_date, result_date,
+                detail_url, pdf_urls, raw, conditions, first_seen_at, updated_at, content_hash
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 notice.id,
                 notice.source,
@@ -142,6 +166,8 @@ class Store:
                 notice.posted_at.isoformat() if isinstance(notice.posted_at, date) else notice.posted_at,
                 notice.apply_start.isoformat() if isinstance(notice.apply_start, date) else notice.apply_start,
                 notice.apply_end.isoformat() if isinstance(notice.apply_end, date) else notice.apply_end,
+                notice.doc_review_date.isoformat() if isinstance(notice.doc_review_date, date) else notice.doc_review_date,
+                notice.result_date.isoformat() if isinstance(notice.result_date, date) else notice.result_date,
                 notice.detail_url,
                 _dumps(notice.pdf_urls),
                 _dumps(notice.raw),

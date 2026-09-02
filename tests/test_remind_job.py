@@ -5,7 +5,8 @@ from src.models import Notice
 from src.store import Store
 
 
-def make_notice(apply_start=None, apply_end=None, housing_type=None, regions=None) -> Notice:
+def make_notice(apply_start=None, apply_end=None, doc_review_date=None, result_date=None,
+                 housing_type=None, regions=None) -> Notice:
     return Notice(
         id="LH:1",
         source="LH",
@@ -13,6 +14,8 @@ def make_notice(apply_start=None, apply_end=None, housing_type=None, regions=Non
         title="장기전세 테스트 공고",
         apply_start=apply_start,
         apply_end=apply_end,
+        doc_review_date=doc_review_date,
+        result_date=result_date,
         housing_type=housing_type,
         regions=regions or [],
         content_hash="h",
@@ -67,6 +70,27 @@ def test_no_reminder_on_non_matching_day(tmp_path, monkeypatch):
 
     result = remind_job.run(today=today)
     assert result["sent"] == []
+
+
+def test_sends_on_doc_review_and_result_dates(tmp_path, monkeypatch):
+    today = date(2026, 10, 23)
+    db_path = tmp_path / "notices.db"
+    store = Store(db_path)
+    store.upsert(make_notice(doc_review_date=today, result_date=date(2026, 12, 28)))
+    store.close()
+
+    monkeypatch.setattr(remind_job, "DB_PATH", db_path)
+    calls = []
+    monkeypatch.setattr(remind_job, "notify", lambda text, link=None: calls.append(text) or "kakao")
+
+    result = remind_job.run(today=today)
+    assert len(result["sent"]) == 1
+    assert result["sent"][0][1] == "doc_review"
+
+    result2 = remind_job.run(today=date(2026, 12, 28))
+    assert len(result2["sent"]) == 1
+    assert result2["sent"][0][1] == "result"
+    assert len(calls) == 2
 
 
 def test_no_match_notice_is_not_reminded(tmp_path, monkeypatch):

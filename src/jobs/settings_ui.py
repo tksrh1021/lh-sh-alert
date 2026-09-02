@@ -94,8 +94,18 @@ table.cal td a.daylink { color: var(--ink); text-decoration: none; font-weight: 
   display: inline-block; font-size: 11px; font-weight: 700; color: var(--wanted-blue);
   background: #eaf0ff; border-radius: 6px; padding: 2px 8px; margin-right: 6px;
 }
+.notice-item .tag.no-match { color: var(--sub); background: #f0f0f3; }
+.notice-item .tag.match { color: #fff; background: var(--wanted-blue); }
+.notice-item .tag.sent { color: #1a7f37; background: #e6f6ea; }
 .notice-item a { color: var(--ink); font-weight: 700; text-decoration: none; }
+.notice-item .meta { color: var(--sub); font-size: 13px; margin-top: 6px; }
+.notice-item .reasons { color: var(--sub); font-size: 12px; margin-top: 6px; line-height: 1.6; }
 .back-link { display: inline-block; margin-bottom: 16px; color: var(--sub); text-decoration: none; font-size: 14px; }
+.filter-row { display: flex; gap: 8px; margin-bottom: 20px; }
+.filter-row a {
+  text-decoration: none; padding: 8px 14px; border-radius: 999px; font-weight: 700;
+  font-size: 13px; color: var(--wanted-blue); background: #eaf0ff;
+}
 """
 
 
@@ -111,6 +121,7 @@ def _page(title: str, active: str, body: str) -> str:
 <div class="tabs">
   <a href="/" class="{'active' if active == 'settings' else ''}">필터 설정</a>
   <a href="/calendar" class="{'active' if active == 'calendar' else ''}">공고 캘린더</a>
+  <a href="/dashboard" class="{'active' if active == 'dashboard' else ''}">대시보드</a>
 </div>
 {body}
 </div></body></html>"""
@@ -186,7 +197,13 @@ def _notices_by_date() -> dict[date, list[tuple[object, str]]]:
         for notice in store.all():
             if match(notice, profile).verdict == "NO_MATCH":
                 continue
-            for label, d in (("접수시작", notice.apply_start), ("접수마감", notice.apply_end)):
+            date_labels = (
+                ("접수시작", notice.apply_start),
+                ("접수마감", notice.apply_end),
+                ("서류심사발표", notice.doc_review_date),
+                ("당첨자발표", notice.result_date),
+            )
+            for label, d in date_labels:
                 if d:
                     buckets.setdefault(d, []).append((notice, label))
         return buckets
@@ -255,6 +272,71 @@ def _render_day(target_date: date) -> str:
     return _page(f"{target_date.isoformat()} 공고", "calendar", body)
 
 
+def _dashboard_rows(show_all: bool):
+    """F-12 대시보드용 목록. 마감 임박한 순으로 정렬하고, 새 공고 알림이
+    나갔는지(F-10 발송 이력)도 같이 보여준다."""
+    profile = load_profile(_profile_path())
+    store = Store(DB_PATH)
+    today = date.today()
+    try:
+        scored = []
+        for notice in store.all():
+            result = match(notice, profile)
+            if result.verdict == "NO_MATCH" and not show_all:
+                continue
+            upcoming = [d for d in (notice.apply_start, notice.apply_end,
+                                     notice.doc_review_date, notice.result_date) if d and d >= today]
+            sort_key = min(upcoming) if upcoming else date.max
+            sent = store.has_notified(notice.id, "new")
+            scored.append((sort_key, notice, result, sent))
+        scored.sort(key=lambda r: r[0])
+        return [(n, r, s) for _, n, r, s in scored]
+    finally:
+        store.close()
+
+
+def _render_dashboard(show_all: bool) -> str:
+    rows = _dashboard_rows(show_all)
+
+    items = []
+    for notice, result, sent in rows:
+        verdict_cls = "match" if result.verdict == "MATCH" else ("no-match" if result.verdict == "NO_MATCH" else "")
+        link = (
+            f'<a href="{notice.detail_url}" target="_blank">{html.escape(notice.title)}</a>'
+            if notice.detail_url else html.escape(notice.title)
+        )
+        dates = []
+        for label, d in (("접수", notice.apply_start), ("~", notice.apply_end),
+                          ("서류심사", notice.doc_review_date), ("당첨발표", notice.result_date)):
+            if d:
+                dates.append(f"{label} {d.isoformat()}" if label != "~" else f"~ {d.isoformat()}")
+        meta = " · ".join(filter(None, [notice.housing_type, ", ".join(notice.regions), " ".join(dates)]))
+        reasons = "<br>".join(html.escape(r) for r in result.reasons) if result.reasons else ""
+
+        items.append(f"""
+<div class="notice-item">
+  <span class="tag {verdict_cls}">{result.verdict}</span>
+  <span class="tag">{notice.source}</span>
+  {f'<span class="tag sent">발송됨</span>' if sent else ''}
+  {link}
+  <div class="meta">{html.escape(meta)}</div>
+  {f'<div class="reasons">{reasons}</div>' if reasons else ''}
+</div>""")
+
+    list_html = "\n".join(items) if items else '<p class="sub">표시할 공고가 없습니다.</p>'
+    toggle_href = "/dashboard" if show_all else "/dashboard?all=1"
+    toggle_label = "관심 공고만 보기" if show_all else "부적합 포함 전체 보기"
+
+    body = f"""
+<div class="card">
+  <h2>공고 대시보드</h2>
+  <p class="sub">마감이 가까운 순으로 정렬됩니다</p>
+  <div class="filter-row"><a href="{toggle_href}">{toggle_label}</a></div>
+  {list_html}
+</div>"""
+    return _page("공공임대 알림 봇 - 대시보드", "dashboard", body)
+
+
 class Handler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
@@ -268,6 +350,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
         elif parsed.path == "/calendar/day":
             target = date.fromisoformat(query["date"][0])
             self._respond(_render_day(target))
+        elif parsed.path == "/dashboard":
+            show_all = query.get("all", ["0"])[0] == "1"
+            self._respond(_render_dashboard(show_all))
         else:
             self._respond(_render_form(_load_current()))
 

@@ -1,6 +1,13 @@
 from datetime import date
 
-from src.normalizer import clean_title, guess_housing_type, normalize_lh, normalize_sh, parse_schedule_dates
+from src.normalizer import (
+    clean_title,
+    guess_housing_type,
+    normalize_lh,
+    normalize_sh,
+    parse_review_dates,
+    parse_schedule_dates,
+)
 
 
 def test_clean_title_strips_new_prefix_and_day_badge():
@@ -100,6 +107,45 @@ def test_parse_schedule_dates_from_real_fixture_supply_schedule_style():
     start, end = parse_schedule_dates(text)
     assert start == date(2026, 9, 28)
     assert end == date(2026, 9, 30)
+
+
+def test_parse_review_dates_finds_doc_review_and_result():
+    text = "○ 서류심사대상자 발표 : 2026. 10. 23.(금) 17:00 예정\n○ 당첨자 및 예비자 발표 : 2026. 12. 28.(월) 17:00 예정"
+    doc_review, result = parse_review_dates(text)
+    assert doc_review == date(2026, 10, 23)
+    assert result == date(2026, 12, 28)
+
+
+def test_parse_review_dates_handles_no_space_before_colon():
+    text = "서류심사대상자 발표: 2026. 10. 14.(수) 16:00 이후"
+    doc_review, result = parse_review_dates(text)
+    assert doc_review == date(2026, 10, 14)
+    assert result is None
+
+
+def test_parse_review_dates_from_real_fixture():
+    from pathlib import Path
+
+    from bs4 import BeautifulSoup
+
+    html = (Path(__file__).parent / "fixtures" / "sh_detail_schedule_style.html").read_text(encoding="utf-8")
+    text = BeautifulSoup(html, "lxml").get_text("\n", strip=True)
+    doc_review, result = parse_review_dates(text)
+    assert doc_review == date(2026, 10, 14)
+    assert result == date(2027, 3, 5)
+
+
+def test_normalize_sh_fills_review_dates():
+    row = {
+        "seq": "309467",
+        "title": "제51차 장기전세주택 입주자 모집공고",
+        "posted_at": "2026-09-02",
+        "detail_url": "https://www.i-sh.co.kr/app/.../view.do?seq=309467&multi_itm_seq=2",
+        "detail_text": "서류심사대상자 발표 : 2026. 10. 23.(금)\n당첨자 발표 : 2026. 12. 28.(월)",
+    }
+    notice = normalize_sh(row)
+    assert notice.doc_review_date == date(2026, 10, 23)
+    assert notice.result_date == date(2026, 12, 28)
 
 
 def test_same_input_produces_same_hash_different_input_differs():

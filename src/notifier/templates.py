@@ -26,16 +26,25 @@ def build_notification(notice: Notice, result: MatchResult) -> tuple[str, str | 
     return "\n".join(lines), notice.detail_url
 
 
+_REMINDER_HEADERS = {
+    "start": "🚀 오늘부터 접수 시작!",
+    "end": "⏰ 오늘 접수 마감!",
+    "doc_review": "📄 오늘 서류심사대상자 발표일!",
+    "result": "🎉 오늘 당첨자 발표일!",
+}
+
+
 def build_reminder(notice: Notice, kind: str) -> tuple[str, str | None]:
-    if kind == "start":
-        header = "🚀 오늘부터 접수 시작!"
-    else:
-        header = "⏰ 오늘 접수 마감!"
+    header = _REMINDER_HEADERS.get(kind, "⏰ 알림")
     lines = [header, "", f"[{notice.source}] {notice.title}"]
     if notice.apply_start:
         lines.append(f"· 접수 시작: {notice.apply_start.isoformat()}")
     if notice.apply_end:
         lines.append(f"· 접수 마감: {notice.apply_end.isoformat()}")
+    if notice.doc_review_date:
+        lines.append(f"· 서류심사 발표: {notice.doc_review_date.isoformat()}")
+    if notice.result_date:
+        lines.append(f"· 당첨자 발표: {notice.result_date.isoformat()}")
     return "\n".join(lines), notice.detail_url
 
 
