@@ -1,12 +1,17 @@
-"""로컬에서 여는 필터 설정 화면. profile.yaml을 만들어주고, 저장하면
-GitHub Actions가 볼 수 있도록 GitHub Secret(PROFILE_YAML)까지 자동으로 갱신한다.
+"""로컬에서 여는 필터 설정 + 공고 캘린더 화면.
+
+설정 화면에서 profile.yaml을 만들고 GitHub Secret(PROFILE_YAML)까지 자동 갱신한다.
+캘린더 화면은 data/notices.db에 이미 모여있는 공고를 접수시작/마감일 기준으로
+달력에 표시해서, LH 검색페이지(apply.lh.or.kr)처럼 날짜를 눌러 그날 공고를 본다.
 
 실행: python -m src.jobs.settings_ui
 """
+import calendar
 import html
 import http.server
 import urllib.parse
 import webbrowser
+from datetime import date
 from pathlib import Path
 
 import yaml
@@ -14,11 +19,101 @@ from pydantic import ValidationError
 
 from src.config import HOUSING_TYPE_KEYWORDS, REGIONS, TARGET_GROUP_KEYWORDS
 from src.github_secrets import GithubSecretError, set_secret
-from src.profile import Profile
+from src.matcher import match
+from src.profile import Profile, load_profile
+from src.store import Store
 
 PORT = 8766
 PROFILE_PATH = Path("profile.yaml")
 EXAMPLE_PATH = Path("profile.example.yaml")
+DB_PATH = "data/notices.db"
+
+_BASE_CSS = """
+:root {
+  --wanted-blue: #3552e4; --wanted-blue-dark: #2a41b8;
+  --ink: #17171c; --sub: #6c6c75; --line: #e8e8ee; --bg: #f4f5f9;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: "Wanted Sans", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  background: var(--bg); color: var(--ink); margin: 0; padding: 0 16px;
+}
+.wrap { max-width: 640px; margin: 0 auto; padding: 32px 0 60px; }
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.tabs a {
+  text-decoration: none; padding: 10px 18px; border-radius: 999px; font-weight: 700;
+  font-size: 14px; color: var(--sub); background: #fff; border: 1.5px solid var(--line);
+}
+.tabs a.active { background: var(--wanted-blue); color: #fff; border-color: var(--wanted-blue); }
+.card { background: #fff; border-radius: 20px; padding: 32px 28px; box-shadow: 0 4px 24px rgba(23,23,28,.06); }
+h2 { font-size: 22px; font-weight: 800; margin: 0 0 4px; }
+.sub { color: var(--sub); font-size: 14px; margin-bottom: 24px; }
+label.field-label { display: block; margin-top: 24px; font-weight: 700; font-size: 14px; }
+input[type=date], input[type=time] {
+  width: 100%; padding: 12px 14px; margin-top: 8px; border: 1.5px solid var(--line);
+  border-radius: 10px; font-size: 15px; font-family: inherit; color: var(--ink);
+}
+input:focus { outline: none; border-color: var(--wanted-blue); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.chip { cursor: pointer; }
+.chip input { display: none; }
+.chip span {
+  display: inline-block; padding: 9px 16px; border-radius: 999px; border: 1.5px solid var(--line);
+  font-size: 14px; font-weight: 600; color: var(--sub); transition: all .12s ease;
+}
+.chip input:checked + span { background: var(--wanted-blue); border-color: var(--wanted-blue); color: #fff; }
+.time-row { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+.time-row span { color: var(--sub); }
+small.hint { display: block; color: var(--sub); font-size: 12px; margin-top: 6px; }
+button {
+  width: 100%; margin-top: 32px; padding: 14px; font-size: 16px; font-weight: 800;
+  color: #fff; background: var(--wanted-blue); border: none; border-radius: 12px;
+  cursor: pointer; font-family: inherit;
+}
+button:hover { background: var(--wanted-blue-dark); }
+.msg { padding: 14px 16px; margin-bottom: 20px; border-radius: 10px; font-size: 14px; font-weight: 600; }
+.ok { background: #eaf0ff; color: var(--wanted-blue-dark); }
+.err { background: #fdecec; color: #c62828; }
+table.cal { width: 100%; border-collapse: collapse; margin-top: 8px; }
+table.cal th { padding: 8px 0; font-size: 12px; color: var(--sub); font-weight: 700; }
+table.cal td {
+  height: 68px; vertical-align: top; border: 1px solid var(--line); padding: 6px;
+  font-size: 13px; color: var(--sub); position: relative;
+}
+table.cal td.other-month { color: #d5d5db; }
+table.cal td a.daylink { color: var(--ink); text-decoration: none; font-weight: 700; }
+.dot {
+  display: block; margin-top: 4px; font-size: 11px; font-weight: 700; color: #fff;
+  background: var(--wanted-blue); border-radius: 6px; padding: 2px 6px; text-align: center;
+}
+.cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.cal-nav a { color: var(--wanted-blue); text-decoration: none; font-weight: 700; }
+.notice-item { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.notice-item:last-child { border-bottom: none; }
+.notice-item .tag {
+  display: inline-block; font-size: 11px; font-weight: 700; color: var(--wanted-blue);
+  background: #eaf0ff; border-radius: 6px; padding: 2px 8px; margin-right: 6px;
+}
+.notice-item a { color: var(--ink); font-weight: 700; text-decoration: none; }
+.back-link { display: inline-block; margin-bottom: 16px; color: var(--sub); text-decoration: none; font-size: 14px; }
+"""
+
+
+def _page(title: str, active: str, body: str) -> str:
+    return f"""<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{html.escape(title)}</title>
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/webfonts/wanted-sans-cdn.css">
+<style>{_BASE_CSS}</style></head>
+<body><div class="wrap">
+<div class="tabs">
+  <a href="/" class="{'active' if active == 'settings' else ''}">필터 설정</a>
+  <a href="/calendar" class="{'active' if active == 'calendar' else ''}">공고 캘린더</a>
+</div>
+{body}
+</div></body></html>"""
 
 
 def _load_current() -> dict:
@@ -40,74 +135,13 @@ def _chips(field_name: str, options: list[str], selected: list[str]) -> str:
 
 def _render_form(data: dict, message: str = "") -> str:
     personal = data.get("personal", {})
-    assets = data.get("assets", {})
     interests = data.get("interests", {})
     notify = data.get("notify", {})
 
     quiet_hours = notify.get("quiet_hours") or "23:00-08:00"
     quiet_start, quiet_end = (quiet_hours.split("-") + ["", ""])[:2]
 
-    return f"""<!doctype html>
-<html lang="ko"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>공공임대 알림 봇 - 필터 설정</title>
-<link rel="stylesheet" as="style" crossorigin
-  href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/webfonts/wanted-sans-cdn.css">
-<style>
-:root {{
-  --wanted-blue: #3552e4;
-  --wanted-blue-dark: #2a41b8;
-  --ink: #17171c;
-  --sub: #6c6c75;
-  --line: #e8e8ee;
-  --bg: #f4f5f9;
-}}
-* {{ box-sizing: border-box; }}
-body {{
-  font-family: "Wanted Sans", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-  background: var(--bg); color: var(--ink);
-  max-width: 560px; margin: 48px auto; padding: 0 16px;
-}}
-.card {{
-  background: #fff; border-radius: 20px; padding: 32px 28px;
-  box-shadow: 0 4px 24px rgba(23, 23, 28, 0.06);
-}}
-h2 {{ font-size: 22px; font-weight: 800; margin: 0 0 4px; }}
-.sub {{ color: var(--sub); font-size: 14px; margin-bottom: 24px; }}
-label.field-label {{ display: block; margin-top: 24px; font-weight: 700; font-size: 14px; }}
-input[type=date], input[type=number], input[type=time] {{
-  width: 100%; padding: 12px 14px; margin-top: 8px; box-sizing: border-box;
-  border: 1.5px solid var(--line); border-radius: 10px; font-size: 15px;
-  font-family: inherit; color: var(--ink);
-}}
-input[type=date]:focus, input[type=number]:focus, input[type=time]:focus {{
-  outline: none; border-color: var(--wanted-blue);
-}}
-.chips {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }}
-.chip {{ cursor: pointer; }}
-.chip input {{ display: none; }}
-.chip span {{
-  display: inline-block; padding: 9px 16px; border-radius: 999px;
-  border: 1.5px solid var(--line); font-size: 14px; font-weight: 600;
-  color: var(--sub); transition: all .12s ease;
-}}
-.chip input:checked + span {{
-  background: var(--wanted-blue); border-color: var(--wanted-blue); color: #fff;
-}}
-.time-row {{ display: flex; gap: 10px; align-items: center; margin-top: 8px; }}
-.time-row span {{ color: var(--sub); }}
-small.hint {{ display: block; color: var(--sub); font-size: 12px; margin-top: 6px; }}
-button {{
-  width: 100%; margin-top: 32px; padding: 14px; font-size: 16px; font-weight: 800;
-  color: #fff; background: var(--wanted-blue); border: none; border-radius: 12px;
-  cursor: pointer; font-family: inherit;
-}}
-button:hover {{ background: var(--wanted-blue-dark); }}
-.msg {{ padding: 14px 16px; margin-bottom: 20px; border-radius: 10px; font-size: 14px; font-weight: 600; }}
-.ok {{ background: #eaf0ff; color: var(--wanted-blue-dark); }}
-.err {{ background: #fdecec; color: #c62828; }}
-</style></head>
-<body>
+    body = f"""
 <div class="card">
   <h2>내 조건 설정</h2>
   <p class="sub">여기서 정한 조건에 맞는 공고만 카카오톡으로 옵니다</p>
@@ -115,12 +149,6 @@ button:hover {{ background: var(--wanted-blue-dark); }}
   <form method="post" action="/save">
     <label class="field-label">생년월일</label>
     <input type="date" name="birth_date" value="{personal.get('birth_date', '')}" required>
-
-    <label class="field-label">총자산 (원)</label>
-    <input type="number" name="total_asset_krw" value="{assets.get('total_asset_krw', 0)}">
-
-    <label class="field-label">차량가액 (원)</label>
-    <input type="number" name="car_value_krw" value="{assets.get('car_value_krw', 0)}">
 
     <label class="field-label">관심 주택 유형</label>
     <div class="chips">{_chips("housing_types", HOUSING_TYPE_KEYWORDS, interests.get('housing_types', []))}</div>
@@ -142,13 +170,106 @@ button:hover {{ background: var(--wanted-blue-dark); }}
 
     <button type="submit">저장하고 GitHub에 반영</button>
   </form>
-</div>
-</body></html>"""
+</div>"""
+    return _page("공공임대 알림 봇 - 필터 설정", "settings", body)
+
+
+def _profile_path() -> str:
+    return str(PROFILE_PATH) if PROFILE_PATH.exists() else str(EXAMPLE_PATH)
+
+
+def _notices_by_date() -> dict[date, list[tuple[object, str]]]:
+    profile = load_profile(_profile_path())
+    store = Store(DB_PATH)
+    try:
+        buckets: dict[date, list[tuple[object, str]]] = {}
+        for notice in store.all():
+            if match(notice, profile).verdict == "NO_MATCH":
+                continue
+            for label, d in (("접수시작", notice.apply_start), ("접수마감", notice.apply_end)):
+                if d:
+                    buckets.setdefault(d, []).append((notice, label))
+        return buckets
+    finally:
+        store.close()
+
+
+def _render_calendar(year: int, month: int) -> str:
+    buckets = _notices_by_date()
+    cal = calendar.Calendar(firstweekday=6)  # 일요일 시작
+    weeks = cal.monthdatescalendar(year, month)
+
+    prev_year, prev_month = (year - 1, 12) if month == 1 else (year, month - 1)
+    next_year, next_month = (year + 1, 1) if month == 12 else (year, month + 1)
+
+    rows = []
+    for week in weeks:
+        cells = []
+        for day in week:
+            cls = "other-month" if day.month != month else ""
+            count = len(buckets.get(day, []))
+            badge = f'<a class="dot" href="/calendar/day?date={day.isoformat()}">{count}건</a>' if count else ""
+            cells.append(
+                f'<td class="{cls}"><a class="daylink" href="/calendar/day?date={day.isoformat()}">{day.day}</a>{badge}</td>'
+            )
+        rows.append(f"<tr>{''.join(cells)}</tr>")
+
+    body = f"""
+<div class="card">
+  <div class="cal-nav">
+    <a href="/calendar?year={prev_year}&month={prev_month}">‹ 이전달</a>
+    <h2>{year}년 {month}월</h2>
+    <a href="/calendar?year={next_year}&month={next_month}">다음달 ›</a>
+  </div>
+  <p class="sub">내 조건에 맞는 공고의 접수시작/마감일이 표시됩니다</p>
+  <table class="cal">
+    <tr><th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th></tr>
+    {''.join(rows)}
+  </table>
+</div>"""
+    return _page("공공임대 알림 봇 - 공고 캘린더", "calendar", body)
+
+
+def _render_day(target_date: date) -> str:
+    buckets = _notices_by_date()
+    items = buckets.get(target_date, [])
+
+    if items:
+        rows = []
+        for notice, label in items:
+            link = f'<a href="{notice.detail_url}" target="_blank">{html.escape(notice.title)}</a>' if notice.detail_url else html.escape(notice.title)
+            rows.append(
+                f'<div class="notice-item"><span class="tag">{label}</span>'
+                f'<span class="tag">{notice.source}</span> {link}</div>'
+            )
+        list_html = "\n".join(rows)
+    else:
+        list_html = '<p class="sub">이 날짜엔 해당하는 공고가 없습니다.</p>'
+
+    body = f"""
+<div class="card">
+  <a class="back-link" href="/calendar">‹ 캘린더로 돌아가기</a>
+  <h2>{target_date.isoformat()}</h2>
+  {list_html}
+</div>"""
+    return _page(f"{target_date.isoformat()} 공고", "calendar", body)
 
 
 class Handler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
-        self._respond(_render_form(_load_current()))
+        parsed = urllib.parse.urlparse(self.path)
+        query = urllib.parse.parse_qs(parsed.query)
+
+        if parsed.path == "/calendar":
+            today = date.today()
+            year = int(query.get("year", [today.year])[0])
+            month = int(query.get("month", [today.month])[0])
+            self._respond(_render_calendar(year, month))
+        elif parsed.path == "/calendar/day":
+            target = date.fromisoformat(query["date"][0])
+            self._respond(_render_day(target))
+        else:
+            self._respond(_render_form(_load_current()))
 
     def do_POST(self):
         length = int(self.headers.get("Content-Length", 0))
@@ -161,10 +282,6 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         data = {
             "personal": {"birth_date": form.get("birth_date", [""])[0]},
-            "assets": {
-                "total_asset_krw": int(form.get("total_asset_krw", ["0"])[0] or 0),
-                "car_value_krw": int(form.get("car_value_krw", ["0"])[0] or 0),
-            },
             "interests": {
                 "housing_types": form.get("housing_types", []),
                 "target_groups": form.get("target_groups", []),

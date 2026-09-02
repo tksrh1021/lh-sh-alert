@@ -11,10 +11,13 @@ LH_FILE_DOWNLOAD_URL = "https://apply.lh.or.kr/lhapply/lhFile.do"
 SH_LIST_URL = "https://www.i-sh.co.kr/app/lay2/program/S48T1581C563/www/brd/m_247/list.do?multi_itm_seq=2"
 SH_DETAIL_URL = "https://www.i-sh.co.kr/app/lay2/program/S48T1581C563/www/brd/m_247/view.do"
 
-# 제목에서 주택 유형을 유추할 때 쓰는 키워드 (SH는 목록에 유형 컬럼이 없어서 필요)
+# 제목에서 주택 유형을 유추할 때 쓰는 키워드. LH 검색페이지(apply.lh.or.kr/lhapply/apply/sc/list.do)
+# 실측으로 확인한 공식 임대주택 세부유형 13종 + SH 자체 유형(청년안심주택 등) 추가.
 HOUSING_TYPE_KEYWORDS = [
-    "행복주택", "국민임대", "영구임대", "장기전세", "매입임대",
-    "전세임대", "청년안심주택", "신혼부부", "청년매입임대", "도시형생활주택",
+    "통합공공임대", "국민임대", "공공임대", "영구임대", "행복주택(신혼희망)", "행복주택",
+    "장기전세", "신축다세대매입임대", "가정어린이집", "매입임대", "전세임대",
+    "집주인임대", "6년 공공임대주택", "청년안심주택", "청년매입임대", "청년전세임대",
+    "도시형생활주택",
 ]
 
 # 제목에서 대상 계층을 유추할 때 쓰는 키워드. LH/SH 목록 어디에도 컬럼으로
