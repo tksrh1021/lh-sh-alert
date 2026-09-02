@@ -22,6 +22,16 @@ jobs:
 
       - run: pip install -r requirements.txt
 
+      - name: 프로필 복원 (설정 UI에서 저장한 필터)
+        env:
+          PROFILE_YAML: ${{ secrets.PROFILE_YAML }}
+        run: |
+          if [ -n "$PROFILE_YAML" ]; then
+            echo "$PROFILE_YAML" > profile.yaml
+          else
+            echo "PROFILE_YAML 시크릿이 아직 없음 — profile.example.yaml 기본값 사용"
+          fi
+
       - name: 공고 수집
         run: python -m src.jobs.collect
         env:

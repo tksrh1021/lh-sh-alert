@@ -28,7 +28,14 @@ Python 3.11+ / httpx / BeautifulSoup4 / pdfplumber / pydantic / SQLite / pytest
 - 작업 후 반드시 `pytest`를 실행하고 결과를 보고한다.
 
 ## 현재 Phase
-배포 완료 + Phase 4(나이·자산 조건 자동 추출, 규칙 기반) 완료. GitHub Actions 실제 실행 성공 확인(collect→enrich→notify→DB 커밋). pytest 57개 통과.
+배포 완료 + Phase 4(나이·자산 조건 자동 추출) + 설정 UI 완료. pytest 65개 통과.
+
+## 설정 UI + 프로필 배포 구조 (중요)
+- **버그였던 것**: `profile.yaml`은 민감정보라 `.gitignore`에 있었는데, 그러면 GitHub Actions가 이 파일을 절대 못 본다. 그래서 배포 이후 지금까지 실제로는 `profile.example.yaml`(예시값)로만 판정이 돌아갔었다 — 실제 프로필은 만들어진 적도 없었음.
+- **해결**: `python -m src.jobs.settings_ui` — 로컬 웹폼(stdlib http.server, Flask 없음)에서 나이/자산/관심유형/관심지역/조용한시간을 입력하면 (1) 로컬 `profile.yaml` 저장 (2) GitHub Actions Secret `PROFILE_YAML`에 통째로 암호화해서(`src/github_secrets.py`, PyNaCl sealed box) 업로드까지 자동으로 한다.
+- Actions 쪽은 `collect.yml`/`remind.yml` 맨 앞에 "프로필 복원" 스텝을 추가해 `echo "$PROFILE_YAML" > profile.yaml`로 시크릿을 파일로 복원한 뒤 기존 로직 그대로 실행. 시크릿이 아직 없으면 빈 파일을 만들지 않고 `profile.example.yaml`로 자연스럽게 폴백.
+- 이 UI를 쓰려면 `.env`에 `GITHUB_PAT`(리포의 Secrets 쓰기 권한 필요)와 `GITHUB_REPO`("계정명/저장소명")가 있어야 함.
+- **프로필 스키마도 같이 정리함**: 소득/세대/청약통장/거주지 등 매처가 실제로 안 쓰는 필드를 전부 뺐다. 지금 Profile은 `personal.birth_date`, `assets.total_asset_krw/car_value_krw`, `interests.housing_types/target_groups/regions`, `notify.quiet_hours`뿐 — UI 폼도 이 6개만 물어본다.
 
 ## Phase 4 확정 사항 (사용자 결정)
 - **소득은 자동판단 대상에서 제외**: 공고마다 표(가구원수x대상계층x순위) 표현이 제각각이고 숫자 밀집도가 높아 규칙 기반으로 안전하게 못 뽑는다고 판단. `data/income_standards.yaml`도 더 이상 채울 계획 없음(비워둔 채 유지).

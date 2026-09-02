@@ -1,4 +1,9 @@
-"""설계서 5.3절 profile.yaml 로더. pydantic으로 필수 필드/타입을 강제한다."""
+"""설계서 5.3절 profile.yaml 로더. pydantic으로 필수 필드/타입을 강제한다.
+
+매처가 실제로 쓰는 필드만 남겼다(나이/자산/차량가액/관심유형/관심지역/조용한시간).
+소득·세대·청약통장 등은 자동판단에 안 쓰기로 했으니 여기서도 뺐다 — 안 쓰는
+입력을 UI에서 받는 건 사용자에게 혼란만 준다.
+"""
 from __future__ import annotations
 
 from datetime import date
@@ -10,57 +15,28 @@ from pydantic import BaseModel
 
 class Personal(BaseModel):
     birth_date: date
-    marital_status: str
-    household_size: int
-    is_homeowner: bool
-
-
-class Income(BaseModel):
-    monthly_gross_krw: int
-    basis: str
-    employment_status: str
-    work_start_date: date
 
 
 class Assets(BaseModel):
-    total_asset_krw: int
-    car_value_krw: int
-
-
-class Location(BaseModel):
-    residence: str
-    residence_since: date
-    workplace: str
-    preferred_districts: list[str] = []
-
-
-class Subscription(BaseModel):
-    has_housing_account: bool
-    opened_at: date
-    deposit_count: int
+    total_asset_krw: int = 0
+    car_value_krw: int = 0
 
 
 class Interests(BaseModel):
     housing_types: list[str] = []
     target_groups: list[str] = []
-    regions: list[str] = []  # 보고 싶은 시/도. 거주지·근무지와 별개로 명시 설정
-    max_deposit_krw: int | None = None
-    max_monthly_rent_krw: int | None = None
+    regions: list[str] = []  # 보고 싶은 시/도만 적으면 그 지역 공고만 본다
 
 
 class Notify(BaseModel):
-    channels: list[str] = []
-    quiet_hours: str | None = None
+    quiet_hours: str | None = None  # "23:00-08:00" 형식, 이 시간엔 발송을 다음날 아침으로 미룸
 
 
 class Profile(BaseModel):
     personal: Personal
-    income: Income
-    assets: Assets
-    location: Location
-    subscription: Subscription
-    interests: Interests
-    notify: Notify
+    assets: Assets = Assets()
+    interests: Interests = Interests()
+    notify: Notify = Notify()
 
 
 def load_profile(path: str | Path) -> Profile:
