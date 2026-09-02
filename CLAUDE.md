@@ -35,7 +35,9 @@ Python 3.11+ / httpx / BeautifulSoup4 / pdfplumber / pydantic / SQLite / pytest
 카톡 발송 불가, 알림톡은 사업자등록+과금 필요), (3) 웹 배포(지금의 로컬 UI로는 부족).
 
 ## 현재 Phase
-배포 완료 + Phase 4(나이·자산 조건 자동 추출) + 설정 UI 완료. pytest 65개 통과.
+배포 완료 + Phase 4 + 설정 UI + F-11(발표일 리마인드) + F-12(대시보드) 완료. pytest 79개 통과.
+남은 건 F-10을 더 다듬는 것(지금은 대시보드에 "발송됨" 표시만 있음, 상세 이력 목록은 없음)과
+Phase 5의 타 지방공사(GH/iH) 확장, 다중 사용자(둘 다 사용자가 명시적으로 요청 전엔 착수 금지).
 
 ## 설정 UI + 프로필 배포 구조 (중요)
 - **버그였던 것**: `profile.yaml`은 민감정보라 `.gitignore`에 있었는데, 그러면 GitHub Actions가 이 파일을 절대 못 본다. 그래서 배포 이후 지금까지 실제로는 `profile.example.yaml`(예시값)로만 판정이 돌아갔었다 — 실제 프로필은 만들어진 적도 없었음.
