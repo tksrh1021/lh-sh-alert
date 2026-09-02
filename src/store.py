@@ -96,6 +96,11 @@ class Store:
         rows = self.conn.execute("SELECT * FROM notices ORDER BY source, id").fetchall()
         return [_row_to_notice(r) for r in rows]
 
+    def delete(self, notice_id: str) -> None:
+        self.conn.execute("DELETE FROM notices WHERE id = ?", (notice_id,))
+        self.conn.execute("DELETE FROM notifications WHERE notice_id = ?", (notice_id,))
+        self.conn.commit()
+
     def has_notified(self, notice_id: str, kind: str) -> bool:
         row = self.conn.execute(
             "SELECT 1 FROM notifications WHERE notice_id = ? AND kind = ?", (notice_id, kind)

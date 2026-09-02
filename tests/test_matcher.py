@@ -42,6 +42,25 @@ def test_real_recruitment_title_is_not_excluded_by_result_filter():
     assert result.verdict != "NO_MATCH" or "안내성" not in result.reasons[0]
 
 
+def test_stale_notice_with_unknown_deadline_is_no_match():
+    notice = make_notice(apply_end=None, posted_at=date(2025, 12, 1))  # 31일+ 전
+    result = match(notice, PROFILE, today=date(2026, 1, 1))
+    assert result.verdict == "NO_MATCH"
+    assert "마감됐을 가능성" in result.reasons[0]
+
+
+def test_recent_notice_with_unknown_deadline_stays_needs_review():
+    notice = make_notice(apply_end=None, posted_at=date(2025, 12, 20))  # 12일 전
+    result = match(notice, PROFILE, today=date(2026, 1, 1))
+    assert result.verdict == "NEEDS_REVIEW"
+
+
+def test_sangsi_mojib_exempt_from_staleness_check():
+    notice = make_notice(apply_end=None, posted_at=date(2025, 1, 1), title="상시모집 청년안심주택")
+    result = match(notice, PROFILE, today=date(2026, 1, 1))
+    assert result.verdict != "NO_MATCH"
+
+
 def test_wrong_housing_type_is_no_match():
     notice = make_notice(housing_type="상가")
     result = match(notice, PROFILE, today=date(2026, 1, 1))

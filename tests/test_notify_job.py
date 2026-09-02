@@ -67,3 +67,44 @@ def test_over_daily_cap_sends_one_summary(tmp_path, monkeypatch):
     result = notify_job.run()
     assert len(calls) == 1  # 요약 메시지 1건만
     assert len(result["sent"]) == notify_job.DAILY_CAP + 1  # 전부 발송 처리(중복 방지용)
+
+
+def test_lead_days_is_three_normally():
+    # 2026-01-19(월)이 시작일이면 그 전 3일(16,17,18)은 금/토/일 -> 주말 포함 -> 5일
+    assert notify_job._lead_days(date(2026, 1, 19)) == 5
+    # 2026-01-15(목)이 시작일이면 그 전 3일(12,13,14)은 월/화/수 -> 주말 없음 -> 3일
+    assert notify_job._lead_days(date(2026, 1, 15)) == 3
+
+
+def test_ready_to_notify_unknown_start_is_always_ready():
+    notice = make_notice(0)
+    assert notify_job._ready_to_notify(notice, date(2026, 1, 1)) is True
+
+
+def test_ready_to_notify_far_future_start_is_not_ready():
+    notice = make_notice(0)
+    notice.apply_start = date(2026, 1, 20)  # 오늘로부터 19일 후
+    assert notify_job._ready_to_notify(notice, date(2026, 1, 1)) is False
+
+
+def test_ready_to_notify_within_lead_days_is_ready():
+    notice = make_notice(0)
+    notice.apply_start = date(2026, 1, 3)  # 2일 후, 평일이면 lead=3이라 통과
+    assert notify_job._ready_to_notify(notice, date(2026, 1, 1)) is True
+
+
+def test_run_holds_back_notice_whose_start_is_far_away(tmp_path, monkeypatch):
+    db_path = tmp_path / "notices.db"
+    store = Store(db_path)
+    notice = make_notice(0)
+    notice.apply_start = date(2026, 2, 1)  # 오늘(1/1)로부터 한참 뒤
+    store.upsert(notice)
+    store.close()
+
+    monkeypatch.setattr(notify_job, "DB_PATH", db_path)
+    monkeypatch.setattr(notify_job, "is_quiet_now", lambda quiet_hours: False)
+    monkeypatch.setattr(notify_job, "notify", lambda text, link=None: (_ for _ in ()).throw(AssertionError("호출되면 안 됨")))
+
+    result = notify_job.run(today=date(2026, 1, 1))
+    assert result["sent"] == []
+    assert len(result["skipped_not_ready"]) == 1

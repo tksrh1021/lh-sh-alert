@@ -18,6 +18,10 @@ from src.profile import Profile
 
 Verdict = Literal["MATCH", "NEEDS_REVIEW", "NO_MATCH"]
 
+# LH/SH 접수기간은 보통 며칠~2주라, 게시 후 이만큼 지나도록 마감일을 못 뽑았으면
+# 십중팔구 이미 마감됐다고 본다. "상시모집"은 예외(계속 열려있는 프로그램).
+STALE_UNKNOWN_DEADLINE_DAYS = 30
+
 
 class MatchResult(BaseModel):
     notice_id: str
@@ -70,6 +74,15 @@ def match(notice: Notice, profile: Profile, today: date | None = None) -> MatchR
             reasons=[f"접수 마감됨: {notice.apply_end.isoformat()}"],
         )
     if notice.apply_end is None:
+        stale_days = _days_since_posted(notice.posted_at, today)
+        if stale_days is not None and stale_days > STALE_UNKNOWN_DEADLINE_DAYS and "상시모집" not in notice.title:
+            # 마감일을 못 뽑았어도 게시된 지 한참 지났으면(LH/SH 접수기간은 보통
+            # 며칠~2주) 이미 마감됐을 가능성이 훨씬 높다. "상시모집"류만 예외.
+            return MatchResult(
+                notice_id=notice.id,
+                verdict="NO_MATCH",
+                reasons=[f"게시된 지 {stale_days}일 지났고 마감일 미확인 — 이미 마감됐을 가능성 높음"],
+            )
         reasons.append("접수 마감일 미확인 — 공고문에서 직접 확인 필요")
 
     if notice.target_groups and not (set(notice.target_groups) & set(profile.interests.target_groups)):
@@ -98,6 +111,12 @@ def match(notice: Notice, profile: Profile, today: date | None = None) -> MatchR
     reasons.append(_conditions_summary(notice.conditions))
     reasons.append("소득 조건은 자동판단 대상이 아님 — 공고문에서 직접 확인 필요")
     return MatchResult(notice_id=notice.id, verdict="MATCH", reasons=reasons)
+
+
+def _days_since_posted(posted_at: date | None, today: date) -> int | None:
+    if posted_at is None:
+        return None
+    return (today - posted_at).days
 
 
 def _applicant_age(birth_date: date, today: date) -> int:

@@ -34,6 +34,14 @@ Python 3.11+ / httpx / BeautifulSoup4 / pdfplumber / pydantic / SQLite / pytest
 방식, (2) 사용자별 카카오 로그인/토큰(각자 "나에게 보내기" 인증 필요 — 번호만으론
 카톡 발송 불가, 알림톡은 사업자등록+과금 필요), (3) 웹 배포(지금의 로컬 UI로는 부족).
 
+## 알림 타이밍/정리 규칙 (사용자 요청, 2026-09-03)
+- 카카오 "text" 템플릿은 link가 없으면 API가 거부함(버그로 실제 발견) — `src/notifier/kakao.py`의 FALLBACK_LINK로 항상 채움. LH는 detail_url이 항상 None이라 이게 없으면 LH 알림이 전부 조용히 실패했었음.
+- 당첨자발표/서류심사결과 등 "안내성" 공고는 신청할 게 없으니 애초에 NO_MATCH 처리(`config.RESULT_ANNOUNCEMENT_KEYWORDS`).
+- 마감일을 못 뽑았어도 게시 후 30일(`matcher.STALE_UNKNOWN_DEADLINE_DAYS`) 넘었으면 이미 마감됐다고 보고 NO_MATCH ("상시모집" 제외).
+- 접수 시작일이 아직 많이 남았으면(3일 이상, 주말 끼면 5일) "새 공고" 알림을 바로 안 보내고 시작일 임박할 때까지 보류(`src/jobs/notify.py`의 `_ready_to_notify`) — verdict 자체는 그대로 두고 발송 타이밍만 늦춤.
+- `src/jobs/cleanup.py`: apply_end가 확실히 지난(모르는 건 안 건드림) 공고는 DB에서 아예 삭제. remind.yml에서 remind 실행 직후(당일 마감 리마인드 다 나간 뒤) 매일 실행.
+- SH 크롤러는 게시판 2페이지까지 봄(`sh_crawler.LIST_PAGES`) — 1페이지만 보면 하루에 글 많은 날 놓칠 수 있음. `SHCrawler().collect(pages=N)`으로 필요시 더 깊이(백필) 가능.
+
 ## 현재 Phase
 배포 완료 + Phase 4 + 설정 UI + F-11(발표일 리마인드) + F-12(대시보드) 완료. pytest 79개 통과.
 남은 건 F-10을 더 다듬는 것(지금은 대시보드에 "발송됨" 표시만 있음, 상세 이력 목록은 없음)과

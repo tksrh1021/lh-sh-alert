@@ -18,17 +18,18 @@ LIST_PAGES = 2  # 1페이지(~10건)만 보면 하루에 글이 많이 올라오
 
 
 class SHCrawler:
-    def collect(self) -> list[dict]:
+    def collect(self, pages: int | None = None) -> list[dict]:
+        pages = pages or LIST_PAGES
         rows = []
         seen_seqs = set()
-        for page in range(1, LIST_PAGES + 1):
+        for page in range(1, pages + 1):
             html = self._fetch_list(page)
             for row in self._parse_rows(html):
                 if row["seq"] in seen_seqs:  # 페이지 사이에 새 글이 끼어들어 중복 노출되는 경우 방지
                     continue
                 seen_seqs.add(row["seq"])
                 rows.append(row)
-            if page < LIST_PAGES:
+            if page < pages:
                 time.sleep(REQUEST_DELAY_SECONDS)
 
         for row in rows:
