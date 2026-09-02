@@ -7,6 +7,10 @@ from src.env import load_env, save_env
 
 TOKEN_URL = "https://kauth.kakao.com/oauth/token"
 SEND_URL = "https://kapi.kakao.com/v2/api/talk/memo/default/send"
+# 카카오 "text" 템플릿은 link가 필수 필드라 없으면 통째로 거부된다(code -2).
+# LH 공고는 NetFunnel 때문에 detail_url이 항상 None이라 이 기본값이 없으면
+# LH 관련 알림은 전부 조용히 실패한다 — 실제로 겪은 버그.
+FALLBACK_LINK = "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancList.do?mi=1026"
 
 
 class KakaoSendError(Exception):
@@ -39,9 +43,8 @@ def send_kakao(text: str, link_url: str | None = None) -> None:
     env = load_env()
     access_token = _refresh_access_token(env)
 
-    template = {"object_type": "text", "text": text}
-    if link_url:
-        template["link"] = {"web_url": link_url, "mobile_web_url": link_url}
+    link = link_url or FALLBACK_LINK
+    template = {"object_type": "text", "text": text, "link": {"web_url": link, "mobile_web_url": link}}
 
     resp = httpx.post(
         SEND_URL,

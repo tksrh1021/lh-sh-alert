@@ -1,3 +1,5 @@
+import json
+
 import httpx
 import pytest
 
@@ -30,6 +32,31 @@ def test_send_kakao_success(monkeypatch):
 
     kakao.send_kakao("테스트 메시지")
     assert calls == [kakao.TOKEN_URL, kakao.SEND_URL]
+
+
+def test_send_kakao_without_link_still_includes_fallback_link(monkeypatch):
+    """카카오 'text' 템플릿은 link가 없으면 API가 통째로 거부한다(실제로 겪은 버그).
+    LH 공고는 detail_url이 항상 None이라 이 케이스가 실전에서 항상 발생함."""
+    monkeypatch.setattr(kakao, "load_env", lambda: {
+        "KAKAO_REST_API_KEY": "key", "KAKAO_REFRESH_TOKEN": "refresh",
+    })
+    monkeypatch.setattr(kakao, "save_env", lambda updates: None)
+
+    sent_payload = {}
+
+    def fake_post(url, **kwargs):
+        if url == kakao.TOKEN_URL:
+            return FakeResponse({"access_token": "abc"})
+        sent_payload.update(kwargs.get("data", {}))
+        return FakeResponse({"result_code": 0})
+
+    monkeypatch.setattr(httpx, "post", fake_post)
+
+    kakao.send_kakao("테스트 메시지", link_url=None)
+
+    template = json.loads(sent_payload["template_object"])
+    assert "link" in template
+    assert template["link"]["web_url"] == kakao.FALLBACK_LINK
 
 
 def test_missing_credentials_raises(monkeypatch):
