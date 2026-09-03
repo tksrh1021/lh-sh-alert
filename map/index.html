@@ -382,8 +382,15 @@ fetch("data/happy2026-2.json")
     updateAreaUi();
 
     // --- 단지 마커 + 목록 ---
+    const markerImage = new kakao.maps.MarkerImage(
+      "marker.svg",
+      new kakao.maps.Size(30, 40),
+      { offset: new kakao.maps.Point(15, 40) } // 핀 끝이 좌표를 가리키도록
+    );
     const entries = complexes.map(c => {
-      const marker = new kakao.maps.Marker({ map, position: new kakao.maps.LatLng(c.lat, c.lng), title: c.name });
+      const marker = new kakao.maps.Marker({
+        map, position: new kakao.maps.LatLng(c.lat, c.lng), title: c.name, image: markerImage,
+      });
       kakao.maps.event.addListener(marker, "click", () => { selectListing(c.name); openDetail(c); });
 
       const typeChips = [...new Set(c.units.map(u => u.type + "㎡"))]
