@@ -20,7 +20,13 @@
 
   .layout { display: grid; grid-template-columns: 380px 1fr; height: 100%; }
   @media (max-width: 820px) {
-    .layout { grid-template-columns: 1fr; grid-template-rows: 50vh 1fr; }
+    .layout { grid-template-columns: 1fr; grid-template-rows: 45vh 1fr; }
+    #map { order: 1; }
+    #sidebar { order: 2; border-right: none; border-top: 1px solid var(--line); }
+    /* 좁은 화면에서는 헤더+필터가 목록 스크롤 공간을 다 잡아먹으므로
+       데스크톱처럼 목록만 따로 스크롤시키지 않고 전체를 하나로 스크롤 */
+    #sidebar-list { display: block; overflow-y: auto; }
+    #listing-rows { flex: none; overflow-y: visible; }
   }
 
   #sidebar { position: relative; overflow: hidden; background: var(--surface); border-right: 1px solid var(--line); }
