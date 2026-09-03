@@ -29,6 +29,9 @@
     #sidebar { order: 2; overflow: visible; border-right: none; border-top: 1px solid var(--line); }
     #sidebar-list { display: block; height: auto; overflow: visible; }
     #listing-rows { flex: none; overflow: visible; }
+    /* #sidebar가 목록 길이만큼 늘어나므로, 상세 패널을 #sidebar 기준(inset:0)이 아니라
+       화면 기준(position:fixed)으로 고정해야 목록 길이만큼 같이 늘어나는 걸 막을 수 있음 */
+    #sidebar-detail { position: fixed; inset: 0; z-index: 30; }
   }
 
   #sidebar { position: relative; overflow: hidden; background: var(--surface); border-right: 1px solid var(--line); }
