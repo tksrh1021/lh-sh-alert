@@ -139,12 +139,15 @@
 
   /* 모바일 오버라이드: 스타일시트 맨 끝에 둬야 위 규칙들(동일 우선순위)을
      실제로 덮어씀 — 앞쪽에 있으면 나중에 나온 기본 규칙이 그냥 다시 이김.
-     지도는 항상 보이고, 페이지 자체는 스크롤 안 되고, 사이드바 안 목록만
-     자체 스크롤(데스크톱과 동일한 구조를 세로로 뒤집은 것뿐) */
+     지도는 항상 보이고, 페이지 자체는 스크롤 안 됨(그리드 높이 고정).
+     단, 헤더+필터가 사이드바 절반보다 커서 목록이 눌려 안 보였으므로
+     헤더를 고정하지 않고 목록과 함께 사이드바 안에서 통째로 스크롤되게 함 */
   @media (max-width: 820px) {
     .layout { grid-template-columns: 1fr; grid-template-rows: 45vh 1fr; }
     #map { order: 1; }
     #sidebar { order: 2; border-right: none; border-top: 1px solid var(--line); }
+    #sidebar-list { display: block; overflow-y: auto; }
+    #listing-rows { flex: none; overflow-y: visible; }
   }
 </style>
 </head>
