@@ -20,13 +20,15 @@
 
   .layout { display: grid; grid-template-columns: 380px 1fr; height: 100%; }
   @media (max-width: 820px) {
-    .layout { grid-template-columns: 1fr; grid-template-rows: 45vh 1fr; }
-    #map { order: 1; }
-    #sidebar { order: 2; border-right: none; border-top: 1px solid var(--line); }
-    /* 좁은 화면에서는 헤더+필터가 목록 스크롤 공간을 다 잡아먹으므로
-       데스크톱처럼 목록만 따로 스크롤시키지 않고 전체를 하나로 스크롤 */
-    #sidebar-list { display: block; overflow-y: auto; }
-    #listing-rows { flex: none; overflow-y: visible; }
+    /* 내부 요소에 스크롤을 가두는 대신 페이지 자체가 늘어나 스크롤되도록 함
+       (중첩 스크롤 컨테이너는 실제 폰에서 터치 스크롤이 먹통이 되는 경우가 있음) */
+    html, body { height: auto; min-height: 100%; }
+    body { overflow-x: hidden; }
+    .layout { display: flex; flex-direction: column; height: auto; min-height: 100%; }
+    #map { order: 1; height: 45vh; flex-shrink: 0; }
+    #sidebar { order: 2; overflow: visible; border-right: none; border-top: 1px solid var(--line); }
+    #sidebar-list { display: block; height: auto; overflow: visible; }
+    #listing-rows { flex: none; overflow: visible; }
   }
 
   #sidebar { position: relative; overflow: hidden; background: var(--surface); border-right: 1px solid var(--line); }
@@ -327,9 +329,9 @@ fetch("data/happy2026-2.json")
     const GROUP_TABS = [
       { label: "전체", match: () => true },
       { label: "고령자", match: g => g === "고령자" },
-      { label: "대학생", match: g => g === "대학생" },
       { label: "신혼부부", match: g => g === "신혼부부" },
-      { label: "그 외", match: g => g === "청년" || g === "주거급여수급자" },
+      { label: "청년", match: g => g === "청년" },
+      { label: "그 외", match: g => g === "대학생" || g === "주거급여수급자" },
     ];
     const groupSeg = document.getElementById("group-segmented");
     let activeGroupMatch = GROUP_TABS[0].match;
