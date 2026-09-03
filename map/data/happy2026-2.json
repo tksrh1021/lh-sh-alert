@@ -1,0 +1,3827 @@
+[
+  {
+    "name": "두산위브더프레스티지(개봉동 199-4)",
+    "kind": "신규",
+    "owner": "서울특별시",
+    "address": "서울특별시 구로구 개봉동 199-4",
+    "heating": "개별난방",
+    "gu": "구로구",
+    "units": [
+      {
+        "type": "40",
+        "group": "신혼부부",
+        "households": {
+          "total": 68,
+          "priority": 34,
+          "general": 34,
+          "waitlist": null
+        },
+        "area": {
+          "private": "40.76",
+          "sharedRes": "18.28",
+          "sharedOther": "30.48",
+          "total": "89.53"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 109600,
+              "rent": 421000
+            },
+            "convertUp": {
+              "deposit": 151700,
+              "rent": 210500
+            },
+            "convertDown": {
+              "deposit": 54800,
+              "rent": 535100
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.4938085430205,
+    "lng": 126.859764990955
+  },
+  {
+    "name": "창경궁롯데캐슬시그니처(삼선5)_서울리츠2호",
+    "kind": "신규",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 성북구 삼선동2가 296",
+    "heating": "개별난방",
+    "gu": "성북구",
+    "units": [
+      {
+        "type": "39",
+        "group": "청년",
+        "households": {
+          "total": 30,
+          "priority": 15,
+          "general": 15,
+          "waitlist": null
+        },
+        "area": {
+          "private": "39.39",
+          "sharedRes": "18.00",
+          "sharedOther": "35.51",
+          "total": "92.90"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 120960,
+              "rent": 463000
+            },
+            "convertUp": {
+              "deposit": 139480,
+              "rent": 370400
+            },
+            "convertDown": {
+              "deposit": 96760,
+              "rent": 513400
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 114240,
+              "rent": 437000
+            },
+            "convertUp": {
+              "deposit": 131720,
+              "rent": 349600
+            },
+            "convertDown": {
+              "deposit": 91390,
+              "rent": 484600
+            }
+          }
+        ]
+      },
+      {
+        "type": "39",
+        "group": "신혼부부",
+        "households": {
+          "total": 24,
+          "priority": 12,
+          "general": 12,
+          "waitlist": null
+        },
+        "area": {
+          "private": "39.39",
+          "sharedRes": "18.00",
+          "sharedOther": "35.51",
+          "total": "92.90"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 134400,
+              "rent": 514000
+            },
+            "convertUp": {
+              "deposit": 154960,
+              "rent": 411200
+            },
+            "convertDown": {
+              "deposit": 107520,
+              "rent": 570000
+            }
+          }
+        ]
+      },
+      {
+        "type": "39",
+        "group": "고령자",
+        "households": {
+          "total": 32,
+          "priority": 16,
+          "general": 16,
+          "waitlist": null
+        },
+        "area": {
+          "private": "39.39",
+          "sharedRes": "18.00",
+          "sharedOther": "35.51",
+          "total": "92.90"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 127680,
+              "rent": 489000
+            },
+            "convertUp": {
+              "deposit": 147240,
+              "rent": 391200
+            },
+            "convertDown": {
+              "deposit": 102140,
+              "rent": 542200
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5841200944964,
+    "lng": 127.010295931361
+  },
+  {
+    "name": "디에이치 아너힐즈",
+    "kind": "재공급",
+    "owner": "서울특별시",
+    "address": "서울특별시 강남구 삼성로 11 (개포동, 디에이치아너힐즈)",
+    "heating": "개별난방",
+    "gu": "강남구",
+    "units": [
+      {
+        "type": "49",
+        "group": "신혼부부",
+        "households": {
+          "total": 23,
+          "priority": 2,
+          "general": 3,
+          "waitlist": 18
+        },
+        "area": {
+          "private": "49.40",
+          "sharedRes": "18.14",
+          "sharedOther": "41.92",
+          "total": "109.46"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 181600,
+              "rent": 726000
+            },
+            "convertUp": {
+              "deposit": 254200,
+              "rent": 363000
+            },
+            "convertDown": {
+              "deposit": 90800,
+              "rent": 915100
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.4844402093504,
+    "lng": 127.067960222798
+  },
+  {
+    "name": "강동리엔파크11단지",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 강동구 고덕로98길 101 (상일동, 강동리엔파크11단지)",
+    "heating": "지역난방",
+    "gu": "강동구",
+    "units": [
+      {
+        "type": "29",
+        "group": "청년",
+        "households": {
+          "total": 6,
+          "priority": 0,
+          "general": 0,
+          "waitlist": 6
+        },
+        "area": {
+          "private": "29.99",
+          "sharedRes": "22.29",
+          "sharedOther": "31.93",
+          "total": "84.21"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 84960,
+              "rent": 340000
+            },
+            "convertUp": {
+              "deposit": 118960,
+              "rent": 170000
+            },
+            "convertDown": {
+              "deposit": 42480,
+              "rent": 428500
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 80240,
+              "rent": 321000
+            },
+            "convertUp": {
+              "deposit": 112340,
+              "rent": 160500
+            },
+            "convertDown": {
+              "deposit": 40120,
+              "rent": 404500
+            }
+          }
+        ]
+      },
+      {
+        "type": "29S",
+        "group": "고령자",
+        "households": {
+          "total": 27,
+          "priority": 4,
+          "general": 5,
+          "waitlist": 18
+        },
+        "area": {
+          "private": "29.98",
+          "sharedRes": "21.85",
+          "sharedOther": "31.92",
+          "total": "83.75"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 89680,
+              "rent": 359000
+            },
+            "convertUp": {
+              "deposit": 125580,
+              "rent": 179500
+            },
+            "convertDown": {
+              "deposit": 44840,
+              "rent": 452400
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5542532314164,
+    "lng": 127.180622739676
+  },
+  {
+    "name": "강동리엔파크14단지",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 강동구 고덕로98길 160 (상일동, 강동리엔파크14단지)",
+    "heating": "지역난방",
+    "gu": "강동구",
+    "units": [
+      {
+        "type": "36",
+        "group": "청년",
+        "households": {
+          "total": 12,
+          "priority": 1,
+          "general": 2,
+          "waitlist": 9
+        },
+        "area": {
+          "private": "36.87",
+          "sharedRes": "16.90",
+          "sharedOther": "31.76",
+          "total": "85.53"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 104400,
+              "rent": 418000
+            },
+            "convertUp": {
+              "deposit": 146200,
+              "rent": 209000
+            },
+            "convertDown": {
+              "deposit": 52200,
+              "rent": 526700
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 98600,
+              "rent": 394000
+            },
+            "convertUp": {
+              "deposit": 138000,
+              "rent": 197000
+            },
+            "convertDown": {
+              "deposit": 49300,
+              "rent": 496700
+            }
+          }
+        ]
+      },
+      {
+        "type": "29S",
+        "group": "고령자",
+        "households": {
+          "total": 26,
+          "priority": 4,
+          "general": 5,
+          "waitlist": 17
+        },
+        "area": {
+          "private": "29.84",
+          "sharedRes": "13.96",
+          "sharedOther": "25.71",
+          "total": "69.51"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 88920,
+              "rent": 356000
+            },
+            "convertUp": {
+              "deposit": 124520,
+              "rent": 178000
+            },
+            "convertDown": {
+              "deposit": 44460,
+              "rent": 448600
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5510900437112,
+    "lng": 127.180837138837
+  },
+  {
+    "name": "고덕 그라시움",
+    "kind": "재공급",
+    "owner": "서울특별시",
+    "address": "서울특별시 강동구 고덕로 333 (고덕동, 고덕그라시움)",
+    "heating": "지역난방",
+    "gu": "강동구",
+    "units": [
+      {
+        "type": "59",
+        "group": "신혼부부",
+        "households": {
+          "total": 7,
+          "priority": 0,
+          "general": 0,
+          "waitlist": 7
+        },
+        "area": {
+          "private": "59.79",
+          "sharedRes": "22.76",
+          "sharedOther": "50.05",
+          "total": "132.60"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 162400,
+              "rent": 648000
+            },
+            "convertUp": {
+              "deposit": 227200,
+              "rent": 324000
+            },
+            "convertDown": {
+              "deposit": 81200,
+              "rent": 817100
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5561770852501,
+    "lng": 127.159176546352
+  },
+  {
+    "name": "롯데캐슬베네루체",
+    "kind": "재공급",
+    "owner": "서울특별시",
+    "address": "서울특별시 강동구 상암로79길 88 (상일동, 고덕 롯데캐슬 베네루체)",
+    "heating": "지역난방",
+    "gu": "강동구",
+    "units": [
+      {
+        "type": "59",
+        "group": "신혼부부",
+        "households": {
+          "total": 4,
+          "priority": 0,
+          "general": 0,
+          "waitlist": 4
+        },
+        "area": {
+          "private": "59.98",
+          "sharedRes": "24.66",
+          "sharedOther": "50.86",
+          "total": "135.50"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 156800,
+              "rent": 626000
+            },
+            "convertUp": {
+              "deposit": 219400,
+              "rent": 313000
+            },
+            "convertDown": {
+              "deposit": 78400,
+              "rent": 789300
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5502047175329,
+    "lng": 127.166059233388
+  },
+  {
+    "name": "고덕온빛채",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 강동구 아리수로 385 (고덕동, 고덕 온빛채)",
+    "heating": "지열시스템",
+    "gu": "강동구",
+    "units": [
+      {
+        "type": "36",
+        "group": "청년",
+        "households": {
+          "total": 21,
+          "priority": 3,
+          "general": 4,
+          "waitlist": 14
+        },
+        "area": {
+          "private": "36.62",
+          "sharedRes": "17.50",
+          "sharedOther": "33.26",
+          "total": "87.38"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 105840,
+              "rent": 423000
+            },
+            "convertUp": {
+              "deposit": 148140,
+              "rent": 211500
+            },
+            "convertDown": {
+              "deposit": 52920,
+              "rent": 533200
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 99960,
+              "rent": 400000
+            },
+            "convertUp": {
+              "deposit": 139960,
+              "rent": 200000
+            },
+            "convertDown": {
+              "deposit": 49980,
+              "rent": 504100
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5627588805491,
+    "lng": 127.170832006262
+  },
+  {
+    "name": "푸르내(서울리츠1호)",
+    "kind": "재공급",
+    "owner": "서울리츠1호",
+    "address": "서울특별시 강동구 상일로12길 95",
+    "heating": "개별난방",
+    "gu": "강동구",
+    "units": [
+      {
+        "type": "28S",
+        "group": "고령자",
+        "households": {
+          "total": 5,
+          "priority": 1,
+          "general": 1,
+          "waitlist": 3
+        },
+        "area": {
+          "private": "28.01",
+          "sharedRes": "16.09",
+          "sharedOther": "15.81",
+          "total": "59.91"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 84460,
+              "rent": 274000
+            },
+            "convertUp": {
+              "deposit": 95420,
+              "rent": 219200
+            },
+            "convertDown": {
+              "deposit": 67560,
+              "rent": 309100
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5567817688097,
+    "lng": 127.172316461002
+  },
+  {
+    "name": "꿈의숲 효성해링턴플레이스",
+    "kind": "재공급",
+    "owner": "서울특별시",
+    "address": "서울특별시 강북구 오현로 45 (미아동, 꿈의숲 해링턴 플레이스)",
+    "heating": "개별난방",
+    "gu": "강북구",
+    "units": [
+      {
+        "type": "46",
+        "group": "신혼부부",
+        "households": {
+          "total": 5,
+          "priority": 0,
+          "general": 0,
+          "waitlist": 5
+        },
+        "area": {
+          "private": "46.68",
+          "sharedRes": "15.69",
+          "sharedOther": "35.95",
+          "total": "98.32"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 96000,
+              "rent": 406000
+            },
+            "convertUp": {
+              "deposit": 136600,
+              "rent": 203000
+            },
+            "convertDown": {
+              "deposit": 48000,
+              "rent": 506000
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.6169370292441,
+    "lng": 127.034610388171
+  },
+  {
+    "name": "꿈의숲 롯데캐슬(미아4)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 강북구 오현로 56 (미아동, 꿈의숲 롯데캐슬)",
+    "heating": "개별난방",
+    "gu": "강북구",
+    "units": [
+      {
+        "type": "39",
+        "group": "신혼부부",
+        "households": {
+          "total": 6,
+          "priority": 0,
+          "general": 0,
+          "waitlist": 6
+        },
+        "area": {
+          "private": "39.74",
+          "sharedRes": "17.10",
+          "sharedOther": "28.75",
+          "total": "85.59"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 128330,
+              "rent": 502000
+            },
+            "convertUp": {
+              "deposit": 148410,
+              "rent": 401600
+            },
+            "convertDown": {
+              "deposit": 102660,
+              "rent": 555400
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.6184115650264,
+    "lng": 127.036475927918
+  },
+  {
+    "name": "가양동 1457-1 모듈러 행복주택",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 강서구 강서로 515 (가양동, 라이품)",
+    "heating": "개별난방",
+    "gu": "강서구",
+    "units": [
+      {
+        "type": "16",
+        "group": "청년",
+        "households": {
+          "total": 13,
+          "priority": 2,
+          "general": 3,
+          "waitlist": 8
+        },
+        "area": {
+          "private": "16.05",
+          "sharedRes": "16.16",
+          "sharedOther": "1.30",
+          "total": "33.51"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 37440,
+              "rent": 162000
+            },
+            "convertUp": {
+              "deposit": 53640,
+              "rent": 81000
+            },
+            "convertDown": {
+              "deposit": 18720,
+              "rent": 201000
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 35360,
+              "rent": 153000
+            },
+            "convertUp": {
+              "deposit": 50660,
+              "rent": 76500
+            },
+            "convertDown": {
+              "deposit": 17680,
+              "rent": 189800
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5717096728286,
+    "lng": 126.841669722752
+  },
+  {
+    "name": "e편한세상 염창",
+    "kind": "재공급",
+    "owner": "서울특별시",
+    "address": "서울특별시 강서구 공항대로 583 (염창동, e편한세상)",
+    "heating": "개별난방",
+    "gu": "강서구",
+    "units": [
+      {
+        "type": "51",
+        "group": "신혼부부",
+        "households": {
+          "total": 18,
+          "priority": 4,
+          "general": 4,
+          "waitlist": 10
+        },
+        "area": {
+          "private": "51.75",
+          "sharedRes": "19.27",
+          "sharedOther": "34.29",
+          "total": "105.31"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 141600,
+              "rent": 518000
+            },
+            "convertUp": {
+              "deposit": 193400,
+              "rent": 259000
+            },
+            "convertDown": {
+              "deposit": 70800,
+              "rent": 665500
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5485922640411,
+    "lng": 126.870242587286
+  },
+  {
+    "name": "방화스카이포레",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 강서구 개화동로21길 22 (방화동, 방화 스카이 포레)",
+    "heating": "개별난방",
+    "gu": "강서구",
+    "units": [
+      {
+        "type": "29",
+        "group": "청년",
+        "households": {
+          "total": 12,
+          "priority": 2,
+          "general": 2,
+          "waitlist": 8
+        },
+        "area": {
+          "private": "29.09",
+          "sharedRes": "20.39",
+          "sharedOther": "7.63",
+          "total": "57.11"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 72720,
+              "rent": 266000
+            },
+            "convertUp": {
+              "deposit": 99320,
+              "rent": 133000
+            },
+            "convertDown": {
+              "deposit": 36360,
+              "rent": 341700
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 68680,
+              "rent": 252000
+            },
+            "convertUp": {
+              "deposit": 93880,
+              "rent": 126000
+            },
+            "convertDown": {
+              "deposit": 34340,
+              "rent": 323500
+            }
+          }
+        ]
+      },
+      {
+        "type": "44",
+        "group": "신혼부부",
+        "households": {
+          "total": 28,
+          "priority": 2,
+          "general": 3,
+          "waitlist": 23
+        },
+        "area": {
+          "private": "44.03",
+          "sharedRes": "24.47",
+          "sharedOther": "11.55",
+          "total": "80.05"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 122400,
+              "rent": 449000
+            },
+            "convertUp": {
+              "deposit": 167300,
+              "rent": 224500
+            },
+            "convertDown": {
+              "deposit": 61200,
+              "rent": 576500
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5716657071428,
+    "lng": 126.805113619325
+  },
+  {
+    "name": "e편한세상서울대입구(봉천12-2)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 관악구 참숯5길 7",
+    "heating": "개별난방",
+    "gu": "관악구",
+    "units": [
+      {
+        "type": "30",
+        "group": "대학생",
+        "households": {
+          "total": 8,
+          "priority": 0,
+          "general": 1,
+          "waitlist": 7
+        },
+        "area": {
+          "private": "30.11",
+          "sharedRes": "13.41",
+          "sharedOther": "24.51",
+          "total": "68.04"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 102680,
+              "rent": 372000
+            },
+            "convertUp": {
+              "deposit": 117560,
+              "rent": 297600
+            },
+            "convertDown": {
+              "deposit": 82140,
+              "rent": 414700
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.4773564837839,
+    "lng": 126.940755420806
+  },
+  {
+    "name": "e편한세상 서울대입구2차(봉천12-1)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 관악구 참숯1길 19 (봉천동, e편한세상서울대입구 2차)",
+    "heating": "개별난방",
+    "gu": "관악구",
+    "units": [
+      {
+        "type": "39",
+        "group": "신혼부부",
+        "households": {
+          "total": 10,
+          "priority": 1,
+          "general": 2,
+          "waitlist": 7
+        },
+        "area": {
+          "private": "39.79",
+          "sharedRes": "19.00",
+          "sharedOther": "28.74",
+          "total": "87.53"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 154800,
+              "rent": 574000
+            },
+            "convertUp": {
+              "deposit": 177760,
+              "rent": 459200
+            },
+            "convertDown": {
+              "deposit": 123840,
+              "rent": 638500
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.477304218918,
+    "lng": 126.94238244228
+  },
+  {
+    "name": "건대프라하임3차(화양동 94-9)",
+    "kind": "재공급",
+    "owner": "서울특별시",
+    "address": "서울특별시 광진구 능동로 165-1 (화양동)",
+    "heating": "개별난방",
+    "gu": "광진구",
+    "units": [
+      {
+        "type": "22",
+        "group": "대학생",
+        "households": {
+          "total": 5,
+          "priority": 0,
+          "general": 0,
+          "waitlist": 5
+        },
+        "area": {
+          "private": "22.72",
+          "sharedRes": "7.14",
+          "sharedOther": "0.98",
+          "total": "30.84"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 63920,
+              "rent": 233000
+            },
+            "convertUp": {
+              "deposit": 87220,
+              "rent": 116500
+            },
+            "convertDown": {
+              "deposit": 31960,
+              "rent": 299500
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.545614940243,
+    "lng": 127.07293392526
+  },
+  {
+    "name": "어울채(서울리츠1호)",
+    "kind": "재공급",
+    "owner": "서울리츠1호",
+    "address": "서울특별시 광진구 아차산로58길 58 (자양동, 어울채)",
+    "heating": "개별난방",
+    "gu": "광진구",
+    "units": [
+      {
+        "type": "39",
+        "group": "신혼부부",
+        "households": {
+          "total": 12,
+          "priority": 1,
+          "general": 1,
+          "waitlist": 10
+        },
+        "area": {
+          "private": "39.02",
+          "sharedRes": "20.94",
+          "sharedOther": "33.37",
+          "total": "93.33"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 136400,
+              "rent": 500000
+            },
+            "convertUp": {
+              "deposit": 156400,
+              "rent": 400000
+            },
+            "convertDown": {
+              "deposit": 109120,
+              "rent": 556800
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5350543583171,
+    "lng": 127.089160380811
+  },
+  {
+    "name": "천왕연지마을 1",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 구로구 오류로 36-13 (천왕동, 천왕연지마을1단지)",
+    "heating": "개별난방",
+    "gu": "구로구",
+    "units": [
+      {
+        "type": "32S",
+        "group": "고령자",
+        "households": {
+          "total": 6,
+          "priority": 0,
+          "general": 0,
+          "waitlist": 6
+        },
+        "area": {
+          "private": "32.64",
+          "sharedRes": "18.70",
+          "sharedOther": "22.03",
+          "total": "73.37"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 53200,
+              "rent": 226000
+            },
+            "convertUp": {
+              "deposit": 75800,
+              "rent": 113000
+            },
+            "convertDown": {
+              "deposit": 26600,
+              "rent": 281400
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.4881667239892,
+    "lng": 126.84126231209
+  },
+  {
+    "name": "천왕연지마을 2",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 구로구 오리로 1102-13(천왕동,천왕연지마을2단지)",
+    "heating": "개별난방",
+    "gu": "구로구",
+    "units": [
+      {
+        "type": "40",
+        "group": "신혼부부",
+        "households": {
+          "total": 16,
+          "priority": 2,
+          "general": 3,
+          "waitlist": 11
+        },
+        "area": {
+          "private": "40.10",
+          "sharedRes": "20.09",
+          "sharedOther": "38.86",
+          "total": "99.05"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 69600,
+              "rent": 296000
+            },
+            "convertUp": {
+              "deposit": 99200,
+              "rent": 148000
+            },
+            "convertDown": {
+              "deposit": 34800,
+              "rent": 368500
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.4847535592833,
+    "lng": 126.842429822378
+  },
+  {
+    "name": "천왕이펜하우스8단지(천왕지구 8단지)",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 구로구 금오로 882 (천왕동, 천왕이펜하우스8단지)",
+    "heating": "개별난방",
+    "gu": "구로구",
+    "units": [
+      {
+        "type": "36",
+        "group": "청년",
+        "households": {
+          "total": 32,
+          "priority": 5,
+          "general": 6,
+          "waitlist": 21
+        },
+        "area": {
+          "private": "36.87",
+          "sharedRes": "23.23",
+          "sharedOther": "19.28",
+          "total": "79.38"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 65520,
+              "rent": 246000
+            },
+            "convertUp": {
+              "deposit": 90120,
+              "rent": 123000
+            },
+            "convertDown": {
+              "deposit": 32760,
+              "rent": 314200
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 61880,
+              "rent": 232000
+            },
+            "convertUp": {
+              "deposit": 85080,
+              "rent": 116000
+            },
+            "convertDown": {
+              "deposit": 30940,
+              "rent": 296400
+            }
+          }
+        ]
+      },
+      {
+        "type": "29S",
+        "group": "고령자",
+        "households": {
+          "total": 12,
+          "priority": 2,
+          "general": 2,
+          "waitlist": 8
+        },
+        "area": {
+          "private": "29.38",
+          "sharedRes": "18.51",
+          "sharedOther": "15.36",
+          "total": "63.25"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 55480,
+              "rent": 208000
+            },
+            "convertUp": {
+              "deposit": 76280,
+              "rent": 104000
+            },
+            "convertDown": {
+              "deposit": 27740,
+              "rent": 265700
+            }
+          }
+        ]
+      },
+      {
+        "type": "45",
+        "group": "신혼부부",
+        "households": {
+          "total": 31,
+          "priority": 6,
+          "general": 6,
+          "waitlist": 19
+        },
+        "area": {
+          "private": "45.77",
+          "sharedRes": "28.84",
+          "sharedOther": "23.93",
+          "total": "98.54"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 90400,
+              "rent": 339000
+            },
+            "convertUp": {
+              "deposit": 124300,
+              "rent": 169500
+            },
+            "convertDown": {
+              "deposit": 45200,
+              "rent": 433100
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.4760030858366,
+    "lng": 126.842316036524
+  },
+  {
+    "name": "항동 하버라인 지구(행복주택)",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 구로구 항동로 68 (항동, 하버라인 9단지)",
+    "heating": "지역난방",
+    "gu": "구로구",
+    "units": [
+      {
+        "type": "29S",
+        "group": "고령자",
+        "households": {
+          "total": 14,
+          "priority": 2,
+          "general": 2,
+          "waitlist": 10
+        },
+        "area": {
+          "private": "29.69",
+          "sharedRes": "17.50",
+          "sharedOther": "23.93",
+          "total": "71.12"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 60800,
+              "rent": 228000
+            },
+            "convertUp": {
+              "deposit": 83600,
+              "rent": 114000
+            },
+            "convertDown": {
+              "deposit": 30400,
+              "rent": 291300
+            }
+          }
+        ]
+      },
+      {
+        "type": "39S",
+        "group": "고령자",
+        "households": {
+          "total": 9,
+          "priority": 0,
+          "general": 0,
+          "waitlist": 9
+        },
+        "area": {
+          "private": "39.69",
+          "sharedRes": "22.59",
+          "sharedOther": "36.38",
+          "total": "98.66"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 81320,
+              "rent": 305000
+            },
+            "convertUp": {
+              "deposit": 111820,
+              "rent": 152500
+            },
+            "convertDown": {
+              "deposit": 40660,
+              "rent": 389700
+            }
+          }
+        ]
+      },
+      {
+        "type": "29",
+        "group": "청년",
+        "households": {
+          "total": 118,
+          "priority": 12,
+          "general": 13,
+          "waitlist": 93
+        },
+        "area": {
+          "private": "29.69",
+          "sharedRes": "17.50",
+          "sharedOther": "23.93",
+          "total": "71.12"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 57600,
+              "rent": 216000
+            },
+            "convertUp": {
+              "deposit": 79200,
+              "rent": 108000
+            },
+            "convertDown": {
+              "deposit": 28800,
+              "rent": 276000
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 54400,
+              "rent": 204000
+            },
+            "convertUp": {
+              "deposit": 74800,
+              "rent": 102000
+            },
+            "convertDown": {
+              "deposit": 27200,
+              "rent": 260600
+            }
+          }
+        ]
+      },
+      {
+        "type": "39",
+        "group": "신혼부부",
+        "households": {
+          "total": 103,
+          "priority": 14,
+          "general": 15,
+          "waitlist": 74
+        },
+        "area": {
+          "private": "39.69",
+          "sharedRes": "22.77",
+          "sharedOther": "32.04",
+          "total": "94.50"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 85600,
+              "rent": 321000
+            },
+            "convertUp": {
+              "deposit": 117700,
+              "rent": 160500
+            },
+            "convertDown": {
+              "deposit": 42800,
+              "rent": 410100
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.4804265202648,
+    "lng": 126.825842832721
+  },
+  {
+    "name": "숲에리움(오류1동 청신호)",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 구로구 경인로27길 7 (오류동)",
+    "heating": "개별난방",
+    "gu": "구로구",
+    "units": [
+      {
+        "type": "16",
+        "group": "대학생",
+        "households": {
+          "total": 20,
+          "priority": 3,
+          "general": 4,
+          "waitlist": 13
+        },
+        "area": {
+          "private": "16.99",
+          "sharedRes": "12.59",
+          "sharedOther": "7.42",
+          "total": "37.00"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 48280,
+              "rent": 205000
+            },
+            "convertUp": {
+              "deposit": 68780,
+              "rent": 102500
+            },
+            "convertDown": {
+              "deposit": 24140,
+              "rent": 255200
+            }
+          }
+        ]
+      },
+      {
+        "type": "17",
+        "group": "대학생",
+        "households": {
+          "total": 5,
+          "priority": 0,
+          "general": 0,
+          "waitlist": 5
+        },
+        "area": {
+          "private": "17.08",
+          "sharedRes": "12.63",
+          "sharedOther": "7.47",
+          "total": "37.18"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 48280,
+              "rent": 205000
+            },
+            "convertUp": {
+              "deposit": 68780,
+              "rent": 102500
+            },
+            "convertDown": {
+              "deposit": 24140,
+              "rent": 255200
+            }
+          }
+        ]
+      },
+      {
+        "type": "20",
+        "group": "청년",
+        "households": {
+          "total": 28,
+          "priority": 5,
+          "general": 6,
+          "waitlist": 17
+        },
+        "area": {
+          "private": "21.04",
+          "sharedRes": "13.18",
+          "sharedOther": "12.11",
+          "total": "46.33"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 62640,
+              "rent": 266000
+            },
+            "convertUp": {
+              "deposit": 89240,
+              "rent": 133000
+            },
+            "convertDown": {
+              "deposit": 31320,
+              "rent": 331200
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 59160,
+              "rent": 252000
+            },
+            "convertUp": {
+              "deposit": 84360,
+              "rent": 126000
+            },
+            "convertDown": {
+              "deposit": 29580,
+              "rent": 313600
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.4970283791018,
+    "lng": 126.845121920929
+  },
+  {
+    "name": "노원센트럴푸르지오(상계4)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 노원구 수락산로12",
+    "heating": "개별난방",
+    "gu": "노원구",
+    "units": [
+      {
+        "type": "39",
+        "group": "고령자",
+        "households": {
+          "total": 3,
+          "priority": 0,
+          "general": 1,
+          "waitlist": 2
+        },
+        "area": {
+          "private": "39.02",
+          "sharedRes": "17.49",
+          "sharedOther": "27.75",
+          "total": "84.25"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 110580,
+              "rent": 433000
+            },
+            "convertUp": {
+              "deposit": 127900,
+              "rent": 346400
+            },
+            "convertDown": {
+              "deposit": 88460,
+              "rent": 479000
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.6643837383358,
+    "lng": 127.074879033534
+  },
+  {
+    "name": "e편한세상 청계센트럴포레(용두5)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 동대문구 무학로 91 (용두동, 이편한세상 청계 센트럴포레)",
+    "heating": "개별난방",
+    "gu": "동대문구",
+    "units": [
+      {
+        "type": "39",
+        "group": "청년",
+        "households": {
+          "total": 5,
+          "priority": 0,
+          "general": 1,
+          "waitlist": 4
+        },
+        "area": {
+          "private": "39.92",
+          "sharedRes": "17.57",
+          "sharedOther": "41.42",
+          "total": "98.91"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 114600,
+              "rent": 410000
+            },
+            "convertUp": {
+              "deposit": 131000,
+              "rent": 328000
+            },
+            "convertDown": {
+              "deposit": 91680,
+              "rent": 457700
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 108230,
+              "rent": 387000
+            },
+            "convertUp": {
+              "deposit": 123710,
+              "rent": 309600
+            },
+            "convertDown": {
+              "deposit": 86580,
+              "rent": 432000
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5720012273165,
+    "lng": 127.030062099678
+  },
+  {
+    "name": "보라매자이",
+    "kind": "재공급",
+    "owner": "서울특별시",
+    "address": "서울특별시 동작구 여의대방로22길 121 (신대방동, 보라매자이 더 포레스트)",
+    "heating": "개별난방",
+    "gu": "동작구",
+    "units": [
+      {
+        "type": "59",
+        "group": "신혼부부",
+        "households": {
+          "total": 9,
+          "priority": 0,
+          "general": 0,
+          "waitlist": 9
+        },
+        "area": {
+          "private": "59.94",
+          "sharedRes": "24.19",
+          "sharedOther": "33.89",
+          "total": "118.02"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 180800,
+              "rent": 678000
+            },
+            "convertUp": {
+              "deposit": 248600,
+              "rent": 339000
+            },
+            "convertDown": {
+              "deposit": 90400,
+              "rent": 866300
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.4983519180861,
+    "lng": 126.925286048904
+  },
+  {
+    "name": "상도 청석채",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 동작구 상도로47바길 54",
+    "heating": "개별난방",
+    "gu": "동작구",
+    "units": [
+      {
+        "type": "20",
+        "group": "대학생",
+        "households": {
+          "total": 14,
+          "priority": 3,
+          "general": 3,
+          "waitlist": 8
+        },
+        "area": {
+          "private": "20.61",
+          "sharedRes": "16.01",
+          "sharedOther": "6.20",
+          "total": "42.82"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 43520,
+              "rent": 163000
+            },
+            "convertUp": {
+              "deposit": 59820,
+              "rent": 81500
+            },
+            "convertDown": {
+              "deposit": 21760,
+              "rent": 208300
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5039618292677,
+    "lng": 126.953069173874
+  },
+  {
+    "name": "아크로리버하임(흑석7)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 동작구 현충로 52 (흑석동, 아크로리버하임)",
+    "heating": "개별난방",
+    "gu": "동작구",
+    "units": [
+      {
+        "type": "39",
+        "group": "신혼부부",
+        "households": {
+          "total": 12,
+          "priority": 2,
+          "general": 3,
+          "waitlist": 7
+        },
+        "area": {
+          "private": "39.77",
+          "sharedRes": "14.54",
+          "sharedOther": "23.48",
+          "total": "77.79"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 191600,
+              "rent": 718000
+            },
+            "convertUp": {
+              "deposit": 220320,
+              "rent": 574400
+            },
+            "convertDown": {
+              "deposit": 153280,
+              "rent": 797800
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5096317962488,
+    "lng": 126.962204212791
+  },
+  {
+    "name": "학수복합(학수)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 동작구 사당로 27길 217",
+    "heating": "개별난방",
+    "gu": "동작구",
+    "units": [
+      {
+        "type": "20",
+        "group": "대학생",
+        "households": {
+          "total": 6,
+          "priority": 1,
+          "general": 1,
+          "waitlist": 4
+        },
+        "area": {
+          "private": "21.11",
+          "sharedRes": "15.01",
+          "sharedOther": "0.00",
+          "total": "36.12"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 55420,
+              "rent": 226000
+            },
+            "convertUp": {
+              "deposit": 64460,
+              "rent": 180800
+            },
+            "convertDown": {
+              "deposit": 44330,
+              "rent": 249000
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.4914693929369,
+    "lng": 126.970722505189
+  },
+  {
+    "name": "공덕SK리더스뷰_2단지",
+    "kind": "재공급",
+    "owner": "서울특별시",
+    "address": "서울특별시 마포구 백범로31길 8 (공덕동, 공덕 SK 리더스뷰)",
+    "heating": "개별난방",
+    "gu": "마포구",
+    "units": [
+      {
+        "type": "40",
+        "group": "신혼부부",
+        "households": {
+          "total": 22,
+          "priority": 4,
+          "general": 5,
+          "waitlist": 13
+        },
+        "area": {
+          "private": "40.70",
+          "sharedRes": "19.63",
+          "sharedOther": "39.03",
+          "total": "99.36"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 125600,
+              "rent": 493000
+            },
+            "convertUp": {
+              "deposit": 174900,
+              "rent": 246500
+            },
+            "convertDown": {
+              "deposit": 62800,
+              "rent": 623800
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5449942729365,
+    "lng": 126.949333367033
+  },
+  {
+    "name": "공덕동 크로시티",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 마포구 백범로31길 19 (공덕동, 공덕 크로시티)",
+    "heating": "개별난방",
+    "gu": "마포구",
+    "units": [
+      {
+        "type": "36",
+        "group": "청년",
+        "households": {
+          "total": 10,
+          "priority": 0,
+          "general": 0,
+          "waitlist": 10
+        },
+        "area": {
+          "private": "36.67",
+          "sharedRes": "26.51",
+          "sharedOther": "42.18",
+          "total": "105.36"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 134640,
+              "rent": 527000
+            },
+            "convertUp": {
+              "deposit": 187340,
+              "rent": 263500
+            },
+            "convertDown": {
+              "deposit": 67320,
+              "rent": 667200
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 127160,
+              "rent": 498000
+            },
+            "convertUp": {
+              "deposit": 176960,
+              "rent": 249000
+            },
+            "convertDown": {
+              "deposit": 63580,
+              "rent": 630400
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5462767640651,
+    "lng": 126.949144880615
+  },
+  {
+    "name": "마포자이더센트리지(염리2)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 마포구 숭문길 98",
+    "heating": "개별난방",
+    "gu": "마포구",
+    "units": [
+      {
+        "type": "34",
+        "group": "청년",
+        "households": {
+          "total": 4,
+          "priority": 0,
+          "general": 1,
+          "waitlist": 3
+        },
+        "area": {
+          "private": "34.80",
+          "sharedRes": "17.84",
+          "sharedOther": "30.87",
+          "total": "83.51"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 142020,
+              "rent": 496000
+            },
+            "convertUp": {
+              "deposit": 161860,
+              "rent": 396800
+            },
+            "convertDown": {
+              "deposit": 113610,
+              "rent": 555100
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 134130,
+              "rent": 469000
+            },
+            "convertUp": {
+              "deposit": 152890,
+              "rent": 375200
+            },
+            "convertDown": {
+              "deposit": 107300,
+              "rent": 524800
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5502789649035,
+    "lng": 126.946615741024
+  },
+  {
+    "name": "마포그랑자이(대흥2)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 마포구 대흥로 175 (대흥동, 마포그랑자이)",
+    "heating": "개별난방",
+    "gu": "마포구",
+    "units": [
+      {
+        "type": "39",
+        "group": "고령자",
+        "households": {
+          "total": 22,
+          "priority": 2,
+          "general": 2,
+          "waitlist": 18
+        },
+        "area": {
+          "private": "39.99",
+          "sharedRes": "20.71",
+          "sharedOther": "26.68",
+          "total": "87.38"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 181540,
+              "rent": 695000
+            },
+            "convertUp": {
+              "deposit": 209340,
+              "rent": 556000
+            },
+            "convertDown": {
+              "deposit": 145230,
+              "rent": 770600
+            }
+          }
+        ]
+      },
+      {
+        "type": "45",
+        "group": "신혼부부",
+        "households": {
+          "total": 4,
+          "priority": 1,
+          "general": 1,
+          "waitlist": 2
+        },
+        "area": {
+          "private": "45.98",
+          "sharedRes": "23.37",
+          "sharedOther": "30.69",
+          "total": "100.04"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 220080,
+              "rent": 832000
+            },
+            "convertUp": {
+              "deposit": 253360,
+              "rent": 665600
+            },
+            "convertDown": {
+              "deposit": 176060,
+              "rent": 923700
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5557712803285,
+    "lng": 126.943354906623
+  },
+  {
+    "name": "북한산두산위브(홍은14)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 서대문구 홍은중앙로 3길 9",
+    "heating": "개별난방",
+    "gu": "서대문구",
+    "units": [
+      {
+        "type": "33",
+        "group": "청년",
+        "households": {
+          "total": 7,
+          "priority": 1,
+          "general": 1,
+          "waitlist": 5
+        },
+        "area": {
+          "private": "33.05",
+          "sharedRes": "21.49",
+          "sharedOther": "22.11",
+          "total": "76.65"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 116640,
+              "rent": 439000
+            },
+            "convertUp": {
+              "deposit": 134200,
+              "rent": 351200
+            },
+            "convertDown": {
+              "deposit": 93310,
+              "rent": 487600
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 110160,
+              "rent": 415000
+            },
+            "convertUp": {
+              "deposit": 126760,
+              "rent": 332000
+            },
+            "convertDown": {
+              "deposit": 88120,
+              "rent": 460900
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5990017774988,
+    "lng": 126.944654295681
+  },
+  {
+    "name": "DMC에코자이(가재울6)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 서대문구 거북골로 84",
+    "heating": "지역난방",
+    "gu": "서대문구",
+    "units": [
+      {
+        "type": "39",
+        "group": "신혼부부",
+        "households": {
+          "total": 11,
+          "priority": 1,
+          "general": 2,
+          "waitlist": 8
+        },
+        "area": {
+          "private": "39.67",
+          "sharedRes": "20.92",
+          "sharedOther": "38.32",
+          "total": "98.90"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 143640,
+              "rent": 512000
+            },
+            "convertUp": {
+              "deposit": 164120,
+              "rent": 409600
+            },
+            "convertDown": {
+              "deposit": 114910,
+              "rent": 571800
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5782296308468,
+    "lng": 126.918481311495
+  },
+  {
+    "name": "서초선포레",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 서초구 청계산로9길 1-3 (신원동, 서초 선포레)",
+    "heating": "개별난방",
+    "gu": "서초구",
+    "units": [
+      {
+        "type": "21",
+        "group": "고령자",
+        "households": {
+          "total": 19,
+          "priority": 3,
+          "general": 4,
+          "waitlist": 12
+        },
+        "area": {
+          "private": "21.58",
+          "sharedRes": "12.84",
+          "sharedOther": "21.27",
+          "total": "55.69"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 68400,
+              "rent": 251000
+            },
+            "convertUp": {
+              "deposit": 93500,
+              "rent": 125500
+            },
+            "convertDown": {
+              "deposit": 34200,
+              "rent": 322200
+            }
+          }
+        ]
+      },
+      {
+        "type": "20",
+        "group": "청년",
+        "households": {
+          "total": 15,
+          "priority": 2,
+          "general": 2,
+          "waitlist": 11
+        },
+        "area": {
+          "private": "20.52",
+          "sharedRes": "12.28",
+          "sharedOther": "20.24",
+          "total": "53.04"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 61920,
+              "rent": 227000
+            },
+            "convertUp": {
+              "deposit": 84620,
+              "rent": 113500
+            },
+            "convertDown": {
+              "deposit": 30960,
+              "rent": 291500
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 58480,
+              "rent": 214000
+            },
+            "convertUp": {
+              "deposit": 79880,
+              "rent": 107000
+            },
+            "convertDown": {
+              "deposit": 29240,
+              "rent": 274900
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.4485371374725,
+    "lng": 127.055036215823
+  },
+  {
+    "name": "반포센트럴자이",
+    "kind": "재공급",
+    "owner": "서울특별시",
+    "address": "서울특별시 서초구 반포대로 310-6 (잠원동, 반포센트럴자이)",
+    "heating": "지역난방",
+    "gu": "서초구",
+    "units": [
+      {
+        "type": "59",
+        "group": "신혼부부",
+        "households": {
+          "total": 7,
+          "priority": 0,
+          "general": 0,
+          "waitlist": 7
+        },
+        "area": {
+          "private": "59.98",
+          "sharedRes": "22.19",
+          "sharedOther": "45.50",
+          "total": "127.67"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 228800,
+              "rent": 897000
+            },
+            "convertUp": {
+              "deposit": 318500,
+              "rent": 448500
+            },
+            "convertDown": {
+              "deposit": 114400,
+              "rent": 1135300
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5064734003222,
+    "lng": 127.002352693423
+  },
+  {
+    "name": "왕십리자이(하왕1-5)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 성동구 난계로 100 (하왕십리동, 왕십리자이)",
+    "heating": "개별난방",
+    "gu": "성동구",
+    "units": [
+      {
+        "type": "38",
+        "group": "청년",
+        "households": {
+          "total": 14,
+          "priority": 1,
+          "general": 2,
+          "waitlist": 11
+        },
+        "area": {
+          "private": "38.19",
+          "sharedRes": "19.54",
+          "sharedOther": "33.89",
+          "total": "91.62"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 144360,
+              "rent": 596000
+            },
+            "convertUp": {
+              "deposit": 168200,
+              "rent": 476800
+            },
+            "convertDown": {
+              "deposit": 115480,
+              "rent": 656100
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 136340,
+              "rent": 563000
+            },
+            "convertUp": {
+              "deposit": 158860,
+              "rent": 450400
+            },
+            "convertDown": {
+              "deposit": 109070,
+              "rent": 619800
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5615293048656,
+    "lng": 127.024651500492
+  },
+  {
+    "name": "서울숲리버뷰자이(행당6)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 성동구 고산자로2길 65 (행당동, 서울숲리버뷰자이)",
+    "heating": "개별난방",
+    "gu": "성동구",
+    "units": [
+      {
+        "type": "36",
+        "group": "청년",
+        "households": {
+          "total": 7,
+          "priority": 1,
+          "general": 1,
+          "waitlist": 5
+        },
+        "area": {
+          "private": "36.06",
+          "sharedRes": "16.46",
+          "sharedOther": "25.48",
+          "total": "78.00"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 145530,
+              "rent": 582000
+            },
+            "convertUp": {
+              "deposit": 168810,
+              "rent": 465600
+            },
+            "convertDown": {
+              "deposit": 116420,
+              "rent": 642600
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 137440,
+              "rent": 549000
+            },
+            "convertUp": {
+              "deposit": 159400,
+              "rent": 439200
+            },
+            "convertDown": {
+              "deposit": 109950,
+              "rent": 606200
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.556198526017,
+    "lng": 127.038836506223
+  },
+  {
+    "name": "금호파크힐스이편한세상(금호15)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 성동구 금호로 110 (금호동1가, 이편한세상금호파크힐스)",
+    "heating": "개별난방",
+    "gu": "성동구",
+    "units": [
+      {
+        "type": "30",
+        "group": "고령자",
+        "households": {
+          "total": 19,
+          "priority": 3,
+          "general": 3,
+          "waitlist": 13
+        },
+        "area": {
+          "private": "30.32",
+          "sharedRes": "14.63",
+          "sharedOther": "43.43",
+          "total": "88.38"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 133640,
+              "rent": 544000
+            },
+            "convertUp": {
+              "deposit": 155400,
+              "rent": 435200
+            },
+            "convertDown": {
+              "deposit": 106910,
+              "rent": 599600
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.552995077832,
+    "lng": 127.024556342782
+  },
+  {
+    "name": "정릉 하늘마루",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 성북구 정릉로10가길 6-31 (정릉동)",
+    "heating": "개별난방",
+    "gu": "성북구",
+    "units": [
+      {
+        "type": "26S",
+        "group": "고령자",
+        "households": {
+          "total": 10,
+          "priority": 2,
+          "general": 2,
+          "waitlist": 6
+        },
+        "area": {
+          "private": "26.15",
+          "sharedRes": "14.83",
+          "sharedOther": "19.49",
+          "total": "60.47"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 76760,
+              "rent": 301000
+            },
+            "convertUp": {
+              "deposit": 106860,
+              "rent": 150500
+            },
+            "convertDown": {
+              "deposit": 38380,
+              "rent": 380900
+            }
+          }
+        ]
+      },
+      {
+        "type": "22",
+        "group": "대학생",
+        "households": {
+          "total": 24,
+          "priority": 4,
+          "general": 5,
+          "waitlist": 15
+        },
+        "area": {
+          "private": "22.26",
+          "sharedRes": "12.69",
+          "sharedOther": "16.59",
+          "total": "51.54"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 58480,
+              "rent": 229000
+            },
+            "convertUp": {
+              "deposit": 81380,
+              "rent": 114500
+            },
+            "convertDown": {
+              "deposit": 29240,
+              "rent": 289900
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.6068882387231,
+    "lng": 127.000041110205
+  },
+  {
+    "name": "보문파크뷰자이(보문3)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 성북구 보문사길 111(보문동6가, 보문파크뷰자이)",
+    "heating": "개별난방",
+    "gu": "성북구",
+    "units": [
+      {
+        "type": "29",
+        "group": "청년",
+        "households": {
+          "total": 18,
+          "priority": 1,
+          "general": 2,
+          "waitlist": 15
+        },
+        "area": {
+          "private": "29.96",
+          "sharedRes": "14.62",
+          "sharedOther": "25.55",
+          "total": "70.13"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 116640,
+              "rent": 433000
+            },
+            "convertUp": {
+              "deposit": 133960,
+              "rent": 346400
+            },
+            "convertDown": {
+              "deposit": 93310,
+              "rent": 481600
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 110160,
+              "rent": 409000
+            },
+            "convertUp": {
+              "deposit": 126520,
+              "rent": 327200
+            },
+            "convertDown": {
+              "deposit": 88120,
+              "rent": 454900
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5828731138796,
+    "lng": 127.017891118296
+  },
+  {
+    "name": "꿈의숲코오롱하늘채(장위2)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 성북구 돌곶이로 220 (장위동, 꿈의숲코오롱하늘채)",
+    "heating": "개별난방",
+    "gu": "성북구",
+    "units": [
+      {
+        "type": "40",
+        "group": "신혼부부",
+        "households": {
+          "total": 9,
+          "priority": 1,
+          "general": 2,
+          "waitlist": 6
+        },
+        "area": {
+          "private": "40.24",
+          "sharedRes": "21.42",
+          "sharedOther": "36.33",
+          "total": "97.99"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 132400,
+              "rent": 518000
+            },
+            "convertUp": {
+              "deposit": 153120,
+              "rent": 414400
+            },
+            "convertDown": {
+              "deposit": 105920,
+              "rent": 573100
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.6190182162561,
+    "lng": 127.046432738992
+  },
+  {
+    "name": "래미안아트리치(석관2)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 성북구 돌곶이로8길 22",
+    "heating": "개별난방",
+    "gu": "성북구",
+    "units": [
+      {
+        "type": "39",
+        "group": "고령자",
+        "households": {
+          "total": 11,
+          "priority": 1,
+          "general": 1,
+          "waitlist": 9
+        },
+        "area": {
+          "private": "39.01",
+          "sharedRes": "23.69",
+          "sharedOther": "34.42",
+          "total": "97.12"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 115520,
+              "rent": 452000
+            },
+            "convertUp": {
+              "deposit": 133600,
+              "rent": 361600
+            },
+            "convertDown": {
+              "deposit": 92410,
+              "rent": 500100
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.6065244839458,
+    "lng": 127.062261154976
+  },
+  {
+    "name": "래미안장위퍼스트하이(장위5)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 성북구 한천로 713",
+    "heating": "개별난방",
+    "gu": "성북구",
+    "units": [
+      {
+        "type": "36",
+        "group": "청년",
+        "households": {
+          "total": 20,
+          "priority": 3,
+          "general": 4,
+          "waitlist": 13
+        },
+        "area": {
+          "private": "36.14",
+          "sharedRes": "18.72",
+          "sharedOther": "24.72",
+          "total": "79.58"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 99360,
+              "rent": 390000
+            },
+            "convertUp": {
+              "deposit": 114960,
+              "rent": 312000
+            },
+            "convertDown": {
+              "deposit": 79480,
+              "rent": 431400
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 93840,
+              "rent": 368000
+            },
+            "convertUp": {
+              "deposit": 108560,
+              "rent": 294400
+            },
+            "convertDown": {
+              "deposit": 75070,
+              "rent": 407100
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.6212990641092,
+    "lng": 127.051847478882
+  },
+  {
+    "name": "꿈의숲아이파크(장위7)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 성북구 돌곶이로40길 46 (장위동, 꿈의숲 아이파크)",
+    "heating": "개별난방",
+    "gu": "성북구",
+    "units": [
+      {
+        "type": "40",
+        "group": "신혼부부",
+        "households": {
+          "total": 8,
+          "priority": 0,
+          "general": 1,
+          "waitlist": 7
+        },
+        "area": {
+          "private": "40.47",
+          "sharedRes": "22.94",
+          "sharedOther": "26.97",
+          "total": "90.38"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 146690,
+              "rent": 538000
+            },
+            "convertUp": {
+              "deposit": 168210,
+              "rent": 430400
+            },
+            "convertDown": {
+              "deposit": 117350,
+              "rent": 599100
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.6198223851288,
+    "lng": 127.049660439134
+  },
+  {
+    "name": "장위자이레디언트(장위4)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 성북구 돌곶이로30길 23",
+    "heating": "지역난방",
+    "gu": "성북구",
+    "units": [
+      {
+        "type": "39",
+        "group": "청년",
+        "households": {
+          "total": 19,
+          "priority": 2,
+          "general": 3,
+          "waitlist": 14
+        },
+        "area": {
+          "private": "39.91",
+          "sharedRes": "22.82",
+          "sharedOther": "35.58",
+          "total": "98.31"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 109620,
+              "rent": 420000
+            },
+            "convertUp": {
+              "deposit": 126420,
+              "rent": 336000
+            },
+            "convertDown": {
+              "deposit": 87690,
+              "rent": 465600
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 103530,
+              "rent": 396000
+            },
+            "convertUp": {
+              "deposit": 119370,
+              "rent": 316800
+            },
+            "convertDown": {
+              "deposit": 82820,
+              "rent": 439100
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.6136050803792,
+    "lng": 127.056170195449
+  },
+  {
+    "name": "송파파크데일 3",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 송파구 성내천로47길 22 (마천동, 송파파크데일3단지)",
+    "heating": "개별난방",
+    "gu": "송파구",
+    "units": [
+      {
+        "type": "21",
+        "group": "청년",
+        "households": {
+          "total": 34,
+          "priority": 5,
+          "general": 6,
+          "waitlist": 23
+        },
+        "area": {
+          "private": "21.92",
+          "sharedRes": "12.07",
+          "sharedOther": "14.55",
+          "total": "48.54"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 57600,
+              "rent": 211000
+            },
+            "convertUp": {
+              "deposit": 78700,
+              "rent": 105500
+            },
+            "convertDown": {
+              "deposit": 28800,
+              "rent": 271000
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 54400,
+              "rent": 199000
+            },
+            "convertUp": {
+              "deposit": 74300,
+              "rent": 99500
+            },
+            "convertDown": {
+              "deposit": 27200,
+              "rent": 255600
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.4948133105628,
+    "lng": 127.157899796932
+  },
+  {
+    "name": "잠실올림픽공원아이파크",
+    "kind": "재공급",
+    "owner": "서울특별시",
+    "address": "서울특별시 송파구 올림픽로43길 34 (풍납동, 잠실 올림픽공원 아이파크)",
+    "heating": "지역난방",
+    "gu": "송파구",
+    "units": [
+      {
+        "type": "59",
+        "group": "신혼부부",
+        "households": {
+          "total": 22,
+          "priority": 4,
+          "general": 5,
+          "waitlist": 13
+        },
+        "area": {
+          "private": "59.97",
+          "sharedRes": "23.66",
+          "sharedOther": "55.10",
+          "total": "138.73"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 211200,
+              "rent": 774000
+            },
+            "convertUp": {
+              "deposit": 288600,
+              "rent": 387000
+            },
+            "convertDown": {
+              "deposit": 105600,
+              "rent": 994000
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5249190964012,
+    "lng": 127.114443667858
+  },
+  {
+    "name": "e편한세상 보라매2차",
+    "kind": "재공급",
+    "owner": "서울특별시",
+    "address": "서울특별시 영등포구 신길로 29 (대림동, e편한세상 영등포 아델포레)",
+    "heating": "개별난방",
+    "gu": "영등포구",
+    "units": [
+      {
+        "type": "59",
+        "group": "고령자",
+        "households": {
+          "total": 10,
+          "priority": 1,
+          "general": 2,
+          "waitlist": 7
+        },
+        "area": {
+          "private": "59.97",
+          "sharedRes": "22.76",
+          "sharedOther": "42.80",
+          "total": "125.53"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 149720,
+              "rent": 597000
+            },
+            "convertUp": {
+              "deposit": 209420,
+              "rent": 298500
+            },
+            "convertDown": {
+              "deposit": 74860,
+              "rent": 752900
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.4945138274401,
+    "lng": 126.906116482951
+  },
+  {
+    "name": "보라매 SK뷰(신길5)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 영등포구 여의대방로35가길 19 (신길동, 보라매 SK VIEW)",
+    "heating": "개별난방",
+    "gu": "영등포구",
+    "units": [
+      {
+        "type": "39",
+        "group": "신혼부부",
+        "households": {
+          "total": 8,
+          "priority": 1,
+          "general": 2,
+          "waitlist": 5
+        },
+        "area": {
+          "private": "39.98",
+          "sharedRes": "21.22",
+          "sharedOther": "27.15",
+          "total": "88.35"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 159600,
+              "rent": 593000
+            },
+            "convertUp": {
+              "deposit": 183320,
+              "rent": 474400
+            },
+            "convertDown": {
+              "deposit": 127680,
+              "rent": 659500
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5037353406458,
+    "lng": 126.917440584163
+  },
+  {
+    "name": "용산데시앙포레(효창6)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 용산구 효창원로 227 (효창동, 용산 데시앙 포레)",
+    "heating": "개별난방",
+    "gu": "용산구",
+    "units": [
+      {
+        "type": "45",
+        "group": "신혼부부",
+        "households": {
+          "total": 5,
+          "priority": 1,
+          "general": 1,
+          "waitlist": 3
+        },
+        "area": {
+          "private": "45.64",
+          "sharedRes": "21.73",
+          "sharedOther": "41.84",
+          "total": "109.21"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 171140,
+              "rent": 642000
+            },
+            "convertUp": {
+              "deposit": 196820,
+              "rent": 513600
+            },
+            "convertDown": {
+              "deposit": 136910,
+              "rent": 713300
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5473793002411,
+    "lng": 126.96203907111
+  },
+  {
+    "name": "래미안베라힐즈(녹번1-2)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 은평구 통일로 630",
+    "heating": "개별난방",
+    "gu": "은평구",
+    "units": [
+      {
+        "type": "38",
+        "group": "청년",
+        "households": {
+          "total": 65,
+          "priority": 13,
+          "general": 14,
+          "waitlist": 38
+        },
+        "area": {
+          "private": "38.28",
+          "sharedRes": "18.84",
+          "sharedOther": "24.75",
+          "total": "81.87"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 132480,
+              "rent": 530000
+            },
+            "convertUp": {
+              "deposit": 153680,
+              "rent": 424000
+            },
+            "convertDown": {
+              "deposit": 105980,
+              "rent": 585200
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 125120,
+              "rent": 500000
+            },
+            "convertUp": {
+              "deposit": 145120,
+              "rent": 400000
+            },
+            "convertDown": {
+              "deposit": 100090,
+              "rent": 552100
+            }
+          }
+        ]
+      },
+      {
+        "type": "43",
+        "group": "신혼부부",
+        "households": {
+          "total": 8,
+          "priority": 1,
+          "general": 1,
+          "waitlist": 6
+        },
+        "area": {
+          "private": "43.74",
+          "sharedRes": "24.72",
+          "sharedOther": "28.31",
+          "total": "96.77"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 168400,
+              "rent": 674000
+            },
+            "convertUp": {
+              "deposit": 195360,
+              "rent": 539200
+            },
+            "convertDown": {
+              "deposit": 134720,
+              "rent": 744100
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.6028959898733,
+    "lng": 126.936003442364
+  },
+  {
+    "name": "백련산SK VIEW IPARK(응암10)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 은평구 응암로30길 16",
+    "heating": "개별난방",
+    "gu": "은평구",
+    "units": [
+      {
+        "type": "36",
+        "group": "고령자",
+        "households": {
+          "total": 17,
+          "priority": 3,
+          "general": 3,
+          "waitlist": 11
+        },
+        "area": {
+          "private": "36.08",
+          "sharedRes": "15.96",
+          "sharedOther": "21.28",
+          "total": "73.32"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 104120,
+              "rent": 401000
+            },
+            "convertUp": {
+              "deposit": 120160,
+              "rent": 320800
+            },
+            "convertDown": {
+              "deposit": 83290,
+              "rent": 444300
+            }
+          }
+        ]
+      },
+      {
+        "type": "40",
+        "group": "신혼부부",
+        "households": {
+          "total": 8,
+          "priority": 1,
+          "general": 2,
+          "waitlist": 5
+        },
+        "area": {
+          "private": "40.65",
+          "sharedRes": "17.50",
+          "sharedOther": "23.98",
+          "total": "82.13"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 123600,
+              "rent": 476000
+            },
+            "convertUp": {
+              "deposit": 142640,
+              "rent": 380800
+            },
+            "convertDown": {
+              "deposit": 98880,
+              "rent": 527500
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5952285650967,
+    "lng": 126.91939457024
+  },
+  {
+    "name": "백련산해모로(응암11)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울 은평구 응암로 30길 15 (응암동, 백련산해모로)",
+    "heating": "개별난방",
+    "gu": "은평구",
+    "units": [
+      {
+        "type": "39",
+        "group": "청년",
+        "households": {
+          "total": 8,
+          "priority": 1,
+          "general": 2,
+          "waitlist": 5
+        },
+        "area": {
+          "private": "39.10",
+          "sharedRes": "17.60",
+          "sharedOther": "33.00",
+          "total": "89.70"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 108360,
+              "rent": 431000
+            },
+            "convertUp": {
+              "deposit": 125600,
+              "rent": 344800
+            },
+            "convertDown": {
+              "deposit": 86680,
+              "rent": 476100
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 102340,
+              "rent": 407000
+            },
+            "convertUp": {
+              "deposit": 118620,
+              "rent": 325600
+            },
+            "convertDown": {
+              "deposit": 81870,
+              "rent": 449600
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5959775729359,
+    "lng": 126.921690274973
+  },
+  {
+    "name": "DMC롯데캐슬더퍼스트(수색4)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 은평구 수색로 300 (수색동, DMC롯데캐슬더퍼스트)",
+    "heating": "개별난방",
+    "gu": "은평구",
+    "units": [
+      {
+        "type": "49",
+        "group": "신혼부부",
+        "households": {
+          "total": 13,
+          "priority": 2,
+          "general": 2,
+          "waitlist": 9
+        },
+        "area": {
+          "private": "49.86",
+          "sharedRes": "24.46",
+          "sharedOther": "35.65",
+          "total": "109.97"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 176000,
+              "rent": 626000
+            },
+            "convertUp": {
+              "deposit": 201040,
+              "rent": 500800
+            },
+            "convertDown": {
+              "deposit": 140800,
+              "rent": 699300
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5850903459468,
+    "lng": 126.890441915048
+  },
+  {
+    "name": "힐스테이트녹번역(응암1)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 은평구 은평로 240 (응암동, 힐스테이트녹번역)",
+    "heating": "개별난방",
+    "gu": "은평구",
+    "units": [
+      {
+        "type": "39",
+        "group": "청년",
+        "households": {
+          "total": 16,
+          "priority": 3,
+          "general": 3,
+          "waitlist": 10
+        },
+        "area": {
+          "private": "39.12",
+          "sharedRes": "19.97",
+          "sharedOther": "25.45",
+          "total": "84.54"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 116520,
+              "rent": 406000
+            },
+            "convertUp": {
+              "deposit": 132760,
+              "rent": 324800
+            },
+            "convertDown": {
+              "deposit": 93210,
+              "rent": 454500
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 110040,
+              "rent": 384000
+            },
+            "convertUp": {
+              "deposit": 125400,
+              "rent": 307200
+            },
+            "convertDown": {
+              "deposit": 88030,
+              "rent": 429800
+            }
+          }
+        ]
+      },
+      {
+        "type": "41",
+        "group": "신혼부부",
+        "households": {
+          "total": 4,
+          "priority": 0,
+          "general": 1,
+          "waitlist": 3
+        },
+        "area": {
+          "private": "41.50",
+          "sharedRes": "20.82",
+          "sharedOther": "26.98",
+          "total": "89.30"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 137430,
+              "rent": 480000
+            },
+            "convertUp": {
+              "deposit": 156630,
+              "rent": 384000
+            },
+            "convertDown": {
+              "deposit": 109940,
+              "rent": 537200
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.6004214734002,
+    "lng": 126.934948113512
+  },
+  {
+    "name": "DMC SK뷰(수색9)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 은평구 수색로 216 (수색동, DMC SK VIEW)",
+    "heating": "개별난방",
+    "gu": "은평구",
+    "units": [
+      {
+        "type": "38",
+        "group": "청년",
+        "households": {
+          "total": 4,
+          "priority": 0,
+          "general": 1,
+          "waitlist": 3
+        },
+        "area": {
+          "private": "38.74",
+          "sharedRes": "21.91",
+          "sharedOther": "32.62",
+          "total": "93.27"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 87510,
+              "rent": 320000
+            },
+            "convertUp": {
+              "deposit": 100310,
+              "rent": 256000
+            },
+            "convertDown": {
+              "deposit": 70000,
+              "rent": 356400
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 82650,
+              "rent": 303000
+            },
+            "convertUp": {
+              "deposit": 94770,
+              "rent": 242400
+            },
+            "convertDown": {
+              "deposit": 66120,
+              "rent": 337400
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5798457128547,
+    "lng": 126.899932768477
+  },
+  {
+    "name": "DMC센트럴자이(증산2)_서울리츠2호",
+    "kind": "재공급",
+    "owner": "서울리츠2호",
+    "address": "서울특별시 은평구 수색로 200 (증산동, DMC센트럴자이)",
+    "heating": "개별난방",
+    "gu": "은평구",
+    "units": [
+      {
+        "type": "39",
+        "group": "신혼부부",
+        "households": {
+          "total": 12,
+          "priority": 1,
+          "general": 2,
+          "waitlist": 9
+        },
+        "area": {
+          "private": "39.48",
+          "sharedRes": "18.26",
+          "sharedOther": "27.84",
+          "total": "85.58"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 99740,
+              "rent": 365000
+            },
+            "convertUp": {
+              "deposit": 114340,
+              "rent": 292000
+            },
+            "convertDown": {
+              "deposit": 79790,
+              "rent": 406500
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.5794195375926,
+    "lng": 126.900673276716
+  },
+  {
+    "name": "은뜨락(서울리츠1호)",
+    "kind": "재공급",
+    "owner": "서울리츠1호",
+    "address": "서울특별시 은평구 통일로 972 (진관동, 은뜨락)",
+    "heating": "개별난방",
+    "gu": "은평구",
+    "units": [
+      {
+        "type": "39",
+        "group": "청년",
+        "households": {
+          "total": 66,
+          "priority": 12,
+          "general": 13,
+          "waitlist": 41
+        },
+        "area": {
+          "private": "39.49",
+          "sharedRes": "17.55",
+          "sharedOther": "27.53",
+          "total": "84.57"
+        },
+        "variants": [
+          {
+            "income": "소득있음",
+            "base": {
+              "deposit": 97200,
+              "rent": 389000
+            },
+            "convertUp": {
+              "deposit": 112760,
+              "rent": 311200
+            },
+            "convertDown": {
+              "deposit": 77760,
+              "rent": 429500
+            }
+          },
+          {
+            "income": "소득없음",
+            "base": {
+              "deposit": 91800,
+              "rent": 367000
+            },
+            "convertUp": {
+              "deposit": 106480,
+              "rent": 293600
+            },
+            "convertDown": {
+              "deposit": 73440,
+              "rent": 405200
+            }
+          }
+        ]
+      },
+      {
+        "type": "44",
+        "group": "신혼부부",
+        "households": {
+          "total": 5,
+          "priority": 0,
+          "general": 1,
+          "waitlist": 4
+        },
+        "area": {
+          "private": "44.44",
+          "sharedRes": "20.12",
+          "sharedOther": "30.98",
+          "total": "95.54"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 121600,
+              "rent": 486000
+            },
+            "convertUp": {
+              "deposit": 141040,
+              "rent": 388800
+            },
+            "convertDown": {
+              "deposit": 97280,
+              "rent": 536600
+            }
+          }
+        ]
+      },
+      {
+        "type": "39S",
+        "group": "고령자",
+        "households": {
+          "total": 3,
+          "priority": 0,
+          "general": 1,
+          "waitlist": 2
+        },
+        "area": {
+          "private": "39.49",
+          "sharedRes": "17.55",
+          "sharedOther": "27.53",
+          "total": "84.57"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 102600,
+              "rent": 410000
+            },
+            "convertUp": {
+              "deposit": 119000,
+              "rent": 328000
+            },
+            "convertDown": {
+              "deposit": 82080,
+              "rent": 452700
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.6301758375471,
+    "lng": 126.91991625048
+  },
+  {
+    "name": "우디안4단지",
+    "kind": "재공급",
+    "owner": "서울주택도시개발공사",
+    "address": "서울특별시 중랑구 신내역로 160 (신내동, 우디안4단지)",
+    "heating": "개별난방",
+    "gu": "중랑구",
+    "units": [
+      {
+        "type": "21",
+        "group": "주거급여수급자",
+        "households": {
+          "total": 46,
+          "priority": 8,
+          "general": 9,
+          "waitlist": 29
+        },
+        "area": {
+          "private": "21.96",
+          "sharedRes": "11.82",
+          "sharedOther": "13.85",
+          "total": "47.63"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 33600,
+              "rent": 140000
+            },
+            "convertUp": {
+              "deposit": 47600,
+              "rent": 70000
+            },
+            "convertDown": {
+              "deposit": 16800,
+              "rent": 175000
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.6169216250193,
+    "lng": 127.11108471141
+  },
+  {
+    "name": "사가정센트럴아이파크",
+    "kind": "재공급",
+    "owner": "서울특별시",
+    "address": "서울특별시 중랑구 동일로92길 40 (면목동, 사가정 센트럴 아이파크)",
+    "heating": "개별난방",
+    "gu": "중랑구",
+    "units": [
+      {
+        "type": "59",
+        "group": "고령자",
+        "households": {
+          "total": 5,
+          "priority": 0,
+          "general": 0,
+          "waitlist": 5
+        },
+        "area": {
+          "private": "59.78",
+          "sharedRes": "27.59",
+          "sharedOther": "39.12",
+          "total": "126.49"
+        },
+        "variants": [
+          {
+            "income": null,
+            "base": {
+              "deposit": 152760,
+              "rent": 547000
+            },
+            "convertUp": {
+              "deposit": 207460,
+              "rent": 273500
+            },
+            "convertDown": {
+              "deposit": 76380,
+              "rent": 706100
+            }
+          }
+        ]
+      }
+    ],
+    "lat": 37.58188308245,
+    "lng": 127.080449862319
+  }
+]

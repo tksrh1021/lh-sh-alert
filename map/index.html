@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026년 2차 행복주택 지도</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/static/complete/WantedSans.css">
+<style>
+  :root {
+    --orange: #ff6b00;
+    --ink: #17171c;
+    --sub: #6c6c75;
+    --line: #e8e8ee;
+    --bg: #f4f5f9;
+    --surface: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; font-family: "Wanted Sans", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+  body { background: var(--bg); color: var(--ink); }
+
+  .layout { display: grid; grid-template-columns: 380px 1fr; height: 100%; }
+  @media (max-width: 820px) {
+    .layout { grid-template-columns: 1fr; grid-template-rows: 50vh 1fr; }
+  }
+
+  #sidebar { position: relative; overflow: hidden; background: var(--surface); border-right: 1px solid var(--line); }
+  #sidebar-list { height: 100%; display: flex; flex-direction: column; transition: transform 0.22s ease; }
+  #sidebar-header { flex-shrink: 0; }
+  .brand { display: flex; align-items: center; gap: 10px; padding: 18px 18px 14px; }
+  .brand .emoji { font-size: 26px; line-height: 1; }
+  .brand h1 { font-size: 18px; margin: 0; font-weight: 800; letter-spacing: -0.2px; }
+  .brand h1 .hl { color: var(--orange); }
+  .brand-sub { display: flex; align-items: center; gap: 8px; margin-top: 3px; }
+  .brand-sub span { font-size: 11px; color: var(--sub); }
+  .brand-badge {
+    font-size: 10.5px; font-weight: 700; color: #fff; background: var(--orange);
+    padding: 3px 9px; border-radius: 4px; text-decoration: none; white-space: nowrap;
+  }
+  .brand-badge:hover { background: #e05e00; }
+
+  .side-section { padding: 0 18px 16px; }
+  .side-section.bordered { margin-bottom: 16px; }
+
+  .filter-group {
+    border-top: 8px solid var(--line);
+    border-bottom: 8px solid var(--line);
+    padding: 16px 0 0;
+    margin-bottom: 16px;
+  }
+  .search-wrap { position: relative; }
+  .search-wrap .icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; pointer-events: none; }
+  #search-input {
+    width: 100%; padding: 10px 14px 10px 34px; border: 1.5px solid #ff6001; border-radius: 4px;
+    font-size: 13.5px; font-family: inherit; color: var(--ink);
+  }
+  #search-input:focus { outline: none; }
+  #search-input::placeholder { color: #9a9ca6; font-size: 13px; }
+
+  .stats { display: flex; gap: 10px; }
+  .stat-card { flex: 1; background: #ffffff; border-radius: 4px; padding: 10px 14px; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25); }
+  .stat-card .label { font-size: 11.5px; color: var(--sub); }
+  .stat-card .value { font-size: 19px; font-weight: 800; color: var(--orange); font-variant-numeric: tabular-nums; margin-top: 2px; }
+
+  .field-label { font-size: 12px; font-weight: 700; color: var(--sub); margin: 4px 0 8px; }
+  select#gu-select {
+    width: 100%; padding: 9px 12px; border: 1.5px solid var(--line); border-radius: 4px;
+    font-size: 13px; font-family: inherit; color: var(--ink); background: var(--surface);
+  }
+
+  .segmented { display: flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+  .segmented button {
+    flex: 1; padding: 8px 4px; border: none; border-right: 1px solid var(--line); background: var(--surface);
+    font-size: 11.5px; font-family: inherit; color: var(--sub); cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .segmented button:last-child { border-right: none; }
+  .segmented button:hover:not(.active) { background: var(--bg); }
+  .segmented button.active { background: var(--ink); color: #fff; font-weight: 700; }
+
+  #area-range-label { font-size: 12px; color: var(--sub); display: flex; justify-content: space-between; margin-top: 6px; }
+  .range-slider { position: relative; height: 28px; }
+  .range-slider input[type="range"] {
+    position: absolute; width: 100%; top: 10px; margin: 0; -webkit-appearance: none; appearance: none;
+    background: none; pointer-events: none;
+  }
+  .range-slider input[type="range"]::-webkit-slider-thumb {
+    pointer-events: auto; -webkit-appearance: none; width: 16px; height: 16px; border-radius: 4px;
+    background: var(--orange); cursor: pointer; border: 2px solid #fff; box-shadow: 0 0 0 1px var(--orange);
+  }
+  .range-slider input[type="range"]::-moz-range-thumb {
+    pointer-events: auto; width: 16px; height: 16px; border-radius: 4px;
+    background: var(--orange); cursor: pointer; border: 2px solid #fff;
+  }
+  .range-slider .track { position: absolute; top: 16px; left: 0; right: 0; height: 4px; background: var(--line); border-radius: 4px; }
+  .range-slider .track-fill { position: absolute; top: 16px; height: 4px; background: var(--orange); border-radius: 4px; }
+
+  .list-header { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 18px 10px; flex-shrink: 0; }
+  .list-header h2 { font-size: 13px; margin: 0; }
+  .list-header .count { font-size: 12px; color: var(--orange); font-weight: 700; }
+
+  #listing-rows { flex: 1; min-height: 0; overflow-y: auto; border-top: 1px solid var(--line); }
+
+  .listing { padding: 12px 18px; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .listing[hidden] { display: none; }
+  .listing:hover { background: var(--bg); }
+  .listing.active { background: #fff4ec; }
+  .listing .name { font-weight: 700; font-size: 13.5px; }
+  .listing .gu { font-size: 11.5px; color: var(--sub); margin-top: 2px; }
+  .listing .types { margin-top: 6px; display: flex; gap: 5px; flex-wrap: wrap; }
+  .type-chip { font-size: 11px; padding: 2px 7px; border-radius: 4px; background: var(--bg); color: var(--sub); border: 1px solid var(--line); }
+
+  #map { position: relative; }
+  #map-el { width: 100%; height: 100%; }
+  #empty-msg { position: absolute; top: 12px; left: 12px; background: var(--surface); padding: 6px 10px; border-radius: 4px; font-size: 12px; color: var(--sub); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+  /* 상세 패널: 중앙 모달이 아니라 왼쪽 사이드바 자리에서 슬라이드로 나옴 */
+  #sidebar-detail {
+    position: absolute; inset: 0; background: var(--surface);
+    transform: translateX(100%); transition: transform 0.22s ease;
+    overflow-y: auto; display: flex; flex-direction: column;
+  }
+  #sidebar-detail.open { transform: translateX(0); }
+  #detail-nav { position: sticky; top: 0; background: var(--surface); border-bottom: 1px solid var(--line); padding: 10px 12px; display: flex; justify-content: space-between; z-index: 2; }
+  #detail-nav button { border: none; background: var(--bg); border-radius: 4px; width: 30px; height: 30px; font-size: 15px; cursor: pointer; color: var(--ink); }
+  #detail-body { padding: 16px 18px 24px; }
+  #detail-body h2 { font-size: 16px; font-weight: 800; margin: 0 0 4px; }
+  #detail-body .addr { font-size: 12px; color: var(--sub); margin-bottom: 16px; line-height: 1.5; }
+
+  .unit-block { border: 1px solid var(--line); border-radius: 4px; margin-bottom: 10px; overflow: hidden; }
+  .unit-head { padding: 10px 12px; background: var(--bg); font-weight: 700; font-size: 13px; display: flex; justify-content: space-between; }
+  .unit-head .badge { color: var(--orange); font-weight: 700; }
+  .unit-body { padding: 10px 12px; font-size: 12.5px; }
+  .variant-label { font-size: 11.5px; font-weight: 700; color: var(--sub); margin: 10px 0 6px; }
+  .variant-label:first-child { margin-top: 0; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 8px; }
+  .tab-btn { flex: 1; padding: 6px; border-radius: 4px; border: 1px solid var(--line); background: var(--surface); font-size: 11.5px; cursor: pointer; color: var(--sub); font-family: inherit; }
+  .tab-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .kv { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; }
+  .kv div { display: flex; justify-content: space-between; }
+  .kv .k { color: var(--sub); }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <div id="sidebar">
+    <div id="sidebar-list">
+      <div id="sidebar-header">
+        <div class="brand">
+          <span class="emoji">🏢</span>
+          <div>
+            <h1>SH 2차 <span class="hl">행복주택</span></h1>
+            <div class="brand-sub">
+              <span>2026년 2차 행복주택 공고문 참조</span>
+              <a class="brand-badge" href="https://www.i-sh.co.kr/app/index.do" target="_blank" rel="noopener">SH 청약 공식</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-section bordered">
+          <div class="search-wrap">
+            <svg class="icon" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="#ff6001" stroke-width="2"/>
+              <path d="M20 20l-3.5-3.5" stroke="#ff6001" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <input id="search-input" type="text" placeholder="단지명, 자치구, 주소로 검색" autocomplete="off">
+          </div>
+          <div class="stats" style="margin-top:12px">
+            <div class="stat-card"><div class="label">단지수</div><div class="value" id="stat-complexes">-</div></div>
+            <div class="stat-card"><div class="label">총 모집 세대 수</div><div class="value" id="stat-households">-</div></div>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="side-section">
+            <div class="field-label">지역 선택</div>
+            <select id="gu-select"><option value="">전체</option></select>
+          </div>
+
+          <div class="side-section">
+            <div class="field-label">공급 구분</div>
+            <div class="segmented" id="group-segmented"></div>
+          </div>
+
+          <div class="side-section">
+            <div class="field-label">세대별 계약면적(㎡)</div>
+            <div class="range-slider">
+              <div class="track"></div>
+              <div class="track-fill" id="area-track-fill"></div>
+              <input id="area-min" type="range" step="0.1">
+              <input id="area-max" type="range" step="0.1">
+            </div>
+            <div id="area-range-label"><span id="area-min-label"></span><span id="area-max-label"></span></div>
+          </div>
+        </div>
+
+        <div class="list-header">
+          <h2>단지 목록</h2>
+          <span class="count">총 <span id="list-count">-</span>개</span>
+        </div>
+      </div>
+      <div id="listing-rows"></div>
+    </div>
+
+    <div id="sidebar-detail">
+      <div id="detail-nav">
+        <button id="detail-back" aria-label="목록으로">‹</button>
+        <button id="detail-close" aria-label="닫기">✕</button>
+      </div>
+      <div id="detail-body"></div>
+    </div>
+  </div>
+
+  <div id="map">
+    <div id="map-el"></div>
+    <div id="empty-msg" style="display:none">지도를 불러오는 중...</div>
+  </div>
+</div>
+
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=8aa88d8ab2eb1de29923ed397ad7b3c9"></script>
+<script>
+const won = n => n == null ? "-" : n.toLocaleString("ko-KR") + "원";
+const thousandWon = n => n == null ? "-" : (n * 1000).toLocaleString("ko-KR") + "원";
+const totalHouseholds = c => c.units.reduce((s, u) => s + (u.households.total || 0), 0);
+
+function variantHtml(uid, v, i) {
+  const vid = `${uid}v${i}`;
+  return `
+    ${v.income ? `<div class="variant-label">${v.income}</div>` : ""}
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="${vid}-base">기본 임대조건</button>
+      <button class="tab-btn" data-tab="${vid}-conv">최대 전환조건</button>
+    </div>
+    <div class="tab-pane active" id="${vid}-base">
+      <div class="kv">
+        <div><span class="k">임대보증금</span><span>${thousandWon(v.base?.deposit)}</span></div>
+        <div><span class="k">월 임대료</span><span>${won(v.base?.rent)}</span></div>
+      </div>
+    </div>
+    <div class="tab-pane" id="${vid}-conv">
+      <div class="kv">
+        <div><span class="k">보증금↑ 전환시 보증금</span><span>${thousandWon(v.convertUp?.deposit)}</span></div>
+        <div><span class="k">보증금↑ 전환시 월세</span><span>${won(v.convertUp?.rent)}</span></div>
+        <div><span class="k">보증금↓ 전환시 보증금</span><span>${thousandWon(v.convertDown?.deposit)}</span></div>
+        <div><span class="k">보증금↓ 전환시 월세</span><span>${won(v.convertDown?.rent)}</span></div>
+      </div>
+    </div>`;
+}
+
+function renderDetail(complex) {
+  const body = document.getElementById("detail-body");
+  const unitsHtml = complex.units.map((u, i) => {
+    const uid = `u${i}`;
+    const variantsHtml = u.variants.map((v, j) => variantHtml(uid, v, j)).join("");
+    return `
+      <div class="unit-block">
+        <div class="unit-head">
+          <span>${u.type}㎡ · ${u.group}</span>
+          <span class="badge">${u.households.total ?? "-"}세대</span>
+        </div>
+        <div class="unit-body">
+          <div class="kv" style="margin-bottom:8px">
+            <div><span class="k">전용면적</span><span>${u.area?.private ?? "-"}㎡</span></div>
+            <div><span class="k">계약면적 합계</span><span>${u.area?.total ?? "-"}㎡</span></div>
+          </div>
+          ${variantsHtml}
+        </div>
+      </div>`;
+  }).join("");
+
+  body.innerHTML = `
+    <h2>${complex.name}</h2>
+    <div class="addr">${complex.address} · ${complex.heating ?? ""} · ${complex.kind === "신규" ? "신규 공급" : "재공급"}</div>
+    ${unitsHtml}
+  `;
+  body.querySelectorAll(".unit-body").forEach(scope => {
+    scope.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const group = btn.parentElement; // 같은 .tabs 안의 버튼만 서로 토글
+        group.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const uid = btn.dataset.tab.split("-")[0];
+        scope.querySelectorAll(`[id^="${uid}-"]`).forEach(p => p.classList.remove("active"));
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+  });
+}
+
+function openDetail(complex) {
+  renderDetail(complex);
+  document.getElementById("sidebar-detail").classList.add("open");
+}
+function closeDetail() {
+  document.getElementById("sidebar-detail").classList.remove("open");
+}
+document.getElementById("detail-back").addEventListener("click", closeDetail);
+document.getElementById("detail-close").addEventListener("click", closeDetail);
+
+fetch("data/happy2026-2.json")
+  .then(r => r.json())
+  .then(complexes => {
+    const map = new kakao.maps.Map(document.getElementById("map-el"), {
+      center: new kakao.maps.LatLng(37.5665, 126.9780),
+      level: 8,
+    });
+
+    const rowsEl = document.getElementById("listing-rows");
+
+    // --- 지역(자치구) 선택 옵션 ---
+    const guSelect = document.getElementById("gu-select");
+    [...new Set(complexes.map(c => c.gu).filter(Boolean))].sort().forEach(gu => {
+      const opt = document.createElement("option");
+      opt.value = gu;
+      opt.textContent = gu;
+      guSelect.appendChild(opt);
+    });
+
+    // --- 공급구분(계층) 세그먼트: 전체/고령자/대학생/신혼부부/그 외(청년+주거급여수급자) ---
+    const GROUP_TABS = [
+      { label: "전체", match: () => true },
+      { label: "고령자", match: g => g === "고령자" },
+      { label: "대학생", match: g => g === "대학생" },
+      { label: "신혼부부", match: g => g === "신혼부부" },
+      { label: "그 외", match: g => g === "청년" || g === "주거급여수급자" },
+    ];
+    const groupSeg = document.getElementById("group-segmented");
+    let activeGroupMatch = GROUP_TABS[0].match;
+    GROUP_TABS.forEach((tab, i) => {
+      const btn = document.createElement("button");
+      btn.textContent = tab.label;
+      if (i === 0) btn.classList.add("active");
+      btn.addEventListener("click", () => {
+        activeGroupMatch = tab.match;
+        groupSeg.querySelectorAll("button").forEach(b => b.classList.toggle("active", b === btn));
+        applyFilters();
+      });
+      groupSeg.appendChild(btn);
+    });
+
+    // --- 계약면적 듀얼 슬라이더 ---
+    const allAreas = complexes.flatMap(c => c.units.map(u => parseFloat(u.area.total))).filter(n => !isNaN(n));
+    const areaFloor = Math.floor(Math.min(...allAreas));
+    const areaCeil = Math.ceil(Math.max(...allAreas));
+    const areaMinInput = document.getElementById("area-min");
+    const areaMaxInput = document.getElementById("area-max");
+    [areaMinInput, areaMaxInput].forEach(el => { el.min = areaFloor; el.max = areaCeil; });
+    areaMinInput.value = areaFloor;
+    areaMaxInput.value = areaCeil;
+
+    function updateAreaUi() {
+      let lo = parseFloat(areaMinInput.value), hi = parseFloat(areaMaxInput.value);
+      if (lo > hi) { [areaMinInput.value, areaMaxInput.value] = [hi, lo]; lo = parseFloat(areaMinInput.value); hi = parseFloat(areaMaxInput.value); }
+      document.getElementById("area-min-label").textContent = lo + "㎡";
+      document.getElementById("area-max-label").textContent = hi + "㎡";
+      const range = areaCeil - areaFloor || 1;
+      const fill = document.getElementById("area-track-fill");
+      fill.style.left = ((lo - areaFloor) / range * 100) + "%";
+      fill.style.width = ((hi - lo) / range * 100) + "%";
+    }
+    [areaMinInput, areaMaxInput].forEach(el => el.addEventListener("input", () => { updateAreaUi(); applyFilters(); }));
+    updateAreaUi();
+
+    // --- 단지 마커 + 목록 ---
+    const entries = complexes.map(c => {
+      const marker = new kakao.maps.Marker({ map, position: new kakao.maps.LatLng(c.lat, c.lng), title: c.name });
+      kakao.maps.event.addListener(marker, "click", () => { selectListing(c.name); openDetail(c); });
+
+      const typeChips = [...new Set(c.units.map(u => u.type + "㎡"))]
+        .map(t => `<span class="type-chip">${t}</span>`).join("");
+      const row = document.createElement("div");
+      row.className = "listing";
+      row.dataset.name = c.name;
+      row.innerHTML = `
+        <div class="name">${c.name}</div>
+        <div class="gu">${c.gu ?? ""} · ${totalHouseholds(c)}세대</div>
+        <div class="types">${typeChips}</div>
+      `;
+      row.addEventListener("click", () => {
+        map.setCenter(new kakao.maps.LatLng(c.lat, c.lng));
+        map.setLevel(4);
+        selectListing(c.name);
+        openDetail(c);
+      });
+      rowsEl.appendChild(row);
+
+      return { complex: c, marker, row, searchText: `${c.name} ${c.gu ?? ""} ${c.address}`.toLowerCase() };
+    });
+
+    function selectListing(name) {
+      rowsEl.querySelectorAll(".listing").forEach(el => el.classList.toggle("active", el.dataset.name === name));
+    }
+
+    function applyFilters() {
+      const q = document.getElementById("search-input").value.trim().toLowerCase();
+      const gu = guSelect.value;
+      const lo = parseFloat(areaMinInput.value), hi = parseFloat(areaMaxInput.value);
+
+      let visibleComplexes = 0, visibleHouseholds = 0;
+      entries.forEach(({ complex, marker, row, searchText }) => {
+        const searchOk = !q || searchText.includes(q);
+        const guOk = !gu || complex.gu === gu;
+        const matchingUnits = complex.units.filter(u => {
+          const groupOk = activeGroupMatch(u.group);
+          const area = parseFloat(u.area.total);
+          const areaOk = isNaN(area) || (area >= lo && area <= hi);
+          return groupOk && areaOk;
+        });
+        const match = searchOk && guOk && matchingUnits.length > 0;
+
+        row.hidden = !match;
+        marker.setMap(match ? map : null);
+        if (match) {
+          visibleComplexes += 1;
+          visibleHouseholds += matchingUnits.reduce((s, u) => s + (u.households.total || 0), 0);
+        }
+      });
+      document.getElementById("stat-complexes").textContent = visibleComplexes.toLocaleString("ko-KR");
+      document.getElementById("stat-households").textContent = visibleHouseholds.toLocaleString("ko-KR");
+      document.getElementById("list-count").textContent = visibleComplexes.toLocaleString("ko-KR");
+    }
+
+    document.getElementById("search-input").addEventListener("input", applyFilters);
+    guSelect.addEventListener("change", applyFilters);
+    applyFilters();
+  })
+  .catch(err => {
+    document.getElementById("empty-msg").style.display = "block";
+    document.getElementById("empty-msg").textContent = "데이터를 불러오지 못했습니다: " + err;
+  });
+</script>
+
+</body>
+</html>
