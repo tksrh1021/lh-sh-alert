@@ -117,7 +117,7 @@
   .list-header h2 .list-icon { color: var(--sub); font-size: 13px; }
   .list-header .count { font-size: 12px; color: var(--orange); font-weight: 700; }
 
-  #listing-rows { flex: 1; min-height: 0; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; gap: 10px; padding: 12px; }
+  #listing-rows { flex: 1; min-height: 0; overflow-y: auto; background: #fff; display: flex; flex-direction: column; gap: 10px; padding: 12px; }
 
   .listing {
     background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
@@ -149,16 +149,23 @@
   #map-el { width: 100%; height: 100%; }
   #empty-msg { position: absolute; top: 12px; left: 12px; background: var(--surface); padding: 6px 10px; border-radius: 4px; font-size: 12px; color: var(--sub); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
 
-  /* 상세 패널: 중앙 모달이 아니라 왼쪽 사이드바 자리에서 슬라이드로 나옴 */
+  /* 상세 패널: 사이드바를 덮지 않고, 지도 위에 옆으로 떠서 슬라이드로 나옴
+     (목록은 항상 그대로 보임). position:fixed라 #sidebar의 overflow:hidden에
+     안 잘림 — 모바일에서는 화면 폭이 부족해 아래쪽 미디어쿼리에서 원래
+     방식(사이드바 자리를 덮는 슬라이드)으로 되돌림 */
   #sidebar-detail {
-    position: absolute; inset: 0; background: var(--surface);
-    transform: translateX(100%); transition: transform 0.22s ease;
+    position: fixed; top: 16px; bottom: 16px; left: 396px; width: 380px;
+    background: var(--surface); border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
     overflow-y: auto; display: flex; flex-direction: column;
+    transform: translateX(-16px); opacity: 0; pointer-events: none;
+    transition: transform 0.22s ease, opacity 0.22s ease;
+    z-index: 20;
   }
-  #sidebar-detail.open { transform: translateX(0); }
+  #sidebar-detail.open { transform: translateX(0); opacity: 1; pointer-events: auto; }
   #detail-nav {
     position: sticky; top: 0; background: var(--surface); border-bottom: 1px solid var(--line);
-    padding: 10px 12px; display: flex; align-items: center; gap: 10px; z-index: 2;
+    border-radius: 16px 16px 0 0; padding: 10px 12px; display: flex; align-items: center; gap: 10px; z-index: 2;
   }
   #detail-back {
     flex-shrink: 0; border: none; background: var(--bg); border-radius: 20px; padding: 6px 12px 6px 8px;
@@ -226,6 +233,15 @@
     #sidebar { order: 2; border-right: none; border-top: 1px solid var(--line); }
     #sidebar-list { display: block; overflow-y: auto; }
     #listing-rows { flex: none; overflow-y: visible; }
+    /* 화면이 좁아 지도 옆에 띄울 공간이 없으므로, 사이드바 자리를 덮는
+       원래 슬라이드 방식으로 되돌림 */
+    #sidebar-detail {
+      position: absolute; inset: 0; top: 0; bottom: 0; left: 0; width: auto;
+      border-radius: 0; box-shadow: none;
+      transform: translateX(100%); opacity: 1; pointer-events: auto;
+    }
+    #sidebar-detail.open { transform: translateX(0); }
+    #detail-nav { border-radius: 0; }
   }
 </style>
 </head>
