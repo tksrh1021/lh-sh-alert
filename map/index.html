@@ -117,32 +117,39 @@
   .list-header h2 .list-icon { color: var(--sub); font-size: 13px; }
   .list-header .count { font-size: 12px; color: var(--orange); font-weight: 700; }
 
-  #listing-rows { flex: 1; min-height: 0; overflow-y: auto; background: #fff; display: flex; flex-direction: column; gap: 10px; padding: 12px; }
+  /* 스크롤바가 카드 폭을 줄이는 여백처럼 보이지 않도록, 실제 스크롤 요소를
+     보이는 영역보다 스크롤바 폭(6px)만큼 오른쪽으로 밀어 바깥(overflow:hidden)
+     경계 밖으로 빼버림 — 카드는 항상 꽉 찬 폭으로 보임 */
+  #listing-rows-outer { flex: 1; min-height: 0; position: relative; overflow: hidden; background: #fff; }
+  #listing-rows {
+    position: absolute; inset: 0; right: -6px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 10px; padding: 12px 18px 12px 12px;
+  }
 
   /* 커스텀 스크롤바: 평소엔 안 보이다가 hover할 때만 얇은 바(rail)로 나타남,
      위아래 화살표 버튼도 없앰 */
-  #listing-rows, #sidebar-detail, #sidebar-list {
+  #listing-rows, #detail-scroll, #sidebar-list {
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;
   }
-  #listing-rows:hover, #sidebar-detail:hover, #sidebar-list:hover {
+  #listing-rows:hover, #detail-scroll:hover, #sidebar-list:hover {
     scrollbar-color: #d8d8e0 transparent;
   }
-  #listing-rows::-webkit-scrollbar, #sidebar-detail::-webkit-scrollbar, #sidebar-list::-webkit-scrollbar { width: 6px; }
-  #listing-rows::-webkit-scrollbar-track, #sidebar-detail::-webkit-scrollbar-track, #sidebar-list::-webkit-scrollbar-track { background: transparent; }
-  #listing-rows::-webkit-scrollbar-button, #sidebar-detail::-webkit-scrollbar-button, #sidebar-list::-webkit-scrollbar-button,
+  #listing-rows::-webkit-scrollbar, #detail-scroll::-webkit-scrollbar, #sidebar-list::-webkit-scrollbar { width: 6px; }
+  #listing-rows::-webkit-scrollbar-track, #detail-scroll::-webkit-scrollbar-track, #sidebar-list::-webkit-scrollbar-track { background: transparent; }
+  #listing-rows::-webkit-scrollbar-button, #detail-scroll::-webkit-scrollbar-button, #sidebar-list::-webkit-scrollbar-button,
   #listing-rows::-webkit-scrollbar-button:start:decrement, #listing-rows::-webkit-scrollbar-button:end:increment,
-  #sidebar-detail::-webkit-scrollbar-button:start:decrement, #sidebar-detail::-webkit-scrollbar-button:end:increment,
+  #detail-scroll::-webkit-scrollbar-button:start:decrement, #detail-scroll::-webkit-scrollbar-button:end:increment,
   #sidebar-list::-webkit-scrollbar-button:start:decrement, #sidebar-list::-webkit-scrollbar-button:end:increment {
     display: none; width: 0; height: 0;
   }
-  #listing-rows::-webkit-scrollbar-thumb, #sidebar-detail::-webkit-scrollbar-thumb, #sidebar-list::-webkit-scrollbar-thumb {
+  #listing-rows::-webkit-scrollbar-thumb, #detail-scroll::-webkit-scrollbar-thumb, #sidebar-list::-webkit-scrollbar-thumb {
     background: transparent; border-radius: 10px;
   }
-  #listing-rows:hover::-webkit-scrollbar-thumb, #sidebar-detail:hover::-webkit-scrollbar-thumb, #sidebar-list:hover::-webkit-scrollbar-thumb {
+  #listing-rows:hover::-webkit-scrollbar-thumb, #detail-scroll:hover::-webkit-scrollbar-thumb, #sidebar-list:hover::-webkit-scrollbar-thumb {
     background: #d8d8e0;
   }
-  #listing-rows::-webkit-scrollbar-thumb:hover, #sidebar-detail::-webkit-scrollbar-thumb:hover, #sidebar-list::-webkit-scrollbar-thumb:hover {
+  #listing-rows::-webkit-scrollbar-thumb:hover, #detail-scroll::-webkit-scrollbar-thumb:hover, #sidebar-list::-webkit-scrollbar-thumb:hover {
     background: #c2c2cc;
   }
 
@@ -184,12 +191,18 @@
     position: fixed; top: 16px; bottom: 16px; left: 396px; width: 380px;
     background: var(--surface); border-radius: 16px;
     box-shadow: 0 12px 40px rgba(0,0,0,0.18);
-    overflow-y: auto; display: flex; flex-direction: column;
+    overflow: hidden;
     transform: translateX(-16px); opacity: 0; pointer-events: none;
     transition: transform 0.22s ease, opacity 0.22s ease;
     z-index: 20;
   }
   #sidebar-detail.open { transform: translateX(0); opacity: 1; pointer-events: auto; }
+  /* 여기도 목록과 동일하게, 실제 스크롤 요소를 스크롤바 폭만큼 밖으로 밀어
+     둥근 모서리 카드 안에서 여백 없이 꽉 차 보이게 함 */
+  #detail-scroll {
+    position: absolute; inset: 0; right: -6px; padding-right: 6px;
+    overflow-y: auto; display: flex; flex-direction: column;
+  }
   #detail-nav {
     position: sticky; top: 0; background: var(--surface); border-bottom: 1px solid var(--line);
     border-radius: 16px 16px 0 0; padding: 14px 16px; display: flex; align-items: center;
@@ -259,7 +272,8 @@
     #map { order: 1; }
     #sidebar { order: 2; border-right: none; border-top: 1px solid var(--line); }
     #sidebar-list { display: block; overflow-y: auto; }
-    #listing-rows { flex: none; overflow-y: visible; }
+    #listing-rows-outer { flex: none; overflow: visible; position: static; }
+    #listing-rows { position: static; right: auto; padding: 12px; overflow-y: visible; }
     /* 화면이 좁아 지도 옆에 띄울 공간이 없으므로, 사이드바 자리를 덮는
        원래 슬라이드 방식으로 되돌림 */
     #sidebar-detail {
@@ -335,15 +349,19 @@
           <span class="count"><span id="list-count">-</span>개</span>
         </div>
       </div>
-      <div id="listing-rows"></div>
+      <div id="listing-rows-outer">
+        <div id="listing-rows"></div>
+      </div>
     </div>
 
     <div id="sidebar-detail">
-      <div id="detail-nav">
-        <span id="detail-nav-title"></span>
-        <button id="detail-back" aria-label="닫기">✕</button>
+      <div id="detail-scroll">
+        <div id="detail-nav">
+          <span id="detail-nav-title"></span>
+          <button id="detail-back" aria-label="닫기">✕</button>
+        </div>
+        <div id="detail-body"></div>
       </div>
-      <div id="detail-body"></div>
     </div>
   </div>
 
