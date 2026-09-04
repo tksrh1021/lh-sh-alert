@@ -68,6 +68,14 @@
   .stat-card .value { font-size: 19px; font-weight: 800; color: var(--orange); font-variant-numeric: tabular-nums; margin-top: 2px; }
 
   .field-label { font-size: 12px; font-weight: 700; color: var(--sub); margin: 4px 0 8px; }
+  .field-label-row { display: flex; justify-content: space-between; align-items: center; margin: 4px 0 8px; }
+  .field-label-row .field-label { margin: 0; }
+  .unit-toggle { display: flex; border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
+  .unit-toggle button {
+    border: none; background: var(--surface); font-size: 10.5px; font-weight: 700; color: var(--sub);
+    padding: 3px 10px; cursor: pointer; font-family: inherit;
+  }
+  .unit-toggle button.active { background: var(--orange); color: #fff; }
   select#gu-select {
     width: 100%; padding: 9px 12px; border: 1.5px solid var(--line); border-radius: 4px;
     font-size: 13px; font-family: inherit; color: var(--ink); background: var(--surface);
@@ -257,7 +265,13 @@
           </div>
 
           <div class="side-section">
-            <div class="field-label">세대별 계약면적(㎡)</div>
+            <div class="field-label-row">
+              <div class="field-label">세대별 계약면적</div>
+              <div class="unit-toggle" id="area-unit-toggle">
+                <button type="button" class="active" data-unit="m2">㎡</button>
+                <button type="button" data-unit="pyeong">평</button>
+              </div>
+            </div>
             <div class="range-slider">
               <div class="track"></div>
               <div class="track-fill" id="area-track-fill"></div>
@@ -446,11 +460,23 @@ fetch("data/happy2026-2.json")
     areaMinInput.value = areaFloor;
     areaMaxInput.value = areaCeil;
 
+    // --- 평/㎡ 단위 전환 (필터링은 항상 ㎡ 원본 값으로, 표시만 바뀜) ---
+    const M2_PER_PYEONG = 3.305785;
+    let areaUnit = "m2";
+    const formatArea = v => areaUnit === "pyeong" ? (v / M2_PER_PYEONG).toFixed(1) + "평" : v + "㎡";
+    document.querySelectorAll("#area-unit-toggle button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        areaUnit = btn.dataset.unit;
+        document.querySelectorAll("#area-unit-toggle button").forEach(b => b.classList.toggle("active", b === btn));
+        updateAreaUi();
+      });
+    });
+
     function updateAreaUi() {
       let lo = parseFloat(areaMinInput.value), hi = parseFloat(areaMaxInput.value);
       if (lo > hi) { [areaMinInput.value, areaMaxInput.value] = [hi, lo]; lo = parseFloat(areaMinInput.value); hi = parseFloat(areaMaxInput.value); }
-      document.getElementById("area-min-label").textContent = lo + "㎡";
-      document.getElementById("area-max-label").textContent = hi + "㎡";
+      document.getElementById("area-min-label").textContent = formatArea(lo);
+      document.getElementById("area-max-label").textContent = formatArea(hi);
       const range = areaCeil - areaFloor || 1;
       const fill = document.getElementById("area-track-fill");
       fill.style.left = ((lo - areaFloor) / range * 100) + "%";
