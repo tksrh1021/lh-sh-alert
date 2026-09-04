@@ -119,6 +119,20 @@
 
   #listing-rows { flex: 1; min-height: 0; overflow-y: auto; background: #fff; display: flex; flex-direction: column; gap: 10px; padding: 12px; }
 
+  /* 얇고 둥근 커스텀 스크롤바 (기본 브라우저 스크롤바 대신) */
+  #listing-rows, #sidebar-detail, #sidebar-list {
+    scrollbar-width: thin;
+    scrollbar-color: #d8d8e0 transparent;
+  }
+  #listing-rows::-webkit-scrollbar, #sidebar-detail::-webkit-scrollbar, #sidebar-list::-webkit-scrollbar { width: 6px; }
+  #listing-rows::-webkit-scrollbar-track, #sidebar-detail::-webkit-scrollbar-track, #sidebar-list::-webkit-scrollbar-track { background: transparent; }
+  #listing-rows::-webkit-scrollbar-thumb, #sidebar-detail::-webkit-scrollbar-thumb, #sidebar-list::-webkit-scrollbar-thumb {
+    background: #d8d8e0; border-radius: 10px;
+  }
+  #listing-rows::-webkit-scrollbar-thumb:hover, #sidebar-detail::-webkit-scrollbar-thumb:hover, #sidebar-list::-webkit-scrollbar-thumb:hover {
+    background: #c2c2cc;
+  }
+
   .listing {
     background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
     padding: 14px 16px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
