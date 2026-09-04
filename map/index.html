@@ -129,25 +129,26 @@
   }
   #listing-rows::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
-  #sidebar-list, #sidebar-detail { scrollbar-width: thin; scrollbar-color: transparent transparent; }
-  #sidebar-list:hover, #sidebar-detail:hover { scrollbar-color: #d8d8e0 transparent; }
-  #sidebar-list::-webkit-scrollbar, #sidebar-detail::-webkit-scrollbar { width: 6px; }
-  #sidebar-list::-webkit-scrollbar-track, #sidebar-detail::-webkit-scrollbar-track { background: transparent; }
-  #sidebar-list::-webkit-scrollbar-button, #sidebar-detail::-webkit-scrollbar-button,
-  #sidebar-list::-webkit-scrollbar-button:start:decrement, #sidebar-list::-webkit-scrollbar-button:end:increment,
-  #sidebar-detail::-webkit-scrollbar-button:start:decrement, #sidebar-detail::-webkit-scrollbar-button:end:increment {
+  #sidebar-list { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+  #sidebar-list:hover { scrollbar-color: #d8d8e0 transparent; }
+  #sidebar-list::-webkit-scrollbar { width: 6px; }
+  #sidebar-list::-webkit-scrollbar-track { background: transparent; }
+  #sidebar-list::-webkit-scrollbar-button,
+  #sidebar-list::-webkit-scrollbar-button:start:decrement, #sidebar-list::-webkit-scrollbar-button:end:increment {
     display: none; width: 0; height: 0;
   }
-  #sidebar-list::-webkit-scrollbar-thumb, #sidebar-detail::-webkit-scrollbar-thumb { background: transparent; border-radius: 10px; }
-  #sidebar-list:hover::-webkit-scrollbar-thumb, #sidebar-detail:hover::-webkit-scrollbar-thumb { background: #d8d8e0; }
-  #sidebar-list::-webkit-scrollbar-thumb:hover, #sidebar-detail::-webkit-scrollbar-thumb:hover { background: #c2c2cc; }
+  #sidebar-list::-webkit-scrollbar-thumb { background: transparent; border-radius: 10px; }
+  #sidebar-list:hover::-webkit-scrollbar-thumb { background: #d8d8e0; }
+  #sidebar-list::-webkit-scrollbar-thumb:hover { background: #c2c2cc; }
 
-  /* JS가 위치/높이를 계산해서 그리는 가짜 스크롤바 표시줄 — hover할 때만 보임 */
+  /* JS가 위치/높이를 계산해서 그리는 가짜 스크롤바 표시줄 — hover할 때만 보이고
+     클릭+드래그로 스크롤도 가능 */
   .fake-scrollbar-thumb {
     position: absolute; right: 2px; width: 4px; border-radius: 4px;
-    background: transparent; pointer-events: none; transition: background 0.15s;
+    background: transparent; pointer-events: none; cursor: pointer; transition: background 0.15s;
   }
-  #listing-rows-outer:hover .fake-scrollbar-thumb { background: #d8d8e0; }
+  .fake-scrollbar-thumb:active { cursor: grabbing; }
+  #listing-rows-outer:hover .fake-scrollbar-thumb { background: #d8d8e0; pointer-events: auto; }
 
   .listing {
     background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
@@ -185,14 +186,21 @@
      방식(사이드바 자리를 덮는 슬라이드)으로 되돌림 */
   #sidebar-detail {
     position: fixed; top: 16px; bottom: 16px; left: 396px; width: 380px;
-    background: var(--surface); border-radius: 16px;
+    background: var(--surface); border-radius: 16px; overflow: hidden;
     box-shadow: 0 12px 40px rgba(0,0,0,0.18);
-    overflow-y: auto; display: flex; flex-direction: column;
     transform: translateX(-16px); opacity: 0; pointer-events: none;
     transition: transform 0.22s ease, opacity 0.22s ease;
     z-index: 20;
   }
   #sidebar-detail.open { transform: translateX(0); opacity: 1; pointer-events: auto; }
+  /* 목록과 동일하게: 실제 스크롤 요소(#detail-scroll)는 네이티브 스크롤바를
+     숨기고, 그 자리를 JS가 그리는 .fake-scrollbar-thumb가 대신함 */
+  #detail-scroll {
+    position: absolute; inset: 0; overflow-y: auto; display: flex; flex-direction: column;
+    scrollbar-width: none;
+  }
+  #detail-scroll::-webkit-scrollbar { display: none; width: 0; height: 0; }
+  #sidebar-detail:hover .fake-scrollbar-thumb { background: #d8d8e0; pointer-events: auto; }
   #detail-nav {
     position: sticky; top: 0; background: var(--surface); border-bottom: 1px solid var(--line);
     border-radius: 16px 16px 0 0; padding: 14px 16px; display: flex; align-items: center;
@@ -266,7 +274,7 @@
        데스크톱용 절대 위치/가짜 스크롤바 구조를 다시 일반 흐름으로 되돌림 */
     #listing-rows-outer { flex: none; position: static; }
     #listing-rows { position: static; inset: auto; overflow-y: visible; padding: 12px; }
-    .fake-scrollbar-thumb { display: none; }
+    #listing-rows-thumb { display: none; }
     /* 화면이 좁아 지도 옆에 띄울 공간이 없으므로, 사이드바 자리를 덮는
        원래 슬라이드 방식으로 되돌림 */
     #sidebar-detail {
@@ -349,11 +357,14 @@
     </div>
 
     <div id="sidebar-detail">
-      <div id="detail-nav">
-        <span id="detail-nav-title"></span>
-        <button id="detail-back" aria-label="닫기">✕</button>
+      <div id="detail-scroll">
+        <div id="detail-nav">
+          <span id="detail-nav-title"></span>
+          <button id="detail-back" aria-label="닫기">✕</button>
+        </div>
+        <div id="detail-body"></div>
       </div>
-      <div id="detail-body"></div>
+      <div class="fake-scrollbar-thumb" id="detail-scroll-thumb"></div>
     </div>
   </div>
 
@@ -380,9 +391,8 @@ function baseDepositRange(c) {
 const PIN_ICON = `<svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-7.5 7-12a7 7 0 1 0-14 0c0 4.5 7 12 7 12Z" stroke="#9a9ca6" stroke-width="1.6"/><circle cx="12" cy="9" r="2.3" stroke="#9a9ca6" stroke-width="1.6"/></svg>`;
 
 // 네이티브 스크롤바를 완전히 숨긴 스크롤 영역 위에, 위치/높이만 계산해서
-// 그리는 얇은 표시줄. 실제 스크롤은 여전히 휠/트랙패드로 하고, 이건 시각적
-// 안내용이라 드래그는 지원하지 않음 — 그래서 좌우 padding을 스크롤바 폭만큼
-// 미리 빼둘 필요가 없어짐(여백이 항상 좌우 동일).
+// 그리는 얇은 표시줄. 클릭+드래그로도 스크롤할 수 있음 — 그래서 좌우
+// padding을 스크롤바 폭만큼 미리 빼둘 필요가 없어짐(여백이 항상 좌우 동일).
 function mountFakeScrollbar(scrollEl, thumbEl) {
   const MIN_THUMB = 24;
   function update() {
@@ -397,6 +407,28 @@ function mountFakeScrollbar(scrollEl, thumbEl) {
   }
   scrollEl.addEventListener("scroll", update);
   new ResizeObserver(update).observe(scrollEl);
+
+  let dragging = false, startY = 0, startScrollTop = 0;
+  thumbEl.addEventListener("mousedown", e => {
+    dragging = true;
+    startY = e.clientY;
+    startScrollTop = scrollEl.scrollTop;
+    document.body.style.userSelect = "none";
+    e.preventDefault();
+  });
+  document.addEventListener("mousemove", e => {
+    if (!dragging) return;
+    const maxTop = scrollEl.clientHeight - thumbEl.offsetHeight;
+    if (maxTop <= 0) return;
+    const scrollable = scrollEl.scrollHeight - scrollEl.clientHeight;
+    scrollEl.scrollTop = startScrollTop + ((e.clientY - startY) / maxTop) * scrollable;
+  });
+  document.addEventListener("mouseup", () => {
+    if (!dragging) return;
+    dragging = false;
+    document.body.style.userSelect = "";
+  });
+
   update();
   return update;
 }
@@ -432,6 +464,10 @@ function variantHtml(uid, v, i) {
 }
 
 const GROUP_ICON = { "고령자": "🧓", "신혼부부": "💑", "청년": "🧑", "대학생": "🎓", "주거급여수급자": "🏠" };
+
+const updateDetailThumb = mountFakeScrollbar(
+  document.getElementById("detail-scroll"), document.getElementById("detail-scroll-thumb")
+);
 
 function renderDetail(complex) {
   const body = document.getElementById("detail-body");
@@ -475,9 +511,11 @@ function renderDetail(complex) {
         const uid = btn.dataset.tab.split("-")[0];
         scope.querySelectorAll(`[id^="${uid}-"]`).forEach(p => p.classList.remove("active"));
         document.getElementById(btn.dataset.tab).classList.add("active");
+        updateDetailThumb();
       });
     });
   });
+  updateDetailThumb();
 }
 
 function openDetail(complex) {
