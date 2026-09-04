@@ -117,7 +117,9 @@
   .list-header h2 .list-icon { color: var(--sub); font-size: 13px; }
   .list-header .count { font-size: 12px; color: var(--orange); font-weight: 700; }
 
-  #listing-rows { flex: 1; min-height: 0; overflow-y: auto; background: #fff; display: flex; flex-direction: column; gap: 10px; padding: 12px; }
+  /* 오른쪽만 padding(12px)+스크롤바 폭(6px)이 겹쳐 이중으로 여백을
+     차지하지 않도록, 오른쪽 padding을 스크롤바 폭만큼 줄여서 맞춤 */
+  #listing-rows { flex: 1; min-height: 0; overflow-y: auto; background: #fff; display: flex; flex-direction: column; gap: 10px; padding: 12px 6px 12px 12px; }
 
   /* 커스텀 스크롤바: 평소엔 안 보이다가 hover할 때만 얇은 바(rail)로 나타남,
      위아래 화살표 버튼도 없앰 */
@@ -259,7 +261,10 @@
     #map { order: 1; }
     #sidebar { order: 2; border-right: none; border-top: 1px solid var(--line); }
     #sidebar-list { display: block; overflow-y: auto; }
-    #listing-rows { flex: none; overflow-y: visible; }
+    /* 모바일은 여기서 스크롤이 안 생기고(overflow-y:visible) #sidebar-list가
+       대신 스크롤하므로 스크롤바가 안 생김 — 오른쪽 padding을 줄여둘 이유가
+       없어서 다시 좌우 동일하게 맞춤 */
+    #listing-rows { flex: none; overflow-y: visible; padding: 12px; }
     /* 화면이 좁아 지도 옆에 띄울 공간이 없으므로, 사이드바 자리를 덮는
        원래 슬라이드 방식으로 되돌림 */
     #sidebar-detail {
