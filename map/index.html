@@ -105,14 +105,19 @@
 
   #listing-rows { flex: 1; min-height: 0; overflow-y: auto; border-top: 1px solid var(--line); }
 
-  .listing { padding: 12px 18px; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .listing { display: flex; align-items: center; gap: 8px; padding: 12px 14px 12px 18px; border-bottom: 1px solid var(--line); cursor: pointer; }
   .listing[hidden] { display: none; }
   .listing:hover { background: var(--bg); }
   .listing.active { background: #fff4ec; }
-  .listing .name { font-weight: 700; font-size: 13.5px; }
+  .listing-main { flex: 1; min-width: 0; }
+  .listing-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .listing .name { font-weight: 700; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .listing .hh-badge { flex-shrink: 0; font-size: 11px; font-weight: 700; color: var(--orange); background: #fff1e6; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
   .listing .gu { font-size: 11.5px; color: var(--sub); margin-top: 2px; }
   .listing .types { margin-top: 6px; display: flex; gap: 5px; flex-wrap: wrap; }
   .type-chip { font-size: 11px; padding: 2px 7px; border-radius: 4px; background: var(--bg); color: var(--sub); border: 1px solid var(--line); }
+  .listing-arrow { flex-shrink: 0; font-size: 20px; color: #c7c7cf; transition: transform 0.15s, color 0.15s; }
+  .listing:hover .listing-arrow { color: var(--orange); transform: translateX(2px); }
 
   #map { position: relative; }
   #map-el { width: 100%; height: 100%; }
@@ -125,14 +130,27 @@
     overflow-y: auto; display: flex; flex-direction: column;
   }
   #sidebar-detail.open { transform: translateX(0); }
-  #detail-nav { position: sticky; top: 0; background: var(--surface); border-bottom: 1px solid var(--line); padding: 10px 12px; display: flex; justify-content: space-between; z-index: 2; }
-  #detail-nav button { border: none; background: var(--bg); border-radius: 4px; width: 30px; height: 30px; font-size: 15px; cursor: pointer; color: var(--ink); }
+  #detail-nav {
+    position: sticky; top: 0; background: var(--surface); border-bottom: 1px solid var(--line);
+    padding: 10px 12px; display: flex; align-items: center; gap: 10px; z-index: 2;
+  }
+  #detail-back {
+    flex-shrink: 0; border: none; background: var(--bg); border-radius: 20px; padding: 6px 12px 6px 8px;
+    font-size: 12.5px; font-weight: 700; cursor: pointer; color: var(--ink); font-family: inherit;
+    display: flex; align-items: center; gap: 2px;
+  }
+  #detail-back:hover { background: #ececf2; }
+  #detail-nav-title {
+    font-size: 12.5px; font-weight: 700; color: var(--sub); overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;
+  }
   #detail-body { padding: 16px 18px 24px; }
   #detail-body h2 { font-size: 16px; font-weight: 800; margin: 0 0 4px; }
   #detail-body .addr { font-size: 12px; color: var(--sub); margin-bottom: 16px; line-height: 1.5; }
 
   .unit-block { border: 1px solid var(--line); border-radius: 4px; margin-bottom: 10px; overflow: hidden; }
-  .unit-head { padding: 10px 12px; background: var(--bg); font-weight: 700; font-size: 13px; display: flex; justify-content: space-between; }
+  .unit-head { padding: 10px 12px; background: var(--bg); font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 6px; justify-content: space-between; }
+  .unit-head .label { display: flex; align-items: center; gap: 6px; }
   .unit-head .badge { color: var(--orange); font-weight: 700; }
   .unit-body { padding: 10px 12px; font-size: 12.5px; }
   .variant-label { font-size: 11.5px; font-weight: 700; color: var(--sub); margin: 10px 0 6px; }
@@ -145,6 +163,17 @@
   .kv .k { color: var(--sub); }
   .tab-pane { display: none; }
   .tab-pane.active { display: block; }
+
+  .rent-highlight { display: flex; gap: 8px; }
+  .rh-item { flex: 1; background: var(--bg); border-radius: 4px; padding: 8px 10px; }
+  .rh-label { font-size: 11px; color: var(--sub); }
+  .rh-value { font-size: 14.5px; font-weight: 800; color: var(--orange); margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+  .conv-grid { display: flex; gap: 8px; }
+  .conv-col { flex: 1; background: var(--bg); border-radius: 4px; padding: 8px 10px; }
+  .conv-label { font-size: 11px; font-weight: 700; color: var(--sub); margin-bottom: 6px; }
+  .kv-mini { display: flex; justify-content: space-between; font-size: 12px; margin-top: 3px; }
+  .kv-mini .k { color: var(--sub); }
 
   /* 모바일 오버라이드: 스타일시트 맨 끝에 둬야 위 규칙들(동일 우선순위)을
      실제로 덮어씀 — 앞쪽에 있으면 나중에 나온 기본 규칙이 그냥 다시 이김.
@@ -222,8 +251,8 @@
 
     <div id="sidebar-detail">
       <div id="detail-nav">
-        <button id="detail-back" aria-label="목록으로">‹</button>
-        <button id="detail-close" aria-label="닫기">✕</button>
+        <button id="detail-back" aria-label="목록으로 돌아가기">‹ 목록으로</button>
+        <span id="detail-nav-title"></span>
       </div>
       <div id="detail-body"></div>
     </div>
@@ -247,23 +276,31 @@ function variantHtml(uid, v, i) {
     ${v.income ? `<div class="variant-label">${v.income}</div>` : ""}
     <div class="tabs">
       <button class="tab-btn active" data-tab="${vid}-base">기본 임대조건</button>
-      <button class="tab-btn" data-tab="${vid}-conv">최대 전환조건</button>
+      <button class="tab-btn" data-tab="${vid}-conv">보증금 전환</button>
     </div>
     <div class="tab-pane active" id="${vid}-base">
-      <div class="kv">
-        <div><span class="k">임대보증금</span><span>${thousandWon(v.base?.deposit)}</span></div>
-        <div><span class="k">월 임대료</span><span>${won(v.base?.rent)}</span></div>
+      <div class="rent-highlight">
+        <div class="rh-item"><div class="rh-label">임대보증금</div><div class="rh-value">${thousandWon(v.base?.deposit)}</div></div>
+        <div class="rh-item"><div class="rh-label">월 임대료</div><div class="rh-value">${won(v.base?.rent)}</div></div>
       </div>
     </div>
     <div class="tab-pane" id="${vid}-conv">
-      <div class="kv">
-        <div><span class="k">보증금↑ 전환시 보증금</span><span>${thousandWon(v.convertUp?.deposit)}</span></div>
-        <div><span class="k">보증금↑ 전환시 월세</span><span>${won(v.convertUp?.rent)}</span></div>
-        <div><span class="k">보증금↓ 전환시 보증금</span><span>${thousandWon(v.convertDown?.deposit)}</span></div>
-        <div><span class="k">보증금↓ 전환시 월세</span><span>${won(v.convertDown?.rent)}</span></div>
+      <div class="conv-grid">
+        <div class="conv-col">
+          <div class="conv-label">보증금 올리면</div>
+          <div class="kv-mini"><span class="k">보증금</span><span>${thousandWon(v.convertUp?.deposit)}</span></div>
+          <div class="kv-mini"><span class="k">월세</span><span>${won(v.convertUp?.rent)}</span></div>
+        </div>
+        <div class="conv-col">
+          <div class="conv-label">보증금 낮추면</div>
+          <div class="kv-mini"><span class="k">보증금</span><span>${thousandWon(v.convertDown?.deposit)}</span></div>
+          <div class="kv-mini"><span class="k">월세</span><span>${won(v.convertDown?.rent)}</span></div>
+        </div>
       </div>
     </div>`;
 }
+
+const GROUP_ICON = { "고령자": "🧓", "신혼부부": "💑", "청년": "🧑", "대학생": "🎓", "주거급여수급자": "🏠" };
 
 function renderDetail(complex) {
   const body = document.getElementById("detail-body");
@@ -273,7 +310,7 @@ function renderDetail(complex) {
     return `
       <div class="unit-block">
         <div class="unit-head">
-          <span>${u.type}㎡ · ${u.group}</span>
+          <span class="label">${GROUP_ICON[u.group] ?? "🏢"} ${u.type}㎡ · ${u.group}</span>
           <span class="badge">${u.households.total ?? "-"}세대</span>
         </div>
         <div class="unit-body">
@@ -291,6 +328,7 @@ function renderDetail(complex) {
     <div class="addr">${complex.address} · ${complex.heating ?? ""} · ${complex.kind === "신규" ? "신규 공급" : "재공급"}</div>
     ${unitsHtml}
   `;
+  document.getElementById("detail-nav-title").textContent = complex.name;
   body.querySelectorAll(".unit-body").forEach(scope => {
     scope.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -313,7 +351,6 @@ function closeDetail() {
   document.getElementById("sidebar-detail").classList.remove("open");
 }
 document.getElementById("detail-back").addEventListener("click", closeDetail);
-document.getElementById("detail-close").addEventListener("click", closeDetail);
 
 fetch("data/happy2026-2.json")
   .then(r => r.json())
@@ -397,9 +434,15 @@ fetch("data/happy2026-2.json")
       row.className = "listing";
       row.dataset.name = c.name;
       row.innerHTML = `
-        <div class="name">${c.name}</div>
-        <div class="gu">${c.gu ?? ""} · ${totalHouseholds(c)}세대</div>
-        <div class="types">${typeChips}</div>
+        <div class="listing-main">
+          <div class="listing-top">
+            <div class="name">${c.name}</div>
+            <span class="hh-badge">${totalHouseholds(c)}세대</span>
+          </div>
+          <div class="gu">${c.gu ?? ""}</div>
+          <div class="types">${typeChips}</div>
+        </div>
+        <div class="listing-arrow">›</div>
       `;
       row.addEventListener("click", () => {
         map.setCenter(new kakao.maps.LatLng(c.lat, c.lng));
