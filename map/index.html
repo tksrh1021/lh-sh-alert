@@ -90,7 +90,10 @@
   .segmented button:hover:not(.active) { background: var(--bg); }
   .segmented button.active { background: var(--ink); color: #fff; font-weight: 700; }
 
-  #area-range-label { font-size: 12px; color: var(--sub); display: flex; justify-content: space-between; margin-top: 6px; }
+  #area-range-label {
+    font-size: 12px; color: var(--sub); display: flex; justify-content: space-between;
+    align-items: center; margin-top: 6px; min-height: 16px; font-variant-numeric: tabular-nums;
+  }
   #area-range-label span { min-width: 48px; }
   #area-range-label span:last-child { text-align: right; }
   .range-slider { position: relative; height: 28px; }
@@ -270,7 +273,7 @@
             <div class="field-label-row">
               <div class="field-label">세대별 계약면적</div>
               <div class="unit-toggle" id="area-unit-toggle">
-                <button type="button" class="active" data-unit="m2">㎡</button>
+                <button type="button" class="active" data-unit="m2">m²</button>
                 <button type="button" data-unit="pyeong">평</button>
               </div>
             </div>
@@ -465,7 +468,7 @@ fetch("data/happy2026-2.json")
     // --- 평/㎡ 단위 전환 (필터링은 항상 ㎡ 원본 값으로, 표시만 바뀜) ---
     const M2_PER_PYEONG = 3.305785;
     let areaUnit = "m2";
-    const formatArea = v => areaUnit === "pyeong" ? (v / M2_PER_PYEONG).toFixed(1) + "평" : v + "㎡";
+    const formatArea = v => areaUnit === "pyeong" ? (v / M2_PER_PYEONG).toFixed(1) + "평" : v + "m²";
     document.querySelectorAll("#area-unit-toggle button").forEach(btn => {
       btn.addEventListener("click", () => {
         areaUnit = btn.dataset.unit;
