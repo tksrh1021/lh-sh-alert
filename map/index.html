@@ -317,6 +317,8 @@ function renderDetail(complex) {
           <div class="kv" style="margin-bottom:8px">
             <div><span class="k">전용면적</span><span>${u.area?.private ?? "-"}㎡</span></div>
             <div><span class="k">계약면적 합계</span><span>${u.area?.total ?? "-"}㎡</span></div>
+            <div><span class="k">우선공급 세대수</span><span>${u.households.priority ?? "-"}세대</span></div>
+            <div><span class="k">일반공급 세대수</span><span>${u.households.general ?? "-"}세대</span></div>
           </div>
           ${variantsHtml}
         </div>
@@ -325,7 +327,11 @@ function renderDetail(complex) {
 
   body.innerHTML = `
     <h2>${complex.name}</h2>
-    <div class="addr">${complex.address} · ${complex.heating ?? ""} · ${complex.kind === "신규" ? "신규 공급" : "재공급"}</div>
+    <div class="addr">${complex.address}</div>
+    <div class="kv" style="margin-bottom:16px">
+      <div><span class="k">난방방식</span><span>${complex.heating ?? "-"}</span></div>
+      <div><span class="k">공급방식</span><span>${complex.kind === "신규" ? "신규 공급" : "재공급"}</span></div>
+    </div>
     ${unitsHtml}
   `;
   document.getElementById("detail-nav-title").textContent = complex.name;
