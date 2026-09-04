@@ -130,7 +130,10 @@
   }
   #listing-rows::-webkit-scrollbar, #sidebar-detail::-webkit-scrollbar, #sidebar-list::-webkit-scrollbar { width: 6px; }
   #listing-rows::-webkit-scrollbar-track, #sidebar-detail::-webkit-scrollbar-track, #sidebar-list::-webkit-scrollbar-track { background: transparent; }
-  #listing-rows::-webkit-scrollbar-button, #sidebar-detail::-webkit-scrollbar-button, #sidebar-list::-webkit-scrollbar-button {
+  #listing-rows::-webkit-scrollbar-button, #sidebar-detail::-webkit-scrollbar-button, #sidebar-list::-webkit-scrollbar-button,
+  #listing-rows::-webkit-scrollbar-button:start:decrement, #listing-rows::-webkit-scrollbar-button:end:increment,
+  #sidebar-detail::-webkit-scrollbar-button:start:decrement, #sidebar-detail::-webkit-scrollbar-button:end:increment,
+  #sidebar-list::-webkit-scrollbar-button:start:decrement, #sidebar-list::-webkit-scrollbar-button:end:increment {
     display: none; width: 0; height: 0;
   }
   #listing-rows::-webkit-scrollbar-thumb, #sidebar-detail::-webkit-scrollbar-thumb, #sidebar-list::-webkit-scrollbar-thumb {
