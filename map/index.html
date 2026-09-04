@@ -119,15 +119,25 @@
 
   #listing-rows { flex: 1; min-height: 0; overflow-y: auto; background: #fff; display: flex; flex-direction: column; gap: 10px; padding: 12px; }
 
-  /* 얇고 둥근 커스텀 스크롤바 (기본 브라우저 스크롤바 대신) */
+  /* 커스텀 스크롤바: 평소엔 안 보이다가 hover할 때만 얇은 바(rail)로 나타남,
+     위아래 화살표 버튼도 없앰 */
   #listing-rows, #sidebar-detail, #sidebar-list {
     scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  #listing-rows:hover, #sidebar-detail:hover, #sidebar-list:hover {
     scrollbar-color: #d8d8e0 transparent;
   }
   #listing-rows::-webkit-scrollbar, #sidebar-detail::-webkit-scrollbar, #sidebar-list::-webkit-scrollbar { width: 6px; }
   #listing-rows::-webkit-scrollbar-track, #sidebar-detail::-webkit-scrollbar-track, #sidebar-list::-webkit-scrollbar-track { background: transparent; }
+  #listing-rows::-webkit-scrollbar-button, #sidebar-detail::-webkit-scrollbar-button, #sidebar-list::-webkit-scrollbar-button {
+    display: none; width: 0; height: 0;
+  }
   #listing-rows::-webkit-scrollbar-thumb, #sidebar-detail::-webkit-scrollbar-thumb, #sidebar-list::-webkit-scrollbar-thumb {
-    background: #d8d8e0; border-radius: 10px;
+    background: transparent; border-radius: 10px;
+  }
+  #listing-rows:hover::-webkit-scrollbar-thumb, #sidebar-detail:hover::-webkit-scrollbar-thumb, #sidebar-list:hover::-webkit-scrollbar-thumb {
+    background: #d8d8e0;
   }
   #listing-rows::-webkit-scrollbar-thumb:hover, #sidebar-detail::-webkit-scrollbar-thumb:hover, #sidebar-list::-webkit-scrollbar-thumb:hover {
     background: #c2c2cc;
@@ -179,16 +189,16 @@
   #sidebar-detail.open { transform: translateX(0); opacity: 1; pointer-events: auto; }
   #detail-nav {
     position: sticky; top: 0; background: var(--surface); border-bottom: 1px solid var(--line);
-    border-radius: 16px 16px 0 0; padding: 10px 12px; display: flex; align-items: center; gap: 10px; z-index: 2;
+    border-radius: 16px 16px 0 0; padding: 14px 16px; display: flex; align-items: center;
+    justify-content: space-between; gap: 10px; z-index: 2;
   }
   #detail-back {
-    flex-shrink: 0; border: none; background: var(--bg); border-radius: 20px; padding: 6px 12px 6px 8px;
-    font-size: 12.5px; font-weight: 700; cursor: pointer; color: var(--ink); font-family: inherit;
-    display: flex; align-items: center; gap: 2px;
+    flex-shrink: 0; border: none; background: none; padding: 2px; margin: -2px;
+    font-size: 18px; line-height: 1; cursor: pointer; color: var(--sub); font-family: inherit;
   }
-  #detail-back:hover { background: #ececf2; }
+  #detail-back:hover { color: var(--ink); }
   #detail-nav-title {
-    font-size: 12.5px; font-weight: 700; color: var(--sub); overflow: hidden;
+    font-size: 16px; font-weight: 800; color: var(--ink); overflow: hidden;
     text-overflow: ellipsis; white-space: nowrap;
   }
   #detail-body { padding: 18px 18px 28px; }
@@ -327,8 +337,8 @@
 
     <div id="sidebar-detail">
       <div id="detail-nav">
-        <button id="detail-back" aria-label="목록으로 돌아가기">‹ 목록으로</button>
         <span id="detail-nav-title"></span>
+        <button id="detail-back" aria-label="닫기">✕</button>
       </div>
       <div id="detail-body"></div>
     </div>
