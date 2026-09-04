@@ -100,24 +100,37 @@
   .range-slider .track-fill { position: absolute; top: 16px; height: 4px; background: var(--orange); border-radius: 4px; }
 
   .list-header { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 18px 10px; flex-shrink: 0; }
-  .list-header h2 { font-size: 13px; margin: 0; }
+  .list-header h2 { font-size: 13px; margin: 0; display: flex; align-items: center; gap: 6px; }
+  .list-header h2 .list-icon { color: var(--sub); font-size: 13px; }
   .list-header .count { font-size: 12px; color: var(--orange); font-weight: 700; }
 
-  #listing-rows { flex: 1; min-height: 0; overflow-y: auto; border-top: 1px solid var(--line); }
+  #listing-rows { flex: 1; min-height: 0; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; gap: 10px; padding: 12px; }
 
-  .listing { display: flex; align-items: center; gap: 8px; padding: 12px 14px 12px 18px; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .listing {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    transition: box-shadow 0.15s, border-color 0.15s;
+  }
   .listing[hidden] { display: none; }
-  .listing:hover { background: var(--bg); }
-  .listing.active { background: #fff4ec; }
-  .listing-main { flex: 1; min-width: 0; }
-  .listing-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .listing .name { font-weight: 700; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .listing .hh-badge { flex-shrink: 0; font-size: 11px; font-weight: 700; color: var(--orange); background: #fff1e6; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
-  .listing .gu { font-size: 11.5px; color: var(--sub); margin-top: 2px; }
-  .listing .types { margin-top: 6px; display: flex; gap: 5px; flex-wrap: wrap; }
-  .type-chip { font-size: 11px; padding: 2px 7px; border-radius: 4px; background: var(--bg); color: var(--sub); border: 1px solid var(--line); }
-  .listing-arrow { flex-shrink: 0; font-size: 20px; color: #c7c7cf; transition: transform 0.15s, color 0.15s; }
-  .listing:hover .listing-arrow { color: var(--orange); transform: translateX(2px); }
+  .listing:hover { border-color: #ffd0ac; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+  .listing.active { border-color: var(--orange); background: #fff8f3; }
+  .listing-row1 { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .listing-left { display: flex; align-items: center; gap: 6px; min-width: 0; }
+  .listing .group-chip {
+    flex-shrink: 0; font-size: 10.5px; font-weight: 700; color: #ff6001; background: #FFEEE4;
+    padding: 3px 8px; border-radius: 20px; white-space: nowrap;
+  }
+  .listing .name { flex: 1; min-width: 0; font-weight: 700; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .listing-gu { flex-shrink: 0; font-size: 12px; color: var(--sub); }
+  .listing-row2 { display: flex; align-items: center; gap: 4px; margin-top: 6px; }
+  .listing-row2 svg { flex-shrink: 0; width: 12px; height: 12px; }
+  .listing-row2 span { font-size: 12px; color: var(--sub); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .listing-row3 { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px; }
+  .listing-meta { font-size: 12.5px; color: var(--sub); }
+  .listing-meta b { color: var(--ink); font-weight: 700; }
+  .listing-price { text-align: right; flex-shrink: 0; }
+  .listing-price .pl { font-size: 10.5px; color: var(--sub); }
+  .listing-price .pv { font-size: 15px; font-weight: 800; color: var(--orange); margin-top: 2px; font-variant-numeric: tabular-nums; }
 
   #map { position: relative; }
   #map-el { width: 100%; height: 100%; }
@@ -144,23 +157,37 @@
     font-size: 12.5px; font-weight: 700; color: var(--sub); overflow: hidden;
     text-overflow: ellipsis; white-space: nowrap;
   }
-  #detail-body { padding: 16px 18px 24px; }
-  #detail-body h2 { font-size: 16px; font-weight: 800; margin: 0 0 4px; }
-  #detail-body .addr { font-size: 12px; color: var(--sub); margin-bottom: 16px; line-height: 1.5; }
+  #detail-body { padding: 18px 18px 28px; }
+  #detail-body h2 { font-size: 17px; font-weight: 800; margin: 0 0 6px; }
+  #detail-body .addr { display: flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--sub); margin-bottom: 10px; }
+  #detail-body .addr svg { flex-shrink: 0; width: 13px; height: 13px; }
+  .info-pills { display: flex; gap: 6px; margin-bottom: 20px; }
+  .info-pill { font-size: 11.5px; font-weight: 600; color: var(--sub); background: var(--bg); padding: 5px 10px; border-radius: 20px; }
 
-  .unit-block { border: 1px solid var(--line); border-radius: 4px; margin-bottom: 10px; overflow: hidden; }
-  .unit-head { padding: 10px 12px; background: var(--bg); font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 6px; justify-content: space-between; }
-  .unit-head .label { display: flex; align-items: center; gap: 6px; }
+  .unit-block {
+    border-radius: 12px; margin-bottom: 14px; overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05); border: 1px solid var(--line);
+  }
+  .unit-head { padding: 12px; background: var(--bg); font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+  .unit-head .label { display: flex; align-items: center; gap: 8px; }
+  .unit-head .group-badge {
+    flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+  }
   .unit-head .badge { color: var(--orange); font-weight: 700; }
-  .unit-body { padding: 10px 12px; font-size: 12.5px; }
-  .variant-label { font-size: 11.5px; font-weight: 700; color: var(--sub); margin: 10px 0 6px; }
+  .unit-body { padding: 12px; font-size: 12.5px; }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px; }
+  .info-tile { background: var(--bg); border-radius: 8px; padding: 7px 10px; }
+  .info-tile .k { display: block; font-size: 10.5px; color: var(--sub); }
+  .info-tile .v { display: block; font-size: 12.5px; font-weight: 700; margin-top: 1px; }
+  .variant-label {
+    display: inline-block; font-size: 11px; font-weight: 700; color: var(--ink); background: var(--line);
+    padding: 3px 9px; border-radius: 20px; margin: 12px 0 8px;
+  }
   .variant-label:first-child { margin-top: 0; }
   .tabs { display: flex; gap: 6px; margin-bottom: 8px; }
   .tab-btn { flex: 1; padding: 6px; border-radius: 4px; border: 1px solid var(--line); background: var(--surface); font-size: 11.5px; cursor: pointer; color: var(--sub); font-family: inherit; }
   .tab-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
-  .kv { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; }
-  .kv div { display: flex; justify-content: space-between; }
-  .kv .k { color: var(--sub); }
   .tab-pane { display: none; }
   .tab-pane.active { display: block; }
 
@@ -242,8 +269,8 @@
         </div>
 
         <div class="list-header">
-          <h2>단지 목록</h2>
-          <span class="count">총 <span id="list-count">-</span>개</span>
+          <h2><span class="list-icon">☰</span> 단지 목록</h2>
+          <span class="count"><span id="list-count">-</span>개</span>
         </div>
       </div>
       <div id="listing-rows"></div>
@@ -268,7 +295,17 @@
 <script>
 const won = n => n == null ? "-" : n.toLocaleString("ko-KR") + "원";
 const thousandWon = n => n == null ? "-" : (n * 1000).toLocaleString("ko-KR") + "원";
+const manWon = n => n == null ? "-" : Math.round(n / 10).toLocaleString("ko-KR") + "만원";
 const totalHouseholds = c => c.units.reduce((s, u) => s + (u.households.total || 0), 0);
+
+function baseDepositRange(c) {
+  const deposits = c.units.flatMap(u => u.variants.map(v => v.base?.deposit)).filter(d => d != null);
+  if (!deposits.length) return "-";
+  const lo = Math.min(...deposits), hi = Math.max(...deposits);
+  return lo === hi ? manWon(lo) : `${manWon(lo)} ~ ${manWon(hi)}`;
+}
+
+const PIN_ICON = `<svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-7.5 7-12a7 7 0 1 0-14 0c0 4.5 7 12 7 12Z" stroke="#9a9ca6" stroke-width="1.6"/><circle cx="12" cy="9" r="2.3" stroke="#9a9ca6" stroke-width="1.6"/></svg>`;
 
 function variantHtml(uid, v, i) {
   const vid = `${uid}v${i}`;
@@ -310,15 +347,15 @@ function renderDetail(complex) {
     return `
       <div class="unit-block">
         <div class="unit-head">
-          <span class="label">${GROUP_ICON[u.group] ?? "🏢"} ${u.type}㎡ · ${u.group}</span>
+          <span class="label"><span class="group-badge">${GROUP_ICON[u.group] ?? "🏢"}</span>${u.type}㎡ · ${u.group}</span>
           <span class="badge">${u.households.total ?? "-"}세대</span>
         </div>
         <div class="unit-body">
-          <div class="kv" style="margin-bottom:8px">
-            <div><span class="k">전용면적</span><span>${u.area?.private ?? "-"}㎡</span></div>
-            <div><span class="k">계약면적 합계</span><span>${u.area?.total ?? "-"}㎡</span></div>
-            <div><span class="k">우선공급 세대수</span><span>${u.households.priority ?? "-"}세대</span></div>
-            <div><span class="k">일반공급 세대수</span><span>${u.households.general ?? "-"}세대</span></div>
+          <div class="info-grid">
+            <div class="info-tile"><span class="k">전용면적</span><span class="v">${u.area?.private ?? "-"}㎡</span></div>
+            <div class="info-tile"><span class="k">계약면적 합계</span><span class="v">${u.area?.total ?? "-"}㎡</span></div>
+            <div class="info-tile"><span class="k">우선공급 세대수</span><span class="v">${u.households.priority ?? "-"}세대</span></div>
+            <div class="info-tile"><span class="k">일반공급 세대수</span><span class="v">${u.households.general ?? "-"}세대</span></div>
           </div>
           ${variantsHtml}
         </div>
@@ -327,10 +364,10 @@ function renderDetail(complex) {
 
   body.innerHTML = `
     <h2>${complex.name}</h2>
-    <div class="addr">${complex.address}</div>
-    <div class="kv" style="margin-bottom:16px">
-      <div><span class="k">난방방식</span><span>${complex.heating ?? "-"}</span></div>
-      <div><span class="k">공급방식</span><span>${complex.kind === "신규" ? "신규 공급" : "재공급"}</span></div>
+    <div class="addr">${PIN_ICON}<span>${complex.address}</span></div>
+    <div class="info-pills">
+      <span class="info-pill">🔥 ${complex.heating ?? "-"}</span>
+      <span class="info-pill">${complex.kind === "신규" ? "🆕 신규 공급" : "🔁 재공급"}</span>
     </div>
     ${unitsHtml}
   `;
@@ -434,21 +471,24 @@ fetch("data/happy2026-2.json")
       });
       kakao.maps.event.addListener(marker, "click", () => { selectListing(c.name); openDetail(c); });
 
-      const typeChips = [...new Set(c.units.map(u => u.type + "㎡"))]
-        .map(t => `<span class="type-chip">${t}</span>`).join("");
+      const typesLabel = [...new Set(c.units.map(u => u.type))].map(t => t + "㎡").join(", ");
+      const groupsLabel = [...new Set(c.units.map(u => u.group))].join("+");
       const row = document.createElement("div");
       row.className = "listing";
       row.dataset.name = c.name;
       row.innerHTML = `
-        <div class="listing-main">
-          <div class="listing-top">
-            <div class="name">${c.name}</div>
-            <span class="hh-badge">${totalHouseholds(c)}세대</span>
+        <div class="listing-row1">
+          <div class="listing-left">
+            <span class="group-chip">${groupsLabel}</span>
+            <span class="name">${c.name}</span>
           </div>
-          <div class="gu">${c.gu ?? ""}</div>
-          <div class="types">${typeChips}</div>
+          <span class="listing-gu">${c.gu ?? ""}</span>
         </div>
-        <div class="listing-arrow">›</div>
+        <div class="listing-row2">${PIN_ICON}<span>${c.address}</span></div>
+        <div class="listing-row3">
+          <div class="listing-meta">${typesLabel} · <b>${totalHouseholds(c)}세대</b></div>
+          <div class="listing-price"><div class="pl">기본 보증금</div><div class="pv">${baseDepositRange(c)}</div></div>
+        </div>
       `;
       row.addEventListener("click", () => {
         map.setCenter(new kakao.maps.LatLng(c.lat, c.lng));
