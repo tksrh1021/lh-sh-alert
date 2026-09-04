@@ -117,36 +117,37 @@
   .list-header h2 .list-icon { color: var(--sub); font-size: 13px; }
   .list-header .count { font-size: 12px; color: var(--orange); font-weight: 700; }
 
-  /* 오른쪽만 padding(12px)+스크롤바 폭(6px)이 겹쳐 이중으로 여백을
-     차지하지 않도록, 오른쪽 padding을 스크롤바 폭만큼 줄여서 맞춤 */
-  #listing-rows { flex: 1; min-height: 0; overflow-y: auto; background: #fff; display: flex; flex-direction: column; gap: 10px; padding: 12px 6px 12px 12px; }
+  /* #listing-rows-outer가 보이는 영역(clip 없이 그냥 위치 기준점 역할)이고
+     실제 스크롤은 안쪽 #listing-rows(네이티브 스크롤바는 완전히 숨김)가 함 —
+     그 자리를 JS가 그리는 .fake-scrollbar-thumb 하나로 대신하므로 좌우
+     padding을 동일하게 12px로 유지할 수 있음(여백 이중 계산 문제 자체가 없어짐) */
+  #listing-rows-outer { flex: 1; min-height: 0; position: relative; }
+  #listing-rows {
+    position: absolute; inset: 0; overflow-y: auto; background: #fff;
+    display: flex; flex-direction: column; gap: 10px; padding: 12px;
+    scrollbar-width: none;
+  }
+  #listing-rows::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
-  /* 커스텀 스크롤바: 평소엔 안 보이다가 hover할 때만 얇은 바(rail)로 나타남,
-     위아래 화살표 버튼도 없앰 */
-  #listing-rows, #sidebar-detail, #sidebar-list {
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-  }
-  #listing-rows:hover, #sidebar-detail:hover, #sidebar-list:hover {
-    scrollbar-color: #d8d8e0 transparent;
-  }
-  #listing-rows::-webkit-scrollbar, #sidebar-detail::-webkit-scrollbar, #sidebar-list::-webkit-scrollbar { width: 6px; }
-  #listing-rows::-webkit-scrollbar-track, #sidebar-detail::-webkit-scrollbar-track, #sidebar-list::-webkit-scrollbar-track { background: transparent; }
-  #listing-rows::-webkit-scrollbar-button, #sidebar-detail::-webkit-scrollbar-button, #sidebar-list::-webkit-scrollbar-button,
-  #listing-rows::-webkit-scrollbar-button:start:decrement, #listing-rows::-webkit-scrollbar-button:end:increment,
-  #sidebar-detail::-webkit-scrollbar-button:start:decrement, #sidebar-detail::-webkit-scrollbar-button:end:increment,
-  #sidebar-list::-webkit-scrollbar-button:start:decrement, #sidebar-list::-webkit-scrollbar-button:end:increment {
+  #sidebar-list, #sidebar-detail { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+  #sidebar-list:hover, #sidebar-detail:hover { scrollbar-color: #d8d8e0 transparent; }
+  #sidebar-list::-webkit-scrollbar, #sidebar-detail::-webkit-scrollbar { width: 6px; }
+  #sidebar-list::-webkit-scrollbar-track, #sidebar-detail::-webkit-scrollbar-track { background: transparent; }
+  #sidebar-list::-webkit-scrollbar-button, #sidebar-detail::-webkit-scrollbar-button,
+  #sidebar-list::-webkit-scrollbar-button:start:decrement, #sidebar-list::-webkit-scrollbar-button:end:increment,
+  #sidebar-detail::-webkit-scrollbar-button:start:decrement, #sidebar-detail::-webkit-scrollbar-button:end:increment {
     display: none; width: 0; height: 0;
   }
-  #listing-rows::-webkit-scrollbar-thumb, #sidebar-detail::-webkit-scrollbar-thumb, #sidebar-list::-webkit-scrollbar-thumb {
-    background: transparent; border-radius: 10px;
+  #sidebar-list::-webkit-scrollbar-thumb, #sidebar-detail::-webkit-scrollbar-thumb { background: transparent; border-radius: 10px; }
+  #sidebar-list:hover::-webkit-scrollbar-thumb, #sidebar-detail:hover::-webkit-scrollbar-thumb { background: #d8d8e0; }
+  #sidebar-list::-webkit-scrollbar-thumb:hover, #sidebar-detail::-webkit-scrollbar-thumb:hover { background: #c2c2cc; }
+
+  /* JS가 위치/높이를 계산해서 그리는 가짜 스크롤바 표시줄 — hover할 때만 보임 */
+  .fake-scrollbar-thumb {
+    position: absolute; right: 2px; width: 4px; border-radius: 4px;
+    background: transparent; pointer-events: none; transition: background 0.15s;
   }
-  #listing-rows:hover::-webkit-scrollbar-thumb, #sidebar-detail:hover::-webkit-scrollbar-thumb, #sidebar-list:hover::-webkit-scrollbar-thumb {
-    background: #d8d8e0;
-  }
-  #listing-rows::-webkit-scrollbar-thumb:hover, #sidebar-detail::-webkit-scrollbar-thumb:hover, #sidebar-list::-webkit-scrollbar-thumb:hover {
-    background: #c2c2cc;
-  }
+  #listing-rows-outer:hover .fake-scrollbar-thumb { background: #d8d8e0; }
 
   .listing {
     background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
@@ -261,10 +262,11 @@
     #map { order: 1; }
     #sidebar { order: 2; border-right: none; border-top: 1px solid var(--line); }
     #sidebar-list { display: block; overflow-y: auto; }
-    /* 모바일은 여기서 스크롤이 안 생기고(overflow-y:visible) #sidebar-list가
-       대신 스크롤하므로 스크롤바가 안 생김 — 오른쪽 padding을 줄여둘 이유가
-       없어서 다시 좌우 동일하게 맞춤 */
-    #listing-rows { flex: none; overflow-y: visible; padding: 12px; }
+    /* 모바일은 여기서 스크롤이 안 생기고 #sidebar-list가 대신 스크롤하므로
+       데스크톱용 절대 위치/가짜 스크롤바 구조를 다시 일반 흐름으로 되돌림 */
+    #listing-rows-outer { flex: none; position: static; }
+    #listing-rows { position: static; inset: auto; overflow-y: visible; padding: 12px; }
+    .fake-scrollbar-thumb { display: none; }
     /* 화면이 좁아 지도 옆에 띄울 공간이 없으므로, 사이드바 자리를 덮는
        원래 슬라이드 방식으로 되돌림 */
     #sidebar-detail {
@@ -340,7 +342,10 @@
           <span class="count"><span id="list-count">-</span>개</span>
         </div>
       </div>
-      <div id="listing-rows"></div>
+      <div id="listing-rows-outer">
+        <div id="listing-rows"></div>
+        <div class="fake-scrollbar-thumb" id="listing-rows-thumb"></div>
+      </div>
     </div>
 
     <div id="sidebar-detail">
@@ -373,6 +378,28 @@ function baseDepositRange(c) {
 }
 
 const PIN_ICON = `<svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-7.5 7-12a7 7 0 1 0-14 0c0 4.5 7 12 7 12Z" stroke="#9a9ca6" stroke-width="1.6"/><circle cx="12" cy="9" r="2.3" stroke="#9a9ca6" stroke-width="1.6"/></svg>`;
+
+// 네이티브 스크롤바를 완전히 숨긴 스크롤 영역 위에, 위치/높이만 계산해서
+// 그리는 얇은 표시줄. 실제 스크롤은 여전히 휠/트랙패드로 하고, 이건 시각적
+// 안내용이라 드래그는 지원하지 않음 — 그래서 좌우 padding을 스크롤바 폭만큼
+// 미리 빼둘 필요가 없어짐(여백이 항상 좌우 동일).
+function mountFakeScrollbar(scrollEl, thumbEl) {
+  const MIN_THUMB = 24;
+  function update() {
+    const trackH = scrollEl.clientHeight;
+    if (scrollEl.scrollHeight <= trackH + 1) { thumbEl.style.display = "none"; return; }
+    const thumbH = Math.max(MIN_THUMB, (trackH / scrollEl.scrollHeight) * trackH);
+    const maxTop = trackH - thumbH;
+    const scrollable = scrollEl.scrollHeight - trackH;
+    thumbEl.style.display = "block";
+    thumbEl.style.height = thumbH + "px";
+    thumbEl.style.top = ((scrollEl.scrollTop / scrollable) * maxTop) + "px";
+  }
+  scrollEl.addEventListener("scroll", update);
+  new ResizeObserver(update).observe(scrollEl);
+  update();
+  return update;
+}
 
 function variantHtml(uid, v, i) {
   const vid = `${uid}v${i}`;
@@ -471,6 +498,7 @@ fetch("data/happy2026-2.json")
     });
 
     const rowsEl = document.getElementById("listing-rows");
+    const updateListingThumb = mountFakeScrollbar(rowsEl, document.getElementById("listing-rows-thumb"));
 
     // --- 지역(자치구) 선택 옵션 ---
     const guSelect = document.getElementById("gu-select");
@@ -611,6 +639,7 @@ fetch("data/happy2026-2.json")
       document.getElementById("stat-complexes").textContent = visibleComplexes.toLocaleString("ko-KR");
       document.getElementById("stat-households").textContent = visibleHouseholds.toLocaleString("ko-KR");
       document.getElementById("list-count").textContent = visibleComplexes.toLocaleString("ko-KR");
+      updateListingThumb();
     }
 
     document.getElementById("search-input").addEventListener("input", applyFilters);
