@@ -223,7 +223,8 @@
   #detail-body .addr { display: flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--sub); margin-bottom: 10px; }
   #detail-body .addr svg { flex-shrink: 0; width: 13px; height: 13px; }
   .info-pills { display: flex; gap: 6px; margin-bottom: 20px; }
-  .info-pill { font-size: 11.5px; font-weight: 600; color: var(--sub); background: var(--bg); padding: 5px 10px; border-radius: 20px; }
+  .info-pill { font-size: 11.5px; font-weight: 600; color: var(--sub); background: var(--bg); padding: 5px 10px; border-radius: 20px; text-decoration: none; }
+  a.info-pill:hover { background: #ececf2; }
 
   .unit-block {
     border-radius: 12px; margin-bottom: 14px; overflow: hidden;
@@ -501,6 +502,7 @@ function renderDetail(complex) {
     <div class="info-pills">
       <span class="info-pill">🔥 ${complex.heating ?? "-"}</span>
       <span class="info-pill">${complex.kind === "신규" ? "🆕 신규 공급" : "🔁 재공급"}</span>
+      <a class="info-pill" href="https://map.naver.com/p/search/${encodeURIComponent(complex.address)}" target="_blank" rel="noopener">🚶 거리뷰</a>
     </div>
     ${unitsHtml}
   `;
