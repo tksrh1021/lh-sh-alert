@@ -11,6 +11,10 @@ permissions:
 jobs:
   remind:
     runs-on: ubuntu-latest
+    env:
+      # 사용자 요청으로 카카오톡 알림 임시 중단 (2026-09-09). 리마인드 로직은
+      # 계속 돌지만 notify()가 조용히 스킵됨. 다시 켜려면 이 줄을 지울 것.
+      NOTIFY_DISABLED: "true"
     steps:
       - uses: actions/checkout@v4
 

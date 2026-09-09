@@ -1,4 +1,5 @@
 """카카오 우선, 실패하면 백업 채널. 둘 다 실패하면 조용히 넘기지 않고 예외를 던진다."""
+from src.env import load_env
 from src.notifier.backup import BackupSendError, send_discord
 from src.notifier.kakao import KakaoSendError, send_kakao
 
@@ -8,6 +9,8 @@ class NotifyError(Exception):
 
 
 def notify(text: str, link_url: str | None = None) -> str:
+    if load_env().get("NOTIFY_DISABLED") == "true":
+        return "disabled"
     try:
         send_kakao(text, link_url)
         return "kakao"

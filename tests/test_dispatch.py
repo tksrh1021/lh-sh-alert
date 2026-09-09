@@ -25,3 +25,11 @@ def test_notify_raises_when_both_fail(monkeypatch):
 
     with pytest.raises(dispatch.NotifyError):
         dispatch.notify("hello")
+
+
+def test_notify_skips_silently_when_disabled(monkeypatch):
+    monkeypatch.setattr(dispatch, "load_env", lambda: {"NOTIFY_DISABLED": "true"})
+    monkeypatch.setattr(dispatch, "send_kakao", lambda text, link=None: (_ for _ in ()).throw(AssertionError("안 불려야 함")))
+    monkeypatch.setattr(dispatch, "send_discord", lambda text: (_ for _ in ()).throw(AssertionError("안 불려야 함")))
+
+    assert dispatch.notify("hello") == "disabled"
