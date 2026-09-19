@@ -30,11 +30,17 @@ def main(path: str) -> None:
 
     failed = []
     for c in complexes:
-        latlng = geocode(c["address"], api_key)
+        address = c["address"]
+        latlng = geocode(address, api_key)
+        if not latlng and ")" in address:
+            # 괄호(동 이름) 뒤에 건물 애칭이 붙어 있으면 카카오가 못 찾는 경우가
+            # 있어서, 그 부분을 떼고 한 번 더 시도
+            time.sleep(0.3)
+            latlng = geocode(address[: address.rindex(")") + 1], api_key)
         if latlng:
             c["lat"], c["lng"] = latlng
         else:
-            failed.append(c["name"])
+            failed.append(c.get("name") or address)
         time.sleep(0.3)
 
     with open(path, "w", encoding="utf-8") as f:

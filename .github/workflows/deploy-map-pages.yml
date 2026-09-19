@@ -3,7 +3,7 @@ name: deploy-map-pages
 on:
   push:
     branches: [master]
-    paths: ["map/index.html", "map/data/**"]
+    paths: ["map/*.html", "map/data/**", "map/*.svg"]
   workflow_dispatch: {}
 
 permissions:
